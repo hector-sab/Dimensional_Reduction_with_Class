@@ -33,6 +33,9 @@ device_msg = 'Select which device tf should use for the ops.'\
 			       +' 0: CPU, 1>=GPU (if available).'
 parser.add_argument('-d','--device',help=device_msg,type=int,
                     choices=choices,default=device_default)
+
+
+
 ######## STARTS: Other args
 parser.add_argument('--do',help='Use DropOut if selected',
       action='store_true',default=False)
@@ -47,6 +50,9 @@ parser.add_argument('-s','--save',help='Saves checkpoints of the model',
 parser.add_argument('--log',help='Saves a log of the training process',
       action='store_true',default=True)
 ######## ENDS: Other args
+
+
+
 args = parser.parse_args()
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = str(args.device)
