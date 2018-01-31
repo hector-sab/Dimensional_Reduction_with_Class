@@ -166,6 +166,7 @@ class SegModel:
       if not os.path.exists(log_dir):
         os.makedirs(log_dir)
       self.writer = tf.summary.FileWriter(log_dir+log_name)
+      msg = log_dir
       writer.add_graph(self.session.graph)
 
     self.feed_val = {self.x:val_data['ims'], self.y_seg:val_data['seg']}

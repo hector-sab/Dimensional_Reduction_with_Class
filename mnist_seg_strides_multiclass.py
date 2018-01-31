@@ -43,7 +43,7 @@ import tensorflow as tf
 import numpy as np
 
 from MNIST import load_mnist
-from MNIST_model import SegModel
+from MNIST_model_stv1 import SegModel
 from utils import DataSeg
 
 if __name__=='__main__':
