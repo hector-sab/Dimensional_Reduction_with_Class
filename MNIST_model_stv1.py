@@ -28,6 +28,8 @@ class SegModel:
     -load_checkp: Name of the checkpoint to be loaded
     -save_load_same: Flag indicating if the load and save model 
               are the same
+    -load_step: if the model as many checkpoints steps, select which
+              one should be loaded
     -log: Flag indicating if summaries will be saved
     -log_dir: Directory where it will be saved
     -log_name: Name of the summary
