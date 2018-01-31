@@ -277,7 +277,7 @@ class SegModel:
     for i in range(num_it):
       self.total_it += 1
       data = self.train.next_batch(self.bs)
-      print(self.total_it,data['ims'].shape,data['seg'].shape)
+      #print(self.total_it,data['ims'].shape,data['seg'].shape)
       if self.dropout:
         feed_dict = {self.x:data['ims'],self.y_seg:data['seg'],
                      self.drop_prob:self.do_prob}

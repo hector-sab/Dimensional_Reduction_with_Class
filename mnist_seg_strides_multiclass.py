@@ -40,6 +40,8 @@ parser.add_argument('--dop',help='DropOut probability',
       type=float,default=0.25)
 parser.add_argument('--lr',help='Define a different learning rate',
       type=float,default=3e-7)
+parser.add_argument('-i','--iterations',help='Number of training it.',
+      type=int,default=10000)
 ######## ENDS: Other args
 args = parser.parse_args()
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
@@ -112,6 +114,11 @@ if __name__=='__main__':
 
   model = SegModel(train=train,val=val,test=test,log=True,save=True,
       lr=args.lr,dropout=args.do,do_prob=args.dop)
+  
+  model.optimize(num_it=args.iterations,print_test_acc=True,
+    print_test_it=999,log_it=200)
+  
+  """
   print('---------HERE 1')
   out = model.predict(im=[train.images[0]])
   #msg = np.array_str(out[0].reshape(28,28),max_line_width=100)
@@ -134,3 +141,4 @@ if __name__=='__main__':
   out = model.predict(im=[train.images[0]])
   #msg = np.array_str(out[0].reshape(28,28),max_line_width=100)
   #print('\n{0}\n'.format(msg))
+  """
