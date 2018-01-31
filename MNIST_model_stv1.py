@@ -9,8 +9,8 @@ import os
 
 class SegModel:
   def __init__(self,train,val,test=None,num_class=10,ex=1,lr=3e-7,
-    save=False,save_dir='checkpoints/mnist_seg/',save_checkp='mnist_seg',
-    load=False,load_dir='checkpoints/mnist_seg/',load_checkp='mnist_seg',
+    save=False,save_dir='checkpoints/mnist_seg_stv1/',save_checkp='mnist_seg',
+    load=False,load_dir='checkpoints/mnist_seg_stv1/',load_checkp='mnist_seg',
     save_load_same=True,load_step=None,log=False,log_dir='./log/mnist_seg_v1/',
     log_name='mnist_seg',dropout=False,do_prob=0.25):
     """
