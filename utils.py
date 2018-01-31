@@ -328,7 +328,7 @@ def conv(inp,shape,strides=[1,1,1,1],padding='SAME',
 
     return(conv)
 
-def __flatten(layer):
+def flatten(layer):
   """
   Flattens a convolved tensor.... for the fully connected network
   """

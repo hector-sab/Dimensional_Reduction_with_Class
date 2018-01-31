@@ -37,6 +37,11 @@ parser.add_argument('-d','--device',help=device_msg,type=int,
 
 
 ######## STARTS: Other args
+msg = 'Select which model to train/predict:\n\t'
+msg += '0 - Strides without max pooling\n\t'
+msg += '1 - Max pooling for dimensional reduction'
+parser.add_argument('-m','--model',help=msg,
+      type=int,default=0,choices=[0,1])
 parser.add_argument('--do',help='Use DropOut if selected',
       action='store_true',default=False)
 parser.add_argument('--dop',help='DropOut probability',
@@ -74,7 +79,8 @@ import tensorflow as tf
 import numpy as np
 
 from MNIST import load_mnist
-from MNIST_model_stv1 import SegModel
+from MNIST_model_stv1 import SegModel as SegModel_stv1
+from MNIST_model_mpv1 import SegModel as SegModel_mpv1
 from utils import DataSeg
 
 if __name__=='__main__':
@@ -125,11 +131,15 @@ if __name__=='__main__':
 
 
 
+  if args.model==0:
+    model = SegModel_stv1(train=train,val=val,test=test,log=args.log,
+      save=args.save,lr=args.lr,dropout=args.do,do_prob=args.dop,
+      load=args.load,load_step=args.step)
+  elif args.model==1:
+    model = SegModel_mpv1(train=train,val=val,test=test,log=args.log,
+      save=args.save,lr=args.lr,dropout=args.do,do_prob=args.dop,
+      load=args.load,load_step=args.step)
 
-  model = SegModel(train=train,val=val,test=test,log=args.log,
-    save=args.save,lr=args.lr,dropout=args.do,do_prob=args.dop,
-    load=args.load,load_step=args.step)
-  
   model.optimize(num_it=args.iterations,print_test_acc=True,
     print_test_it=999,log_it=200)
   

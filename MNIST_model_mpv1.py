@@ -213,8 +213,10 @@ class SegModel:
       dropout=self.dropout,do_prob=self.drop_prob)
     c2_shape = [ks2,ks2,num_k1,num_k2]
     self.conv2 = ut.conv(inp=self.conv1,shape=c2_shape,
-      strides=[1,2,2,1],name='conv2',dropout=self.dropout,
+      name='conv2',dropout=self.dropout,
       do_prob=self.drop_prob)
+    self.pool1,self.pool1_args = ut.pool_argmax(self.conv2)
+
     c3_shape = [ks3,ks3,num_k2,num_k3]
     self.conv3 = ut.conv(inp=self.conv2,shape=c3_shape,name='conv3',
       dropout=self.dropout,do_prob=self.drop_prob)
@@ -222,6 +224,8 @@ class SegModel:
     self.conv4 = ut.conv(inp=self.conv3,shape=c4_shape,
       strides=[1,2,2,1],name='conv4',dropout=self.dropout,
       do_prob=self.drop_prob)
+    self.pool2,self.pool2_args = ut.pool_argmax(self.conv4)
+
     c5_shape = [ks5,ks5,num_k4,num_k5]
     self.conv5 = ut.conv(inp=self.conv4,shape=c5_shape,name='conv5',
       dropout=self.dropout,do_prob=self.drop_prob)
@@ -229,31 +233,44 @@ class SegModel:
     self.conv6 = ut.conv(inp=self.conv5,shape=c6_shape,name='conv6',
       dropout=self.dropout,do_prob=self.drop_prob)
 
-    self.deconv1 = ut.deconv(inp=self.conv6,out_like=self.conv5,
-      relu=True,shape=c6_shape,dropout=self.dropout,
+    d1_shape = [ks6,ks6,num_k5,num_k6]
+    self.deconv1 = ut.deconv2(inp=self.conv6,relu=True,
+      shape=d1_shape,dropout=self.dropout,
       do_prob=self.drop_prob)
-    self.deconv2 = ut.deconv(inp=self.deconv1,out_like=self.conv4,
-      shape=c5_shape,relu=True,name='deconv2',dropout=self.dropout,
+    d2_shape = [ks5,ks5,num_k4,num_k5]
+    self.deconv2 = ut.deconv2(inp=self.deconv1,shape=d2_shape,
+      relu=True,name='deconv2',dropout=self.dropout,
       do_prob=self.drop_prob)
-    self.sum1 = self.deconv2 + self.conv4
-    self.deconv3 = ut.deconv(inp=self.sum1,out_like=self.conv3,
-      shape=c4_shape,strides=[1,2,2,1],relu=True,name='deconv3',dropout=self.dropout,
+    self.unpool1 = ut.unpool_with_argmax(self.deconv2,self.pool2_args,
+                      input_shape=[1,7,7,num_k4],name='unpool1')
+
+    self.sum1 = self.unpool1 + self.conv4
+    d3_shape = [ks4,ks4,num_k3,num_k4]
+    self.deconv3 = ut.deconv2(inp=self.sum1,shape=d3_shape,
+      relu=True,name='deconv3',dropout=self.dropout,
       do_prob=self.drop_prob)
-    self.deconv4 = ut.deconv(inp=self.deconv3,out_like=self.conv2,
-      shape=c3_shape,relu=True,name='deconv4',dropout=self.dropout,
+    d4_shape = [ks3,ks3,num_k2,num_k3]
+    self.deconv4 = ut.deconv2(inp=self.deconv3,shape=d4_shape,
+      relu=True,name='deconv4',dropout=self.dropout,
       do_prob=self.drop_prob)
-    self.sum2 = self.deconv4 + self.conv2
-    self.deconv5 = ut.deconv(inp=self.sum2,out_like=self.conv1,
-      shape=c2_shape,strides=[1,2,2,1],relu=True,name='deconv5',dropout=self.dropout,
+    self.unpool2 = ut.unpool_with_argmax(self.deconv4,self.pool1_args,
+                      input_shape=[1,14,14,num_k2],name='unpool2')
+
+    self.sum2 = self.unpool2 + self.conv2
+    d5_shape = [ks2,ks2,num_k2,num_k2]
+    self.deconv5 = ut.deconv2(inp=self.sum2,shape=d5_shape,
+      relu=True,name='deconv5',dropout=self.dropout,
       do_prob=self.drop_prob)
 
-    __d6_shape = [ks1,ks1,self.num_seg_class,num_k1]
-    __outlike6 = tf.placeholder(tf.float32,
+    d6_shape = [ks1,ks1,self.num_seg_class,num_k2]
+    self.deconv6 = ut.deconv2(inp=self.deconv5,shape=d6_shape,
+                   relu=False,name='deconv6')
+    """
+    outlike6 = tf.placeholder(tf.float32,
       shape=[self.ex,28,28,self.num_seg_class],name='d6_tmp')
     self.deconv6 = ut.deconv(inp=self.deconv5,out_like=__outlike6,
       shape=__d6_shape,relu=False,pr=False,name='deconv6')
-
-    # Used just for compativility
+    """
     self.pre_logits = self.deconv6
 
     msg = '\n\t{0} \n\t{1} \n\t{2} \n\t{3} \n\t{4} \n\t{5}'
