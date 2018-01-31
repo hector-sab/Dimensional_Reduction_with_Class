@@ -5,12 +5,13 @@ Description: model for MNIST segmentation
 """
 import tensorflow as tf
 import utils as ut
+import os
 
 class SegModel:
   def __init__(self,train,val,test=None,num_class=10,ex=1,lr=3e-7,
     save=False,save_dir='checkpoints/',save_checkp='mnist_seg',
     load=False,load_dir='checkpoints',load_checkp='mnist_seg',
-    save_load_same=True,log=False,log_dir='./log/mnist_seg_v1/',
+    save_load_same=True,load_step=None,log=False,log_dir='./log/mnist_seg_v1/',
     log_name='mnist_seg'):
     """
     -train: Triaining data using the class DataSeg
@@ -48,7 +49,9 @@ class SegModel:
     self.lr = lr
     self.save = save
     self.load = load
+    self.load_step = load_step
     self.log = log
+    print('log',self.log)
 
     self.total_it = 0
     self.best_val_acc = 0
@@ -139,7 +142,7 @@ class SegModel:
 
     # Save/Load checkpoints
     if self.save:
-      self.saver = tf.train.Saver()
+      self.saver = tf.train.Saver(max_to_keep=5000)
       if not os.path.exists(save_dir):
         os.makedirs(save_dir)
       self.save_path = os.path.join(save_dir,save_checkp)
@@ -167,7 +170,7 @@ class SegModel:
         os.makedirs(log_dir)
       self.writer = tf.summary.FileWriter(log_dir+log_name)
       msg = log_dir
-      writer.add_graph(self.session.graph)
+      self.writer.add_graph(self.session.graph)
 
     self.feed_val = {self.x:val_data['ims'], self.y_seg:val_data['seg']}
 
@@ -175,7 +178,11 @@ class SegModel:
     self.session.run(tf.global_variables_initializer())
 
   def restore_variables(self):
-    self.saver.restore(sess=self.session, save_path=self.load_path)
+    if self.load_step is None:
+      self.saver.restore(sess=self.session, save_path=self.load_path)
+    else:
+      self.saver.restore(sess=self.session, save_path=self.load_path,
+        global_step=self.load_step)
 
   def __model(self):
     ##### Network Specs
@@ -273,7 +280,7 @@ class SegModel:
           
           if self.save:
             self.saver.save(sess=self.session,save_path=self.save_path,
-              global_step=self.total_it,max_to_keep=5000)
+              global_step=self.total_it)
         else:
           saved_str = ''
           

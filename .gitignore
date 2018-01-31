@@ -1,2 +1,6 @@
 
 __pycache__/
+
+checkpoints/
+
+log/mnist_seg_v1/mnist_seg/
