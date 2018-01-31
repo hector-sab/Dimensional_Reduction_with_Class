@@ -4,6 +4,14 @@ Date: January-30-2018
 Description: MNIST segmentation
 """
 
+# TODO: 
+"""
+Dropout not working with tensorboard summary histogram.
+
+InvalidArgumentError (see above for traceback): Nan in summary histogram for: conv2/activations
+         [[Node: conv2/activations = HistogramSummary[T=DT_FLOAT, _device="/job:localhost/replica:0/task:0/cpu:0"](conv2/activations/tag, conv2/Relu)]]
+"""
+
 import os
 import argparse
 desc_msg = 'MNIST segmentation using tensorflow and some sort of LeNet-5'
@@ -25,7 +33,14 @@ device_msg = 'Select which device tf should use for the ops.'\
 			       +' 0: CPU, 1>=GPU (if available).'
 parser.add_argument('-d','--device',help=device_msg,type=int,
                     choices=choices,default=device_default)
-
+######## STARTS: Other args
+parser.add_argument('--do',help='Use DropOut if selected',
+      action='store_true',default=False)
+parser.add_argument('--dop',help='DropOut probability',
+      type=float,default=0.25)
+parser.add_argument('--lr',help='Define a different learning rate',
+      type=float,default=3e-7)
+######## ENDS: Other args
 args = parser.parse_args()
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = str(args.device)
@@ -50,11 +65,9 @@ if __name__=='__main__':
 	# Load MNIST data
   msg = 'Loading MNIST data...\n'
   print(msg)
-
   MNIST_path = './MNIST/'
   MNIST_files = ['train-images.idx3-ubyte','train-labels.idx1-ubyte',
                  't10k-images.idx3-ubyte','t10k-labels.idx1-ubyte']
-
   train_ims = load_mnist(MNIST_path+MNIST_files[0])
   train_cls  = load_mnist(MNIST_path+MNIST_files[1])
   test_ims = load_mnist(MNIST_path+MNIST_files[2])
@@ -98,14 +111,14 @@ if __name__=='__main__':
 
 
   model = SegModel(train=train,val=val,test=test,log=True,save=True,
-    lr=3e-5,dropout=True)
-
+      lr=args.lr,dropout=args.do,do_prob=args.dop)
+  print('---------HERE 1')
   out = model.predict(im=[train.images[0]])
   #msg = np.array_str(out[0].reshape(28,28),max_line_width=100)
   #print('\n{0}\n'.format(msg))
-
-  model.optimize(num_it=1000,print_test_acc=True,print_test_it=999)
-
+  print('---------HERE 2')
+  model.optimize(num_it=1000,print_test_acc=True,print_test_it=999,log_it=200)
+  print('---------HERE 3')
   out = model.predict(im=[train.images[0]])
   #msg = np.array_str(out[0].reshape(28,28),max_line_width=100)
   #print('\n{0}\n'.format(msg))

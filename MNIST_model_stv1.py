@@ -53,14 +53,12 @@ class SegModel:
     self.load = load
     self.load_step = load_step
     self.log = log
-    print('log',self.log)
 
     self.dropout = dropout
     self.do_prob = do_prob
 
     self.total_it = 0
     self.best_val_acc = 0
-    val_data  = self.val.next_batch(self.bs,seg_fb=False)
 
     self.session = tf.Session()
 
@@ -178,6 +176,7 @@ class SegModel:
       msg = log_dir
       self.writer.add_graph(self.session.graph)
 
+    val_data  = self.val.next_batch(self.bs,seg_fb=False)
     self.feed_val = {self.x:val_data['ims'], self.y_seg:val_data['seg']}
 
   def init_variables(self):
@@ -278,7 +277,7 @@ class SegModel:
     for i in range(num_it):
       self.total_it += 1
       data = self.train.next_batch(self.bs)
-
+      print(self.total_it,data['ims'].shape,data['seg'].shape)
       if self.dropout:
         feed_dict = {self.x:data['ims'],self.y_seg:data['seg'],
                      self.drop_prob:self.do_prob}
