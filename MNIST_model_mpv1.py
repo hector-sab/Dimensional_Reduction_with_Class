@@ -240,10 +240,14 @@ class SegModel:
     self.deconv1 = ut.deconv2(inp=self.conv6,shape=d1_shape,
       relu=True,name='deconv1',dropout=self.dropout,
       do_prob=self.drop_prob)
+    print(d1_shape)
+    print(self.deconv1)
     d2_shape = [ks5,ks5,num_k4,num_k5]
     self.deconv2 = ut.deconv2(inp=self.deconv1,shape=d2_shape,
       relu=True,name='deconv2',dropout=self.dropout,
       do_prob=self.drop_prob)
+    print(d2_shape)
+    print(self.deconv2)
     self.unpool1 = ut.unpool_with_argmax(self.deconv2,self.pool2_args,
                       input_shape=[1,7,7,num_k4],name='unpool1')
 
