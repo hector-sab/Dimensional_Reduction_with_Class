@@ -45,6 +45,8 @@ class SegModel:
     self.num_seg_class = self.num_class + 1
 
     self.lr = lr
+    self.save = save
+    self.load = load
     self.log = log
 
     self.total_it = 0
@@ -135,16 +137,17 @@ class SegModel:
 
 
     # Save/Load checkpoints
-    if save:
+    if self.save:
       self.saver = tf.train.Saver()
       if not os.path.exists(save_dir):
         os.makedirs(save_dir)
       self.save_path = os.path.join(save_dir,save_checkp)
     
-    if load:
-      if not save:
+    if self.load:
+      if not self.save:
         self.saver = tf.train.Saver()
       if save_load_same:
+        self.load = True
         self.load_path = self.save_path
       else:
         self.load_path = os.path.join(load_dir,load_checkp)
@@ -155,10 +158,10 @@ class SegModel:
     
     self.init_variables()
 
-    if load:
+    if self.load:
       self.restore_variables()
 
-    if log:
+    if self.log:
       self.writer = tf.summary.FileWriter(log_dir+log_name)
       writer.add_graph(self.session.graph)
 
@@ -230,6 +233,10 @@ class SegModel:
                      self.deconv4,self.deconv5,self.deconv6)
     print(msg)
 
+  def save_checkpoints(self,save=False):
+    if save:
+      self.save = True
+
   def optimize(self,num_it=0,print_it=100,log_it=100,
     print_test_acc=False,print_test_it=1000):
     """
@@ -264,6 +271,9 @@ class SegModel:
           
         print('It: {0} - Acc: {1:.1%} {2}'.format(self.total_it,
           acc,saved_str))
+
+        if self.save:
+          self.saver.save(sess=self.session,save_path=self.save_path)
 
       if print_test_acc and self.total_it%print_test_it==0:
         test_acc = self.test_accuracy()
