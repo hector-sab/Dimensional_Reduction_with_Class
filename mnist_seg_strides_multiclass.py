@@ -93,6 +93,10 @@ if __name__=='__main__':
   print('\tVal data: {0} - {1}'.format(val.images.shape,val.cls.shape))
   print('\tTest data: {0} - {1}'.format(test.images.shape,test.cls.shape))
 
+
+
+
+  
   model = SegModel(train=train,val=val,test=test,log=True,save=True)
 
   out = model.predict(im=[train.images[0]])
