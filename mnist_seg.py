@@ -53,11 +53,11 @@ parser.add_argument('-i','--iterations',help='Number of training it.',
 parser.add_argument('-s','--save',help='Saves checkpoints of the model',
       action='store_true',default=False)
 parser.add_argument('-l','--load',help='Load model from checkpoint',
-      action='store_true',default=False)
+      action='store_true')
 parser.add_argument('--step',help='Step to be loaded from checkpoint',
       type=int)
 parser.add_argument('--log',help='Saves a log of the training process',
-      action='store_true',default=True)
+      action='store_true')
 ######## ENDS: Other args
 
 
