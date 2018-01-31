@@ -262,7 +262,10 @@ def __weights(shape,pr=False,name='weights'):
   """
   shape: [ker_h,ker_w,im_chan,num_ker]
   """
-  w = tf.Variable(tf.truncated_normal(shape, stddev=0.05),name=name)
+  #w = tf.Variable(tf.truncated_normal(shape, stddev=0.05),name=name)
+  # https://arxiv.org/pdf/1502.01852.pdf
+  w = tf.Variable(tf.truncated_normal(shape, stddev=np.sqrt(2.0/(
+                  shape[0]*shape[1]*shape[2]))),name=name)
   if pr:
     print(w)
   return(w)
@@ -427,7 +430,7 @@ def deconv2(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
         tf.summary.histogram('activations',transpose_conv)
     if dropout:
       transpose_conv = tf.nn.dropout(transpose_conv,do_prob)
-      
+
     if histogram:
       tf.summary.histogram('weights',w)
       tf.summary.histogram('biases',b)
