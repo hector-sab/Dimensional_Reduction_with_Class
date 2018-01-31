@@ -557,7 +557,7 @@ def unpool_with_argmax(pooled,ind,input_shape, ksize=[1, 2, 2, 1],
   with tf.name_scope(name) as scope:
     # Get the the shape of the tensor in th form of a list
     #input_shape = pooled.get_shape().as_list()
-    print(input_shape)
+    #print(input_shape)
     # Determine the output shape
     output_shape = (input_shape[0], input_shape[1] * ksize[1], input_shape[2] * ksize[2], input_shape[3])
     # Ceshape into one giant tensor for better workability

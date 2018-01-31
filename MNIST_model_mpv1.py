@@ -232,7 +232,7 @@ class SegModel:
     c6_shape = [ks6,ks6,num_k5,num_k6]
     self.conv6 = ut.conv(inp=self.conv5,shape=c6_shape,name='conv6',
       dropout=self.dropout,do_prob=self.drop_prob)
-
+    print(self.conv6)
 
 
 
