@@ -98,7 +98,7 @@ if __name__=='__main__':
 
 
   model = SegModel(train=train,val=val,test=test,log=True,save=True,
-    lr=3e-9,dropout=True)
+    lr=3e-5,dropout=True)
 
   out = model.predict(im=[train.images[0]])
   #msg = np.array_str(out[0].reshape(28,28),max_line_width=100)
