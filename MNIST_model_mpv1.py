@@ -222,7 +222,7 @@ class SegModel:
       dropout=self.dropout,do_prob=self.drop_prob)
     c4_shape = [ks4,ks4,num_k3,num_k4]
     self.conv4 = ut.conv(inp=self.conv3,shape=c4_shape,
-      strides=[1,2,2,1],name='conv4',dropout=self.dropout,
+      name='conv4',dropout=self.dropout,
       do_prob=self.drop_prob)
     self.pool2,self.pool2_args = ut.pool_argmax(self.conv4)
 
