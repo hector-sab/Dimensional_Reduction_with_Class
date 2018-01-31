@@ -10,7 +10,8 @@ class SegModel:
   def __init__(self,train,val,test=None,num_class=10,ex=1,lr=3e-7,
     save=False,save_dir='checkpoints/',save_checkp='mnist_seg',
     load=False,load_dir='checkpoints',load_checkp='mnist_seg',
-    save_load_same=True,log=False,log_dir='./log/',log_name='mnist_seg'):
+    save_load_same=True,log=False,log_dir='./log/mnist_seg_v1/',
+    log_name='mnist_seg'):
     """
     -train: Triaining data using the class DataSeg
     -val: Validation data using the class DataSeg
@@ -162,6 +163,8 @@ class SegModel:
       self.restore_variables()
 
     if self.log:
+      if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
       self.writer = tf.summary.FileWriter(log_dir+log_name)
       writer.add_graph(self.session.graph)
 
