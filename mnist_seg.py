@@ -43,7 +43,7 @@ msg += '1 - Max pooling for dimensional reduction'
 parser.add_argument('-m','--model',help=msg,
       type=int,default=0,choices=[0,1])
 parser.add_argument('--do',help='Use DropOut if selected',
-      action='store_true',default=False)
+      action='store_true')
 parser.add_argument('--dop',help='DropOut probability',
       type=float,default=0.25)
 parser.add_argument('--lr',help='Define a different learning rate',
@@ -51,7 +51,7 @@ parser.add_argument('--lr',help='Define a different learning rate',
 parser.add_argument('-i','--iterations',help='Number of training it.',
       type=int,default=10000)
 parser.add_argument('-s','--save',help='Saves checkpoints of the model',
-      action='store_true',default=False)
+      action='store_true')
 parser.add_argument('-l','--load',help='Load model from checkpoint',
       action='store_true')
 parser.add_argument('--step',help='Step to be loaded from checkpoint',
