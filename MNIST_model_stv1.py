@@ -270,14 +270,16 @@ class SegModel:
         if self.best_val_acc<acc:
           self.best_val_acc = acc
           saved_str = '*'
+          
+          if self.save:
+            self.saver.save(sess=self.session,save_path=self.save_path,
+              global_step=self.total_it,max_to_keep=5000)
         else:
           saved_str = ''
           
         print('It: {0} - Acc: {1:.1%} {2}'.format(self.total_it,
           acc,saved_str))
 
-        if self.save:
-          self.saver.save(sess=self.session,save_path=self.save_path)
 
       if print_test_acc and self.total_it%print_test_it==0:
         test_acc = self.test_accuracy()
