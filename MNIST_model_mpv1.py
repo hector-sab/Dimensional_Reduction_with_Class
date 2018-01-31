@@ -233,9 +233,12 @@ class SegModel:
     self.conv6 = ut.conv(inp=self.conv5,shape=c6_shape,name='conv6',
       dropout=self.dropout,do_prob=self.drop_prob)
 
+
+
+
     d1_shape = [ks6,ks6,num_k5,num_k6]
-    self.deconv1 = ut.deconv2(inp=self.conv6,relu=True,
-      shape=d1_shape,dropout=self.dropout,
+    self.deconv1 = ut.deconv2(inp=self.conv6,shape=d1_shape,
+      relu=True,name='deconv1',dropout=self.dropout,
       do_prob=self.drop_prob)
     d2_shape = [ks5,ks5,num_k4,num_k5]
     self.deconv2 = ut.deconv2(inp=self.deconv1,shape=d2_shape,
