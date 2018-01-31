@@ -35,10 +35,14 @@ class DataSeg:
     data = (self.images[init:end]!=0)*1
     return(data)
 
-  def next_batch(self,bs,seg_fb=False):
+  def restart_next_batch(self):
+    self.bt_init = 0
+    
+  def next_batch(self,bs,seg_fb=False,res_count=False):
     """
     seg_fb: Foreground/Background only segmentation if True
             if False, it will segment by classes
+    res_count: It will restar the count of the batch feed
     """
     end_batch = self.bt_init + bs
     new_ep = False
@@ -272,7 +276,7 @@ def __biases(shape,pr=False,name='biases'):
     print(b)
   return(b)
 
-def __conv(inp,shape,strides=[1,1,1,1],padding='SAME',
+def conv(inp,shape,strides=[1,1,1,1],padding='SAME',
            relu=True,dropout=False,do_prob=0.5,pool=False,name='conv',
            pr=False):
   with tf.name_scope(name) as scope:
@@ -319,7 +323,7 @@ def __flatten(layer):
 
   return(layer_flat)
 
-def __fc(inp,shape,relu=True,logits=False,dropout=False,do_prob=0.5,
+def fc(inp,shape,relu=True,logits=False,dropout=False,do_prob=0.5,
   pr=False,name='fc'):
   """
   inp: input
@@ -341,7 +345,7 @@ def __fc(inp,shape,relu=True,logits=False,dropout=False,do_prob=0.5,
 
     return(fc)
 
-def __deconv(inp,out_like,shape,strides=[1,1,1,1],
+def deconv(inp,out_like,shape,strides=[1,1,1,1],
   padding='SAME',relu=True,pr=False,name='deconv'):
   """
   inp: input tensor
@@ -373,7 +377,7 @@ def __deconv(inp,out_like,shape,strides=[1,1,1,1],
     
     return(transpose_conv)
 
-def __deconv2(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
+def deconv2(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
   pr=False,name='deconv'):
   """
   """
@@ -402,7 +406,7 @@ def __deconv2(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
     return(transpose_conv)
 
 
-def __pool_argmax(x):
+def pool_argmax(x):
   out = tf.nn.max_pool_with_argmax(x, ksize=[1,2,2,1], strides=[1,2,2,1],
                                    padding='SAME')
   return(out)
@@ -415,7 +419,7 @@ def unravel_argmax(argmax, shape):
   output_list.append(argmax % (shape[2] * shape[3]) // shape[3])
   return(tf.stack(output_list))
 
-def __unpool_layer2x2(x, raveled_argmax, out_shape,pr=False,name='unpool'):
+def unpool_layer2x2(x, raveled_argmax, out_shape,pr=False,name='unpool'):
   with tf.name_scope(name) as scope:
     argmax = unravel_argmax(raveled_argmax, tf.to_int64(out_shape))
     output = tf.zeros([out_shape[1], out_shape[2], out_shape[3]])
