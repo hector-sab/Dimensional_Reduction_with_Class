@@ -42,6 +42,10 @@ parser.add_argument('--lr',help='Define a different learning rate',
       type=float,default=3e-7)
 parser.add_argument('-i','--iterations',help='Number of training it.',
       type=int,default=10000)
+parser.add_argument('-s','--save',help='Saves checkpoints of the model',
+      action='store_true',default=False)
+parser.add_argument('--log',help='Saves a log of the training process',
+      action='store_true',default=True)
 ######## ENDS: Other args
 args = parser.parse_args()
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
@@ -112,8 +116,8 @@ if __name__=='__main__':
 
 
 
-  model = SegModel(train=train,val=val,test=test,log=True,save=True,
-      lr=args.lr,dropout=args.do,do_prob=args.dop)
+  model = SegModel(train=train,val=val,test=test,log=args.log,
+    save=args.save,lr=args.lr,dropout=args.do,do_prob=args.dop)
   
   model.optimize(num_it=args.iterations,print_test_acc=True,
     print_test_it=999,log_it=200)
