@@ -101,23 +101,23 @@ if __name__=='__main__':
     lr=3e-9)
 
   out = model.predict(im=[train.images[0]])
-  msg = np.array_str(out[0].reshape(28,28),max_line_width=100)
-  print('\n{0}\n'.format(msg))
+  #msg = np.array_str(out[0].reshape(28,28),max_line_width=100)
+  #print('\n{0}\n'.format(msg))
 
   model.optimize(num_it=1000,print_test_acc=True,print_test_it=999)
 
   out = model.predict(im=[train.images[0]])
-  msg = np.array_str(out[0].reshape(28,28),max_line_width=100)
-  print('\n{0}\n'.format(msg))
+  #msg = np.array_str(out[0].reshape(28,28),max_line_width=100)
+  #print('\n{0}\n'.format(msg))
 
   model.optimize(num_it=10000,print_test_acc=True,print_test_it=5000)
 
   out = model.predict(im=[train.images[0]])
-  msg = np.array_str(out[0].reshape(28,28),max_line_width=100)
-  print('\n{0}\n'.format(msg))
+  #msg = np.array_str(out[0].reshape(28,28),max_line_width=100)
+  #print('\n{0}\n'.format(msg))
 
   model.optimize(num_it=100000,print_test_acc=True,print_test_it=5000)
 
   out = model.predict(im=[train.images[0]])
-  msg = np.array_str(out[0].reshape(28,28),max_line_width=100)
-  print('\n{0}\n'.format(msg))
+  #msg = np.array_str(out[0].reshape(28,28),max_line_width=100)
+  #print('\n{0}\n'.format(msg))
