@@ -37,7 +37,7 @@ class DataSeg:
 
   def restart_next_batch(self):
     self.bt_init = 0
-    
+
   def next_batch(self,bs,seg_fb=False,res_count=False):
     """
     seg_fb: Foreground/Background only segmentation if True
@@ -278,12 +278,23 @@ def __biases(shape,pr=False,name='biases'):
 
 def conv(inp,shape,strides=[1,1,1,1],padding='SAME',
            relu=True,dropout=False,do_prob=0.5,pool=False,name='conv',
-           pr=False):
+           pr=False,histogram=True):
+  """
+  Tensorflow 2d convolution.
+  
+  inp: 4-D input tensor of shape [num,im_h,im_w,im_c]
+  shape: Shape of the kernels. [ker_h,ker_w,inp_ch,num_k]
+  strides: Strides of the convolution
+  padding: 'SAME' - Adds zero-padding so the resulting convolution
+                    is of the same size as the input
+           'VALID' - No zero-padding, so it olny performs as many 
+                     convolutions as it's possible, resulting in 
+                     a different size.
+  relu: Turn on relu as activation function. Else, it will not use any
+  dropout: Turn on dropout
+  do_prob: Select the percentage of the net to be turn off. [0.0 - 1.0]
+  """
   with tf.name_scope(name) as scope:
-    """
-    inp: input
-    shape: [ker_h,ker_w,inp_chan,num_ker]
-    """
     w = __weights(shape,pr=pr)
     b = __biases([shape[3]],pr=pr)
 
@@ -296,18 +307,21 @@ def conv(inp,shape,strides=[1,1,1,1],padding='SAME',
     conv += b
 
     if pool:
-        conv = tf.nn.max_pool(value=conv,
-                             ksize=[1,2,2,1],
-                             strides=[1,2,2,1],
-                             padding='SAME')
+      conv = tf.nn.max_pool(value=conv,
+                           ksize=[1,2,2,1],
+                           strides=[1,2,2,1],
+                           padding='SAME')
     if relu:
-        conv = tf.nn.relu(conv)
-    if dropout:
-        conv = tf.nn.dropout(conv,do_prob)
-
-        tf.summary.histogram('weights',w)
-        tf.summary.histogram('biases',b)
+      conv = tf.nn.relu(conv)
+      if histogram: 
         tf.summary.histogram('activations',conv)
+    
+    if dropout:
+      conv = tf.nn.dropout(conv,do_prob)
+
+    if histogram:
+      tf.summary.histogram('weights',w)
+      tf.summary.histogram('biases',b)
 
     return(conv)
 
@@ -324,7 +338,7 @@ def __flatten(layer):
   return(layer_flat)
 
 def fc(inp,shape,relu=True,logits=False,dropout=False,do_prob=0.5,
-  pr=False,name='fc'):
+  pr=False,name='fc',histogram=True):
   """
   inp: input
   shape: [num_dim_in,num_class_out]
@@ -337,16 +351,23 @@ def fc(inp,shape,relu=True,logits=False,dropout=False,do_prob=0.5,
     fc += b
 
     if relu:
-        fc = tf.nn.relu(fc)
+      fc = tf.nn.relu(fc)
+      if histogram: 
+        tf.summary.histogram('activations',conv)
     elif logits!=True:
       fc = tf.nn.softmax(fc)
     if dropout:
-        fc = tf.nn.dropout(fc,do_prob)
+      fc = tf.nn.dropout(fc,do_prob)
+
+    if histogram:
+      tf.summary.histogram('weights',w)
+      tf.summary.histogram('biases',b)
 
     return(fc)
 
 def deconv(inp,out_like,shape,strides=[1,1,1,1],
-  padding='SAME',relu=True,pr=False,name='deconv'):
+  padding='SAME',relu=True,pr=False,name='deconv',dropout=False,
+  do_prob=0.5,histogram=True):
   """
   inp: input tensor
   out_like: output-like shape tensor. What are the output tensor
@@ -370,15 +391,19 @@ def deconv(inp,out_like,shape,strides=[1,1,1,1],
     #print(transpose_conv.get_shape())
     if relu:
       transpose_conv = tf.nn.relu(transpose_conv)
+      if histogram:
+        tf.summary.histogram('activations',transpose_conv)
+    if dropout:
+      transpose_conv = tf.nn.dropout(transpose_conv,do_prob)
 
-    tf.summary.histogram('weights',w)
-    tf.summary.histogram('biases',b)
-    tf.summary.histogram('activations',transpose_conv)
+    if histogram:
+      tf.summary.histogram('weights',w)
+      tf.summary.histogram('biases',b)
     
     return(transpose_conv)
 
 def deconv2(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
-  pr=False,name='deconv'):
+  pr=False,name='deconv',dropout=False,do_prob=0.5,histogram=True):
   """
   """
   with tf.name_scope(name) as scope:
@@ -398,10 +423,14 @@ def deconv2(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
 
     if relu:
       transpose_conv = tf.nn.relu(transpose_conv)
-
-    tf.summary.histogram('weights',w)
-    tf.summary.histogram('biases',b)
-    tf.summary.histogram('activations',transpose_conv)
+      if histogram:
+        tf.summary.histogram('activations',transpose_conv)
+    if dropout:
+      transpose_conv = tf.nn.dropout(transpose_conv,do_prob)
+      
+    if histogram:
+      tf.summary.histogram('weights',w)
+      tf.summary.histogram('biases',b)
 
     return(transpose_conv)
 

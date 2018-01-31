@@ -12,7 +12,7 @@ class SegModel:
     save=False,save_dir='checkpoints/mnist_seg/',save_checkp='mnist_seg',
     load=False,load_dir='checkpoints',load_checkp='mnist_seg',
     save_load_same=True,load_step=None,log=False,log_dir='./log/mnist_seg_v1/',
-    log_name='mnist_seg'):
+    log_name='mnist_seg',dropout=False,do_prob=0.25):
     """
     -train: Triaining data using the class DataSeg
     -val: Validation data using the class DataSeg
@@ -55,6 +55,9 @@ class SegModel:
     self.log = log
     print('log',self.log)
 
+    self.dropout = dropout
+    self.do_prob = do_prob
+
     self.total_it = 0
     self.best_val_acc = 0
     val_data  = self.val.next_batch(self.bs,seg_fb=False)
@@ -66,6 +69,7 @@ class SegModel:
     print(msg)
 
     with tf.name_scope('Input'):
+      self.drop_prob = tf.placeholder_with_default(0.0,shape=[])
       # Normal image
       self.x = tf.placeholder(tf.float32,\
         shape=[self.ex,self.im_h,self.im_w,self.im_c], name='x')
@@ -205,32 +209,43 @@ class SegModel:
 
     # Core model
     c1_shape = [ks1,ks1,self.im_c,num_k1]
-    self.conv1 = ut.conv(inp=self.x,shape=c1_shape,name='conv1')
+    self.conv1 = ut.conv(inp=self.x,shape=c1_shape,name='conv1',
+      dropout=self.dropout,do_prob=self.drop_prob)
     c2_shape = [ks2,ks2,num_k1,num_k2]
     self.conv2 = ut.conv(inp=self.conv1,shape=c2_shape,
-      strides=[1,2,2,1],name='conv2')
+      strides=[1,2,2,1],name='conv2',dropout=self.dropout,
+      do_prob=self.drop_prob)
     c3_shape = [ks3,ks3,num_k2,num_k3]
-    self.conv3 = ut.conv(inp=self.conv2,shape=c3_shape,name='conv3')
+    self.conv3 = ut.conv(inp=self.conv2,shape=c3_shape,name='conv3',
+      dropout=self.dropout,do_prob=self.drop_prob)
     c4_shape = [ks4,ks4,num_k3,num_k4]
     self.conv4 = ut.conv(inp=self.conv3,shape=c4_shape,
-      strides=[1,2,2,1],name='conv4')
+      strides=[1,2,2,1],name='conv4',dropout=self.dropout,
+      do_prob=self.drop_prob)
     c5_shape = [ks5,ks5,num_k4,num_k5]
-    self.conv5 = ut.conv(inp=self.conv4,shape=c5_shape,name='conv5')
+    self.conv5 = ut.conv(inp=self.conv4,shape=c5_shape,name='conv5',
+      dropout=self.dropout,do_prob=self.drop_prob)
     c6_shape = [ks6,ks6,num_k5,num_k6]
-    self.conv6 = ut.conv(inp=self.conv5,shape=c6_shape,name='conv6')
+    self.conv6 = ut.conv(inp=self.conv5,shape=c6_shape,name='conv6',
+      dropout=self.dropout,do_prob=self.drop_prob)
 
     self.deconv1 = ut.deconv(inp=self.conv6,out_like=self.conv5,
-      relu=True,shape=c6_shape)
+      relu=True,shape=c6_shape,dropout=self.dropout,
+      do_prob=self.drop_prob)
     self.deconv2 = ut.deconv(inp=self.deconv1,out_like=self.conv4,
-      shape=c5_shape,relu=True,name='deconv2')
+      shape=c5_shape,relu=True,name='deconv2',dropout=self.dropout,
+      do_prob=self.drop_prob)
     self.sum1 = self.deconv2 + self.conv4
     self.deconv3 = ut.deconv(inp=self.sum1,out_like=self.conv3,
-      shape=c4_shape,strides=[1,2,2,1],relu=True,name='deconv3')
+      shape=c4_shape,strides=[1,2,2,1],relu=True,name='deconv3',dropout=self.dropout,
+      do_prob=self.drop_prob)
     self.deconv4 = ut.deconv(inp=self.deconv3,out_like=self.conv2,
-      shape=c3_shape,relu=True,name='deconv4')
+      shape=c3_shape,relu=True,name='deconv4',dropout=self.dropout,
+      do_prob=self.drop_prob)
     self.sum2 = self.deconv4 + self.conv2
     self.deconv5 = ut.deconv(inp=self.sum2,out_like=self.conv1,
-      shape=c2_shape,strides=[1,2,2,1],relu=True,name='deconv5')
+      shape=c2_shape,strides=[1,2,2,1],relu=True,name='deconv5',dropout=self.dropout,
+      do_prob=self.drop_prob)
 
     __d6_shape = [ks1,ks1,self.num_seg_class,num_k1]
     __outlike6 = tf.placeholder(tf.float32,
@@ -264,7 +279,11 @@ class SegModel:
       self.total_it += 1
       data = self.train.next_batch(self.bs)
 
-      feed_dict = {self.x:data['ims'],self.y_seg:data['seg']}
+      if self.dropout:
+        feed_dict = {self.x:data['ims'],self.y_seg:data['seg'],
+                     self.drop_prob:self.do_prob}
+      else:
+        feed_dict = {self.x:data['ims'],self.y_seg:data['seg']}
 
       pred_seg,_ = self.session.run([self.y_pred_cls,self.optimizer],
                    feed_dict=feed_dict)
