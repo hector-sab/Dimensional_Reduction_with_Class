@@ -119,7 +119,7 @@ class SegModel:
     verb: Display training process each 'verb' iterations
     tb_log_it: Saves summary each 'tb_log_it' if log is True
     """
-    for it in range(num_it);
+    for it in range(num_it):
       self.total_it += 1
 
       data = self.train.next_batch(self.bs)

@@ -53,7 +53,7 @@ parser.add_argument('--dop',help='DropOut probability',
 parser.add_argument('--lr',help='Define a different learning rate',
       type=float,default=3e-7)
 parser.add_argument('-i','--iterations',help='Number of training it.',
-      type=int,default=10000)
+      type=int,default=1000)
 parser.add_argument('-s','--save',help='Saves checkpoints of the model',
       action='store_true')
 parser.add_argument('-l','--load',help='Load model from checkpoint',
