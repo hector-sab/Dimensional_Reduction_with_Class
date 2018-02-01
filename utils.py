@@ -381,7 +381,7 @@ def conv2(inp,shape,padding='SAME',strides=[1,1,1,1],relu=True,
                         strides=strides,
                         padding=padding,
                         name=name)
-    out += b
+    out = conv + b
 
     if dropout:
       out = tf.nn.dropout(out,do_prob)
