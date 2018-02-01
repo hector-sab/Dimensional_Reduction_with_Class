@@ -697,7 +697,7 @@ def unpool_with_argmax(pooled,ind,input_shape, ksize=[1, 2, 2, 1],
     print(ind_)
     print(pooled_)
     print(ref)
-    #ref = tf.Variable(tmp_zeros)
+    ref = tf.Variable(ref)
     # Update the sparse matrix with the pooled values , it is a batch wise operation
     unpooled_ = tf.scatter_nd_update(ref, ind_, pooled_)
     # Reshape the vector to get the final result 
