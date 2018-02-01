@@ -351,9 +351,9 @@ class ModelMPv1:
     self.drop_prob = drop_prob
     self.x = inp
     # shape vs get_shape https://stackoverflow.com/a/43290897/5969548
-    self.im_h = tf.shape(self.x)[1]
-    self.im_w = tf.shape(self.x)[2]
-    self.im_c = tf.shape(self.x)[3]
+    self.im_h = self.x.get_shape()[1]
+    self.im_w = self.x.get_shape()[2]
+    self.im_c = self.x.get_shape()[3]
 
     ##### Network Specs
     ks1 = 3
