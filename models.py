@@ -144,7 +144,7 @@ class SegModel:
       self.session.run(self.optimizer,feed_dict=feed_dict)
 
       if verb is not None and self.total_it%verb==0:
-        acc = self.full_acc(self.val,self.bs)
+        acc = self.full_acc(self.val,bs=self.bs)
 
         if self.best_acc<acc:
           self.best_val_acc = acc
@@ -192,6 +192,7 @@ class SegModel:
     data: DataSet used to calculate full accuracy. It cann be
           train, val, or test
     """
+    print('HERERERERE {0}'.format(bs))
     dataset.restart_next_batch()
     num_ex = dataset.images.shape[0]
     total_acc = 0
