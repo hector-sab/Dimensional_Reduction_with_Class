@@ -680,7 +680,7 @@ def unpool_with_argmax(pooled,ind,input_shape, ksize=[1, 2, 2, 1],
     
     tmp_out1 = tf.placeholder(tf.int64,shape=[output_shape[0]])
     tmp_range = tf.range(tf.shape(tmp_out1,out_type=tf.int64)[0],dtype=ind.dtype)
-    batch_range = tf.reshape(tmp_range, shape=[input_shape[0], 1, 1, 1])
+    batch_range = tf.reshape(tmp_range, shape=[-1, 1, 1, 1])
     
 
 
