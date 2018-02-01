@@ -686,7 +686,7 @@ def unpool_with_argmax(pooled,ind,input_shape, ksize=[1, 2, 2, 1],
 
 
     b = tf.ones_like(ind) * batch_range
-    b_ = tf.reshape(b, [input_shape[0] * input_shape[1] * input_shape[2] * input_shape[3], 1])
+    b_ = tf.reshape(b, [-1, 1])
     ind_ = tf.reshape(ind, [-1, 1])
     ind_ = tf.concat([b_, ind_],1)
     
