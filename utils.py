@@ -663,7 +663,7 @@ def unpool_with_argmax(pooled,ind,input_shape, ksize=[1, 2, 2, 1],
         2. Due to point 1, use broadcasting to appropriately place the values at their right locations ! 
   """
   print('Pooled {}'.format(pooled))
-  print('Indices {}'.format(indices))
+  print('Indices {}'.format(ind))
   with tf.name_scope(name) as scope:
     # Get the the shape of the tensor in th form of a list
     #input_shape = pooled.get_shape().as_list()
