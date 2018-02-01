@@ -476,9 +476,9 @@ class ModelMPv1:
     if path is None and name is None:
       path = def_path
       name = def_name
-    elif save_dir is None and name is not None:
+    elif path is None and name is not None:
       path = def_path
-    elif save_dir is not None and name_fold is None:
+    elif path is not None and name_fold is None:
       name = def_name
 
     return(path,name)
@@ -493,9 +493,9 @@ class ModelMPv1:
     if path is None and name is None:
       path = def_path
       name = def_name
-    elif save_dir is None and name is not None:
+    elif path is None and name is not None:
       path = def_path
-    elif save_dir is not None and name_fold is None:
+    elif path is not None and name_fold is None:
       name = def_name
 
     return(path,name)
@@ -622,9 +622,9 @@ class ModelStv1:
     if path is None and name is None:
       path = def_path
       name = def_name
-    elif save_dir is None and name is not None:
+    elif path is None and name is not None:
       path = def_path
-    elif save_dir is not None and name_fold is None:
+    elif path is not None and name_fold is None:
       name = def_name
 
     return(path,name)
@@ -639,9 +639,9 @@ class ModelStv1:
     if path is None and name is None:
       path = def_path
       name = def_name
-    elif save_dir is None and name is not None:
+    elif path is None and name is not None:
       path = def_path
-    elif save_dir is not None and name_fold is None:
+    elif path is not None and name_fold is None:
       name = def_name
 
     return(path,name)
