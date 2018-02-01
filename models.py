@@ -19,10 +19,9 @@ class SegModel:
   # TODO: Check if visualization nodes can be reused to create just one
   def __init__(self,train,val,test=None,num_class=11,ex=None,model=0,
     bs=1,lr=3e-5,dropout=False,drop_prob=0.25,training=True,save=False,
-    save_dir='checkpoints/mnist_seg_mpv1/',save_checkp='mnist_seg',
-    max_to_keep=1,load=False,load_dir='checkpoints/mnist_seg_mpv1/',
-    load_checkp='mnist_seg',save_load_same=True,load_step=None,
-    tb_log=False,log_dir='./log/mnist_seg_v1/',log_name='mnist_seg'):
+    save_dir=None,save_checkp=None,max_to_keep=1,load=False,load_dir=None,
+    load_checkp=None,save_load_same=True,load_step=None,tb_log=False,
+    log_dir='./log/',log_name='mnist_seg'):
     """
     -train: Triaining data using the class DataSeg
     -val: Validation data using the class DataSeg
@@ -92,6 +91,11 @@ class SegModel:
       print("There's no model with that option choice...")
       sys.exit()
 
+    # Specify where to save the model and the tb log
+    save_dir,save_checkp = self.model.checkpoint_dir(save_dir,save_checkp)
+    load_dir,load_checkp = self.model.checkoint_dir(load_dir,load_checkp)
+    log_dir,log_name = self.model.log_dir(log_dir,log_name)
+
     self.last_layer = self.model.last_layer()
 
     # Create output placeholders
@@ -108,9 +112,9 @@ class SegModel:
     self.init_variables()
 
     if self.save:
-      self.savable(save_dir)
+      self.savable(save_dir,save_checkp)
     if self.load:
-      self.loadable(load_dir,save_load_same)
+      self.loadable(load_dir,load_checkp,save_load_same)
 
     if self.tb_log:
       self.tensorboard_log(log_dir,log_name)
@@ -172,10 +176,6 @@ class SegModel:
         s = self.session.run(self.summary,feed_dict=tmp_feed)
         self.writer.add_summary(s,self.total_it)
 
-
-
-
-
   def test_acc(self,bs=1):
     """
     Description: Returns the accuracy on test set
@@ -216,7 +216,7 @@ class SegModel:
     print(msg)
     self.writer.add_graph(self.session.graph)
 
-  def savable(self,save_dir):
+  def savable(self,save_dir,save_checkp):
     """
     Save path to be saved
     """
@@ -224,7 +224,7 @@ class SegModel:
       os.makedirs(save_dir)
     self.save_path = os.path.join(save_dir,save_checkp)
 
-  def loadable(self,load_dir,save_load_same):
+  def loadable(self,load_dir,load_checkp,save_load_same):
     """
     Load path to be saved
     """
@@ -466,6 +466,42 @@ class ModelMPv1:
     """
     return(self.pre_logits)
 
+  def checkpoint_dir(self,path,name):
+    """
+    Indicates where to save/load the model
+    """
+    def_name = 'mnist_seg'
+    def_path = 'checkpoints/mnist_seg_mpv1/'
+
+    if path is None and name is None:
+      path = def_path
+      name = def_name
+    elif save_dir is None and name is not None:
+      path = def_path
+    elif save_dir is not None and name_fold is None:
+      name = def_name
+
+    return(path,name_fold)
+
+  def log_dir(self,path,name):
+    """
+    Indicates where to save log used for tensorboard
+    """
+    def_name = 'mnist_seg_mpv1'
+    def_path = './log/'
+
+    if path is None and name is None:
+      path = def_path
+      name = def_name
+    elif save_dir is None and name is not None:
+      path = def_path
+    elif save_dir is not None and name_fold is None:
+      name = def_name
+
+    return(path,name_fold)
+
+
+
 class ModelStv1:
   """
   Contains the model of the segmentation using strides of two,
@@ -575,3 +611,37 @@ class ModelStv1:
     Returns the last layer of the model
     """
     return(self.pre_logits)
+
+  def checkpoint_dir(self,path,name):
+    """
+    Indicates where to save/load the model
+    """
+    def_name = 'mnist_seg'
+    def_path = 'checkpoints/mnist_seg_stv1/'
+
+    if path is None and name is None:
+      path = def_path
+      name = def_name
+    elif save_dir is None and name is not None:
+      path = def_path
+    elif save_dir is not None and name_fold is None:
+      name = def_name
+
+    return(path,name_fold)
+
+  def log_dir(self,path,name):
+    """
+    Indicates where to save log used for tensorboard
+    """
+    def_name = 'mnist_seg_mpv1'
+    def_path = './log/'
+
+    if path is None and name is None:
+      path = def_path
+      name = def_name
+    elif save_dir is None and name is not None:
+      path = def_path
+    elif save_dir is not None and name_fold is None:
+      name = def_name
+
+    return(path,name_fold)
