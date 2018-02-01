@@ -21,7 +21,7 @@ class SegModel:
     bs=1,lr=3e-5,dropout=False,drop_prob=0.25,training=True,save=False,
     save_dir=None,save_checkp=None,max_to_keep=1,load=False,load_dir=None,
     load_checkp=None,save_load_same=True,load_step=None,tb_log=False,
-    log_dir='./log/',log_name='mnist_seg'):
+    log_dir=None,log_name=None):
     """
     -train: Triaining data using the class DataSeg
     -val: Validation data using the class DataSeg
