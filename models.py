@@ -3,10 +3,12 @@ Author: Héctor Sánchez
 Date: January-31-2018
 Description: Contains the different models for MNIST segmentation
 """
+import os
 import sys
+# Hidde debug infro from tf... https://stackoverflow.com/a/38645250/5969548
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+import tensorflow as tf
 import utils as ut
-with ut.HiddenPrints():
-  import tensorflow as tf
 
 
 class SegModel:

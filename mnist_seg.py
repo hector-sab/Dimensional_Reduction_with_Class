@@ -22,6 +22,8 @@ parser = argparse.ArgumentParser(desc_msg)
 ### START: Select the device where the operations will be executed
 
 # All posible choices for device selection
+# Hidde debug infro from tf... https://stackoverflow.com/a/38645250/5969548
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 from tensorflow.python.client import device_lib
 
 with ut.HiddenPrints():

@@ -1,6 +1,8 @@
 import os
 import sys
 import numpy as np
+# Hidde debug infro from tf... https://stackoverflow.com/a/38645250/5969548
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
