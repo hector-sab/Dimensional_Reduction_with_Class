@@ -128,6 +128,7 @@ class SegModel:
     verb: Display training process each 'verb' iterations
     tb_log_it: Saves summary each 'tb_log_it' if log is True
     """
+    print('\nStarting optimization...\n')
     for it in range(num_it):
       self.total_it += 1
 
@@ -143,7 +144,7 @@ class SegModel:
       self.session.run(self.optimizer,feed_dict=feed_dict)
 
       if verb is not None and self.total_it%verb==0:
-        acc = self.full_acc(self.val,1)
+        acc = self.full_acc(self.val,self.bs)
 
         if self.best_acc<acc:
           self.best_val_acc = acc
