@@ -136,7 +136,6 @@ if __name__=='__main__':
   print('\tVal data: {0} - {1}'.format(val.images.shape,val.cls.shape))
   print('\tTest data: {0} - {1}'.format(test.images.shape,test.cls.shape))
 
-  print('----->>>>>>here',args.ex)
 
   model = models.SegModel(train=train,val=val,test=test,model=args.model,
                 bs=args.bs,save=args.save,load=args.load,load_step=args.step,
