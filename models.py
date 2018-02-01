@@ -164,7 +164,7 @@ class SegModel:
         In case verbose is disabled, to ensure checkpoints are saved
         """
         if self.total_it%100==0:
-          acc = self.full_acc(self.val,1)
+          acc = self.full_acc(self.val,self.bs)
           if self.best_acc<acc:
             self.best_val_acc = acc
             self.saver.save(sess=self.session,save_path=self.save_path,
@@ -184,7 +184,7 @@ class SegModel:
     acc = self.full_acc(self.test,bs)
     return(acc)
 
-  def full_acc(self,dataset,bs):
+  def full_acc(self,dataset,bs=1):
     """
     Description: Returns the validation accuracy when batch size
             is equal to bs (one...).
@@ -196,7 +196,7 @@ class SegModel:
     num_ex = dataset.images.shape[0]
     total_acc = 0
     
-    for it in range(num_ex):
+    for it in range(int(num_ex/bs)):
       data = dataset.next_batch(bs)
       feed_dict = {self.x: data['ims'],
                    self.y_seg: data['seg']}
