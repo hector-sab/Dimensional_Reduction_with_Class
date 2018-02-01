@@ -4,8 +4,9 @@ Date: January-31-2018
 Description: Contains the different models for MNIST segmentation
 """
 import sys
-import tensorflow as tf
 import utils as ut
+with ut.HiddenPrints():
+  import tensorflow as tf
 
 
 class SegModel:
