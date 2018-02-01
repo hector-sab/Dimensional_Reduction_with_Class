@@ -113,7 +113,7 @@ class SegModel:
       self.tensorboard_log(log_dir,log_name)
 
 
-  def train2(self,num_it=0,verb=None,tb_log_it=100):
+  def optimize(self,num_it=0,verb=None,tb_log_it=100):
     """
     Description: Trains the model
 
@@ -180,7 +180,7 @@ class SegModel:
     acc = self.full_acc(self.test,bs)
     return(acc)
 
-  def full_acc(self,data,bs):
+  def full_acc(self,dataset,bs):
     """
     Description: Returns the validation accuracy when batch size
             is equal to bs (one...).
