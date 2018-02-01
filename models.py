@@ -302,7 +302,7 @@ class SegModel:
     with tf.name_scope('Input'):
       self.drop_prob = tf.placeholder_with_default(0.0,shape=[],
         name='drop_prob')
-      self.x = tf.placeholder(tf.float32\
+      self.x = tf.placeholder(tf.float32,\
         shape=[self.ex,self.im_h,self.im_w,self.im_c],name='x')
       tf.summary.image('input',self.x,1)
 
