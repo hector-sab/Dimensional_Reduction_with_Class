@@ -14,6 +14,8 @@ InvalidArgumentError (see above for traceback): Nan in summary histogram for: co
 
 import os
 import argparse
+import utils as ut
+
 desc_msg = 'MNIST segmentation using tensorflow and some sort of LeNet-5'
 parser = argparse.ArgumentParser(desc_msg)
 
@@ -21,7 +23,9 @@ parser = argparse.ArgumentParser(desc_msg)
 
 # All posible choices for device selection
 from tensorflow.python.client import device_lib
-all_devices = device_lib.list_local_devices()
+
+with ut.HiddenPrints():
+  all_devices = device_lib.list_local_devices()
 
 choices = []
 for i in range(len(all_devices)):
@@ -29,9 +33,9 @@ for i in range(len(all_devices)):
 
 device_default = choices[-1]
 
-device_msg = 'Select which device tf should use for the ops.'\
-			       +' 0: CPU, 1>=GPU (if available).'
-parser.add_argument('-d','--device',help=device_msg,type=int,
+msg = 'Select which device tf should use for the ops.'\
+			+' 0: CPU, 1>=GPU (if available).'
+parser.add_argument('-d','--device',help=msg,type=int,
                     choices=choices,default=device_default)
 
 
@@ -56,7 +60,7 @@ parser.add_argument('-l','--load',help='Load model from checkpoint',
       action='store_true')
 parser.add_argument('--step',help='Step to be loaded from checkpoint',
       type=int)
-parser.add_argument('--log',help='Saves a log of the training process',
+parser.add_argument('--tb_log',help='Saves a log of the training process',
       action='store_true')
 ######## ENDS: Other args
 
@@ -79,9 +83,7 @@ import tensorflow as tf
 import numpy as np
 
 from MNIST import load_mnist
-from MNIST_model_stv1 import SegModel as SegModel_stv1
-from MNIST_model_mpv1 import SegModel as SegModel_mpv1
-from utils import DataSeg
+import models
 
 if __name__=='__main__':
 	# Load MNIST data
@@ -112,9 +114,9 @@ if __name__=='__main__':
   train_ims = train_ims[:ind]
   train_cls = train_cls[:ind]
 
-  train = DataSeg(ims=train_ims,cls=train_cls)
-  val = DataSeg(ims=val_ims,cls=val_cls)
-  test = DataSeg(ims=test_ims,cls=test_cls)
+  train = ut.DataSeg(ims=train_ims,cls=train_cls)
+  val = ut.DataSeg(ims=val_ims,cls=val_cls)
+  test = ut.DataSeg(ims=test_ims,cls=test_cls)
 
   # Frees memory
   train_ims = None
@@ -128,42 +130,11 @@ if __name__=='__main__':
   print('\tVal data: {0} - {1}'.format(val.images.shape,val.cls.shape))
   print('\tTest data: {0} - {1}'.format(test.images.shape,test.cls.shape))
 
-
-
-
-  if args.model==0:
-    model = SegModel_stv1(train=train,val=val,test=test,log=args.log,
-      save=args.save,lr=args.lr,dropout=args.do,do_prob=args.dop,
-      load=args.load,load_step=args.step)
-  elif args.model==1:
-    model = SegModel_mpv1(train=train,val=val,test=test,log=args.log,
-      save=args.save,lr=args.lr,dropout=args.do,do_prob=args.dop,
-      load=args.load,load_step=args.step)
-
-  model.optimize(num_it=args.iterations,print_test_acc=True,
-    print_test_it=999,log_it=200)
   
-  """
-  print('---------HERE 1')
-  out = model.predict(im=[train.images[0]])
-  #msg = np.array_str(out[0].reshape(28,28),max_line_width=100)
-  #print('\n{0}\n'.format(msg))
-  print('---------HERE 2')
-  model.optimize(num_it=1000,print_test_acc=True,print_test_it=999,log_it=200)
-  print('---------HERE 3')
-  out = model.predict(im=[train.images[0]])
-  #msg = np.array_str(out[0].reshape(28,28),max_line_width=100)
-  #print('\n{0}\n'.format(msg))
-
-  model.optimize(num_it=10000,print_test_acc=True,print_test_it=5000)
-
-  out = model.predict(im=[train.images[0]])
-  #msg = np.array_str(out[0].reshape(28,28),max_line_width=100)
-  #print('\n{0}\n'.format(msg))
-
-  model.optimize(num_it=10000,print_test_acc=True,print_test_it=5000)
-
-  out = model.predict(im=[train.images[0]])
-  #msg = np.array_str(out[0].reshape(28,28),max_line_width=100)
-  #print('\n{0}\n'.format(msg))
-  """
+  model = models.SegModel(train=train,val=val,test=test,model=args.model,
+                save=args.save,load=args.load,load_step=args.step,
+                lr=args.lr,dropout=args.do,drop_prob=args.dop,
+                tb_log=args.tb_log)
+  
+  model.train(num_it=args.iterations,verb=100)
+    

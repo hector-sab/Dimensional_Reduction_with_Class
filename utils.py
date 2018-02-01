@@ -1,3 +1,5 @@
+import os
+import sys
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -121,6 +123,25 @@ class Data:
     out = {'ims': ims,'cls':cls, 'lbs': lbs, 'new_ep': new_ep, 'num_batches': num_bt}
     
     return(out)
+
+class HiddenPrints:
+  """
+  Description: Hides all print functions from a function
+  
+  Taken from:
+  https://stackoverflow.com/a/45669280/5969548
+
+  How to use it...
+
+  with HiddenPrints():
+    print("This will not be printed") # This won't print
+  """
+  def __enter__(self):
+    self._original_stdout = sys.stdout
+    sys.stdout = open(os.devnull, 'w')
+
+  def __exit__(self, exc_type, exc_val, exc_tb):
+    sys.stdout = self._original_stdout
 
 def plot_ims(ims,cls_true=None,cls_pred=None,nrows=3,ncols=3):
   """
@@ -258,30 +279,32 @@ def pil2np(img):
   out = out.reshape((img.size[1],img.size[0],4))
   return(out)
 
-def __weights(shape,pr=False,name='weights'):
+def weights(shape,verb=False,name='weights'):
   """
   shape: [ker_h,ker_w,im_chan,num_ker]
+  verb: Displays the info about the weights tensor
   """
   #w = tf.Variable(tf.truncated_normal(shape, stddev=0.05),name=name)
   # https://arxiv.org/pdf/1502.01852.pdf
   w = tf.Variable(tf.truncated_normal(shape, stddev=np.sqrt(2.0/(
                   shape[0]*shape[1]*shape[2]))),name=name)
-  if pr:
+  if verb:
     print(w)
   return(w)
 
-def __biases(shape,pr=False,name='biases'):
+def biases(shape,verb=False,name='biases'):
   """
   shape: [num_ker]
+  verb: Displays the info about the biases tensor
   """
   b = tf.Variable(tf.constant(0.05,shape=shape),name=name)
-  if pr:
+  if verb:
     print(b)
   return(b)
 
 def conv(inp,shape,strides=[1,1,1,1],padding='SAME',
            relu=True,dropout=False,do_prob=0.5,pool=False,name='conv',
-           pr=False,histogram=True):
+           verb=False,histogram=True):
   """
   Tensorflow 2d convolution.
   
@@ -296,10 +319,11 @@ def conv(inp,shape,strides=[1,1,1,1],padding='SAME',
   relu: Turn on relu as activation function. Else, it will not use any
   dropout: Turn on dropout
   do_prob: Select the percentage of the net to be turn off. [0.0 - 1.0]
+  pool: Adds max pooling to the operation
   """
   with tf.name_scope(name) as scope:
-    w = __weights(shape,pr=pr)
-    b = __biases([shape[3]],pr=pr)
+    w = weights(shape,verb=pr)
+    b = biases([shape[3]],verb=pr)
 
     conv = tf.nn.conv2d(input=inp,
                          filter=w,
@@ -328,6 +352,93 @@ def conv(inp,shape,strides=[1,1,1,1],padding='SAME',
 
     return(conv)
 
+def conv2(inp,shape,padding='SAME',strides=[1,1,1,1],relu=True,
+          dropout=False,drop_prob=0.25,verb=False,histogram=False,
+          name='conv'):
+  """
+  Tensorflow 2d convolution.
+  
+  inp: 4-D input tensor of shape [num,im_h,im_w,im_c]
+  shape: Shape of the kernels. [ker_h,ker_w,inp_ch,num_k]
+  strides: Strides of the convolution
+  padding: 'SAME' - Adds zero-padding so the resulting convolution
+                    is of the same size as the input
+           'VALID' - No zero-padding, so it olny performs as many 
+                     convolutions as it's possible, resulting in 
+                     a different size.
+  relu: Turn on relu as activation function. Else, it will not use any
+  dropout: Turn on dropout
+  do_prob: Select the percentage of the net to be turn off. [0.0 - 1.0]
+  verb: Display information about the tensor.
+  histogram: Indicates if information for tensorboard should be annexed.
+  """
+  with tf.name_scope(name) as scope:
+    w = weights(shape,verb=verb)
+    b = biases([shape[3]],verb=verb)
+
+    conv = tf.nn.conv2d(input=inp,
+                        filter=w,
+                        strides=strides,
+                        padding=padding,
+                        name=name)
+    out += b
+
+    if dropout:
+      out = tf.nn.dropout(out,do_prob)
+    
+    if relu:
+      out = tf.nn.relu(out)
+
+    if verb:
+      print(out)
+
+    if histogram:
+      tf.summary.histogram('activation',out)
+      tf.summary.histogram('weights',w)
+      tf.summary.histogram('biases',b)
+
+    return(out)
+
+def max_pool(layer,name='max_pool',ksize=[1,2,2,1],strides=[1,2,2,1],
+  padding='SAME',args=False):
+  with tf.name_scope(name) as scope:
+    """
+    layer: Tensor to be max pooled
+    name: Name of the operation
+    ksize: 1-D tensor with 4 elements. For more info, read below.
+    strides 1-D tensor with 4 elements. For more info, read below.
+    padding: 'SAME' - Adds zero padding.
+             'VALID' - Does not add zero padding.
+    args: Indicates if the indices for the maximum elements are required.
+
+
+    Note on max_pool with/without args: If the max pool operation is 
+      performed without indices/max args the output is a single tensor.
+      However, if indices/max args are required, the output will be two
+      tensors. The first one contains the resulting tensor of max pool,
+      and the second one contains the indices for the max arguments.
+    Note on ksize: Shape of [k on num_b,k on im_h,k on im_w,k on im_c].
+      We could have a batch of RGB images with shape [6,68,68,3]
+      and if ksize=[1,2,2,1] it will perform a max pooling over each 
+      example. In each example it will perform a 2-by-2-window max 
+      pooling over each of the three channels.
+    Note on strides: Since we normally want to reduce the dimensionality
+      of the tensor, we perform the max pooling on the image with its
+      windows moving two possitions in the cols and rows, but not jumping
+      any example nor any channel, due to strides=[1,2,2,1]
+    """
+    if not args:
+      out = tf.nn.max_pool(value=layer,
+                           ksize=ksize,
+                           strides=[1,2,2,1],
+                           padding=padding)
+    else:
+      out = tf.nn.max_pool_with_argmax(value=layer,
+                                       ksize=ksize,
+                                       strides=strides,
+                                       padding=padding)
+    return(out)
+
 def flatten(layer):
   """
   Flattens a convolved tensor.... for the fully connected network
@@ -347,8 +458,8 @@ def fc(inp,shape,relu=True,logits=False,dropout=False,do_prob=0.5,
   shape: [num_dim_in,num_class_out]
   """
   with tf.name_scope(name) as scope:
-    w = __weights(shape,pr=pr)
-    b = __biases([shape[1]],pr=pr)
+    w = weights(shape,pr=pr)
+    b = biases([shape[1]],pr=pr)
 
     fc = tf.matmul(inp,w)
     fc += b
@@ -380,8 +491,8 @@ def deconv(inp,out_like,shape,strides=[1,1,1,1],
   pr: Print weights and biases shape
   """
   with tf.name_scope(name) as scope:
-    w = __weights(shape,pr=pr)
-    b = __biases([shape[2]],pr=pr)
+    w = weights(shape,pr=pr)
+    b = biases([shape[2]],pr=pr)
     out_shape = tf.shape(out_like)
     
     transpose_conv = tf.nn.conv2d_transpose(value=inp,
@@ -410,8 +521,8 @@ def deconv2(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
   """
   """
   with tf.name_scope(name) as scope:
-    w = __weights(shape,pr=pr)
-    b = __biases([shape[2]],pr=pr)
+    w = weights(shape,pr=pr)
+    b = biases([shape[2]],pr=pr)
 
     x_shape = tf.shape(inp)
     out_shape = tf.stack([x_shape[0],x_shape[1],x_shape[2],shape[2]])
@@ -437,11 +548,6 @@ def deconv2(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
 
     return(transpose_conv)
 
-
-def pool_argmax(x):
-  out = tf.nn.max_pool_with_argmax(x, ksize=[1,2,2,1], strides=[1,2,2,1],
-                                   padding='SAME')
-  return(out)
 
 ###### STARTS
 # https://github.com/fabianbormann/Tensorflow-DeconvNet-Segmentation/blob/master/DeconvNet.py
