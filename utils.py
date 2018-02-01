@@ -433,7 +433,7 @@ def max_pool(layer,name='max_pool',ksize=[1,2,2,1],strides=[1,2,2,1],
                            strides=[1,2,2,1],
                            padding=padding)
     else:
-      out = tf.nn.max_pool_with_argmax(value=layer,
+      out = tf.nn.max_pool_with_argmax(input=layer,
                                        ksize=ksize,
                                        strides=strides,
                                        padding=padding)
