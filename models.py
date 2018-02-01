@@ -419,7 +419,7 @@ class ModelMPv1:
       do_prob=self.drop_prob,histogram=histogram)
 
     self.unpool1 = ut.unpool_with_argmax(self.deconv2,self.ind2,
-                      input_shape=[self.x.get_shape()[0],7,7,num_k4],name='unpool1')
+                      input_shape=[self.x.get_shape()[0].value,7,7,num_k4],name='unpool1')
 
     self.sum1 = self.unpool1 + self.conv4
     d3_shape = [ks4,ks4,num_k3,num_k4]
@@ -433,7 +433,7 @@ class ModelMPv1:
       do_prob=self.drop_prob,histogram=histogram)
 
     self.unpool2 = ut.unpool_with_argmax(self.deconv4,self.ind1,
-                      input_shape=[self.x.get_shape()[0],14,14,num_k2],name='unpool2')
+                      input_shape=[self.x.get_shape()[0].value,14,14,num_k2],name='unpool2')
 
     self.sum2 = self.unpool2 + self.conv2
     d5_shape = [ks2,ks2,num_k2,num_k2]
