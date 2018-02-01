@@ -478,7 +478,7 @@ class ModelMPv1:
       name = def_name
     elif path is None and name is not None:
       path = def_path
-    elif path is not None and name_fold is None:
+    elif path is not None and name is None:
       name = def_name
 
     return(path,name)
@@ -495,7 +495,7 @@ class ModelMPv1:
       name = def_name
     elif path is None and name is not None:
       path = def_path
-    elif path is not None and name_fold is None:
+    elif path is not None and name is None:
       name = def_name
 
     return(path,name)
@@ -624,7 +624,7 @@ class ModelStv1:
       name = def_name
     elif path is None and name is not None:
       path = def_path
-    elif path is not None and name_fold is None:
+    elif path is not None and name is None:
       name = def_name
 
     return(path,name)
@@ -633,7 +633,7 @@ class ModelStv1:
     """
     Indicates where to save log used for tensorboard
     """
-    def_name = 'mnist_seg_mpv1'
+    def_name = 'mnist_seg_stv1'
     def_path = './log/'
 
     if path is None and name is None:
@@ -641,7 +641,7 @@ class ModelStv1:
       name = def_name
     elif path is None and name is not None:
       path = def_path
-    elif path is not None and name_fold is None:
+    elif path is not None and name is None:
       name = def_name
 
     return(path,name)
