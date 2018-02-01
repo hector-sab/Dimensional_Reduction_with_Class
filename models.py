@@ -3,9 +3,10 @@ Author: Héctor Sánchez
 Date: January-31-2018
 Description: Contains the different models for MNIST segmentation
 """
-
+import sys
 import tensorflow as tf
 import utils as ut
+
 
 class SegModel:
   """
@@ -85,7 +86,7 @@ class SegModel:
         drop_prob=self.drop_prob,histogram=self.tb_log)
     else:
       print("There's no model with that option choice...")
-      break
+      sys.exit()
 
     self.last_layer = self.model.last_layer()
 
