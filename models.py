@@ -150,7 +150,7 @@ class SegModel:
               global_step=self.total_it)
         else:
           saved_str = ''
-        msg = 'It: {0}/{1} - Acc {2:.1%} {3}'.format(self.total_it,
+        msg = 'It: {0}/{1} - Acc {2:2%} {3}'.format(self.total_it,
                 self.total_it+num_it-(it+1),acc,saved_str)
         print(msg)
 
@@ -167,7 +167,7 @@ class SegModel:
 
       if self.tb_log and self.total_it%tb_log_it==0:
         self.val.restart_next_batch()
-        data = val.next_batch(self.bs)
+        data = self.val.next_batch(self.bs)
         tmp_feed = {self.x:data['ims'], self.y_seg:data['seg']}
         s = self.session.run(self.summary,feed_dict=tmp_feed)
         self.writer.add_summary(s,self.total_it)
@@ -212,7 +212,7 @@ class SegModel:
     if not os.path.exists(log_dir):
       os.makedirs(log_dir)
     self.writer = tf.summary.FileWriter(log_dir+log_name)
-    msg = 'Saving Tensorboard log at: {0}'.format(log_dir)
+    msg = '\nSaving Tensorboard log at: {0}'.format(log_dir)
     print(msg)
     self.writer.add_graph(self.session.graph)
 
@@ -338,8 +338,7 @@ class SegModel:
 
 class ModelMPv1:
   """
-  Contains the model of the segmentation using strides of two,
-  and no max pooling
+  Contains the model of the segmentation using max pooling
   """
   def __init__(self,inp,dropout=False,drop_prob=0.25,
     histogram=True,num_class=11):
@@ -412,11 +411,13 @@ class ModelMPv1:
     d1_shape = [ks6,ks6,num_k5,num_k6]
     self.deconv1 = ut.deconv2(inp=self.conv6,shape=d1_shape,
       relu=True,name='deconv1',dropout=self.dropout,
-      do_prob=self.drop_prob)
+      do_prob=self.drop_prob,histogram=histogram)
+
     d2_shape = [ks5,ks5,num_k4,num_k5]
     self.deconv2 = ut.deconv2(inp=self.deconv1,shape=d2_shape,
       relu=True,name='deconv2',dropout=self.dropout,
-      do_prob=self.drop_prob)
+      do_prob=self.drop_prob,histogram=histogram)
+
     self.unpool1 = ut.unpool_with_argmax(self.deconv2,self.ind2,
                       input_shape=[1,7,7,num_k4],name='unpool1')
 
@@ -424,11 +425,13 @@ class ModelMPv1:
     d3_shape = [ks4,ks4,num_k3,num_k4]
     self.deconv3 = ut.deconv2(inp=self.sum1,shape=d3_shape,
       relu=True,name='deconv3',dropout=self.dropout,
-      do_prob=self.drop_prob)
+      do_prob=self.drop_prob,histogram=histogram)
+
     d4_shape = [ks3,ks3,num_k2,num_k3]
     self.deconv4 = ut.deconv2(inp=self.deconv3,shape=d4_shape,
       relu=True,name='deconv4',dropout=self.dropout,
-      do_prob=self.drop_prob)
+      do_prob=self.drop_prob,histogram=histogram)
+
     self.unpool2 = ut.unpool_with_argmax(self.deconv4,self.ind1,
                       input_shape=[1,14,14,num_k2],name='unpool2')
 
@@ -436,11 +439,11 @@ class ModelMPv1:
     d5_shape = [ks2,ks2,num_k2,num_k2]
     self.deconv5 = ut.deconv2(inp=self.sum2,shape=d5_shape,
       relu=True,name='deconv5',dropout=self.dropout,
-      do_prob=self.drop_prob)
+      do_prob=self.drop_prob,histogram=histogram)
 
     d6_shape = [ks1,ks1,self.num_class,num_k2]
     self.deconv6 = ut.deconv2(inp=self.deconv5,shape=d6_shape,
-                   relu=False,name='deconv6')
+                   relu=False,name='deconv6',histogram=histogram)
     """
     outlike6 = tf.placeholder(tf.float32,
       shape=[self.ex,28,28,self.num_seg_class],name='d6_tmp')
@@ -456,6 +459,116 @@ class ModelMPv1:
     msg = msg.format(self.deconv1,self.deconv2,self.deconv3,
                      self.deconv4,self.deconv5,self.deconv6)
     print(msg)
+
+  def last_layer(self):
+    """
+    Returns the last layer of the model
+    """
+    return(self.pre_logits)
+
+class ModelStv1:
+  """
+  Contains the model of the segmentation using strides of two,
+  and no max pooling
+  """
+  def __init__(self,inp,dropout=False,drop_prob=0.25,,
+    histogram=True,num_class=11,verb=True):
+    """
+    inp: Input placeholder.
+    shape: Tensorflow tensor shape used in the input placeholder.
+           It must be a list object.
+    dropout: Flag used to indicate if dropout will be used
+    drop_prob: Percentage of neurons to be turned off
+    histogram: Indicates if information for tensorboard should be annexed.
+    """
+    self.dropout = dropout
+    self.drop_prob = drop_prob
+    self.x = inp
+    # shape vs get_shape https://stackoverflow.com/a/43290897/5969548
+    self.im_h = int(self.x.get_shape()[1])
+    self.im_w = int(self.x.get_shape()[2])
+    self.im_c = int(self.x.get_shape()[3])
+    self.num_class = num_class
+    
+    ##### Network Specs
+    ks1 = 3; num_k1 = 8
+    ks2 = 3; num_k2 = 8
+
+    ks3 = 3; num_k3 = 16
+    ks4 = 3; num_k4 = 16
+
+    ks5 = 3; num_k5 = 32
+    ks6 = 3; num_k6 = 32
+
+    #### Core Model
+    c1_shape = [ks1,ks1,self.im_c,num_k1]
+    self.conv1 = ut.conv2(inp=self.x,shape=c1_shape,name='conv1',
+      dropout=self.dropout,do_prob=self.drop_prob,histogram=histogram)
+
+    c2_shape = [ks2,ks2,num_k1,num_k2]
+    self.conv2 = ut.conv2(inp=self.conv1,shape=c2_shape,
+      strides=[1,2,2,1],name='conv2',dropout=self.dropout,
+      do_prob=self.drop_prob,histogram=histogram)
+
+    c3_shape = [ks3,ks3,num_k2,num_k3]
+    self.conv3 = ut.conv(inp=self.conv2,shape=c3_shape,name='conv3',
+      dropout=self.dropout,do_prob=self.drop_prob,histogram=histogram)
+
+    c4_shape = [ks4,ks4,num_k3,num_k4]
+    self.conv4 = ut.conv(inp=self.conv3,shape=c4_shape,
+      strides=[1,2,2,1],name='conv4',dropout=self.dropout,
+      do_prob=self.drop_prob,histogram=histogram)
+
+    c5_shape = [ks5,ks5,num_k4,num_k5]
+    self.conv5 = ut.conv(inp=self.conv4,shape=c5_shape,name='conv5',
+      dropout=self.dropout,do_prob=self.drop_prob,histogram=histogram)
+
+    c6_shape = [ks6,ks6,num_k5,num_k6]
+    self.conv6 = ut.conv(inp=self.conv5,shape=c6_shape,name='conv6',
+      dropout=self.dropout,do_prob=self.drop_prob,histogram=histogram)
+
+
+
+
+    self.deconv1 = ut.deconv(inp=self.conv6,out_like=self.conv5,
+      relu=True,shape=c6_shape,dropout=self.dropout,
+      do_prob=self.drop_prob,histogram=histogram)
+
+    self.deconv2 = ut.deconv(inp=self.deconv1,out_like=self.conv4,
+      shape=c5_shape,relu=True,name='deconv2',dropout=self.dropout,
+      do_prob=self.drop_prob,histogram=histogram)
+
+    self.sum1 = self.deconv2 + self.conv4
+    self.deconv3 = ut.deconv(inp=self.sum1,out_like=self.conv3,
+      shape=c4_shape,strides=[1,2,2,1],relu=True,name='deconv3',dropout=self.dropout,
+      do_prob=self.drop_prob,histogram=histogram)
+
+    self.deconv4 = ut.deconv(inp=self.deconv3,out_like=self.conv2,
+      shape=c3_shape,relu=True,name='deconv4',dropout=self.dropout,
+      do_prob=self.drop_prob,histogram=histogram)
+
+    self.sum2 = self.deconv4 + self.conv2
+    self.deconv5 = ut.deconv(inp=self.sum2,out_like=self.conv1,
+      shape=c2_shape,strides=[1,2,2,1],relu=True,name='deconv5',dropout=self.dropout,
+      do_prob=self.drop_prob,histogram=histogram)
+
+    __d6_shape = [ks1,ks1,self.num_seg_class,num_k1]
+    __outlike6 = tf.placeholder(tf.float32,
+      shape=[self.ex,28,28,self.num_seg_class],name='d6_tmp')
+    self.deconv6 = ut.deconv(inp=self.deconv5,out_like=__outlike6,
+      shape=__d6_shape,relu=False,pr=False,name='deconv6',histogram=histogram)
+
+
+    self.pre_logits = self.deconv6
+
+    if verb:
+      msg = '\n\t{0} \n\t{1} \n\t{2} \n\t{3} \n\t{4} \n\t{5}'
+      msg = msg.format(self.conv1,self.conv2,self.conv3,self.conv4,
+                       self.conv5,self.conv6)
+      msg += '\n\t{0} \n\t{1} \n\t{2} \n\t{3} \n\t{4} \n\t{5}'
+      msg = msg.format(self.deconv1,self.deconv2,self.deconv3,
+                       self.deconv4,self.deconv5,self.deconv6)
+      print(msg)
 
   def last_layer(self):
     """

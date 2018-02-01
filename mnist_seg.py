@@ -64,6 +64,8 @@ parser.add_argument('--step',help='Step to be loaded from checkpoint',
       type=int)
 parser.add_argument('--tb_log',help='Saves a log of the training process',
       action='store_true')
+parser.add_argument('--bs',help='Size of batch for training',
+      type=int,default=1)
 ######## ENDS: Other args
 
 
@@ -134,7 +136,7 @@ if __name__=='__main__':
 
   
   model = models.SegModel(train=train,val=val,test=test,model=args.model,
-                save=args.save,load=args.load,load_step=args.step,
+                bs=args.bs,save=args.save,load=args.load,load_step=args.step,
                 lr=args.lr,dropout=args.do,drop_prob=args.dop,
                 tb_log=args.tb_log)
   
