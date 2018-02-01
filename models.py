@@ -83,7 +83,8 @@ class SegModel:
       pass
     elif model==1:
       self.model = ModelMPv1(inp=self.x,dropout=self.dropout,
-        drop_prob=self.drop_prob,histogram=self.tb_log)
+        drop_prob=self.drop_prob,histogram=self.tb_log,
+        num_class=self.num_class)
     else:
       print("There's no model with that option choice...")
       sys.exit()
@@ -338,7 +339,7 @@ class ModelMPv1:
   and no max pooling
   """
   def __init__(self,inp,dropout=False,drop_prob=0.25,
-    histogram=True):
+    histogram=True,num_class=11):
     """
     inp: Input placeholder.
     shape: Tensorflow tensor shape used in the input placeholder.
@@ -354,7 +355,7 @@ class ModelMPv1:
     self.im_h = int(self.x.get_shape()[1])
     self.im_w = int(self.x.get_shape()[2])
     self.im_c = int(self.x.get_shape()[3])
-
+    self.num_class = num_class
     ##### Network Specs
     ks1 = 3
     num_k1 = 8
