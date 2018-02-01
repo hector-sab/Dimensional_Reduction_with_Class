@@ -481,7 +481,7 @@ def fc(inp,shape,relu=True,logits=False,dropout=False,do_prob=0.5,
 
 def deconv(inp,out_like,shape,strides=[1,1,1,1],
   padding='SAME',relu=True,verb=False,name='deconv',dropout=False,
-  do_prob=0.5,histogram=True,verb=False):
+  do_prob=0.5,histogram=True):
   """
   inp: input tensor
   out_like: output-like shape tensor. What are the output tensor
