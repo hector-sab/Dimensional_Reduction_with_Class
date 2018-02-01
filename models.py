@@ -199,6 +199,7 @@ class SegModel:
     
     for it in range(int(num_ex/bs)):
       data = dataset.next_batch(bs)
+      print(data['ims'].shape)
       feed_dict = {self.x: data['ims'],
                    self.y_seg: data['seg']}
       acc = self.session.run(self.accuracy,feed_dict=feed_dict)
