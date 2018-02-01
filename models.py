@@ -471,7 +471,7 @@ class ModelStv1:
   Contains the model of the segmentation using strides of two,
   and no max pooling
   """
-  def __init__(self,inp,dropout=False,drop_prob=0.25,,
+  def __init__(self,inp,dropout=False,drop_prob=0.25,
     histogram=True,num_class=11,verb=True):
     """
     inp: Input placeholder.
