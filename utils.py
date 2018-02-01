@@ -662,6 +662,8 @@ def unpool_with_argmax(pooled,ind,input_shape, ksize=[1, 2, 2, 1],
         1. In tensorflow the indices in argmax are flattened, so that a maximum value at position [b, y, x, c] becomes flattened index ((b * height + y) * width + x) * channels + c
         2. Due to point 1, use broadcasting to appropriately place the values at their right locations ! 
   """
+  print('Pooled {}'.format(pooled))
+  print('Indices {}'.format(indices))
   with tf.name_scope(name) as scope:
     # Get the the shape of the tensor in th form of a list
     #input_shape = pooled.get_shape().as_list()
@@ -694,12 +696,28 @@ def unpool_with_argmax(pooled,ind,input_shape, ksize=[1, 2, 2, 1],
     #ref = tf.Variable(tf.zeros([output_shape[0], output_shape[1] * output_shape[2] * output_shape[3]]))
     #tmp_zeros = tf.zeros_like(tmp_ref)
     ref = tf.zeros_like(tmp_ref)
-    print(ind_)
-    print(pooled_)
-    print(ref)
     ref = tf.Variable(ref)
     # Update the sparse matrix with the pooled values , it is a batch wise operation
     unpooled_ = tf.scatter_nd_update(ref, ind_, pooled_)
     # Reshape the vector to get the final result 
     unpooled = tf.reshape(unpooled_, [output_shape[0], output_shape[1], output_shape[2], output_shape[3]])
     return(unpooled)
+
+def unpool_with_argmax2(pooled,ind,input_shape, ksize=[1, 2, 2, 1],
+            name='unpool'):
+  """
+    ORIGINAL
+    To unpool the tensor after  max_pool_with_argmax.
+    Argumnets:
+        pooled:    the max pooled output tensor
+        ind:       argmax indices , the second output of max_pool_with_argmax
+        ksize:     ksize should be the same as what you have used to pool
+    Returns:
+        unpooled:      the tensor after unpooling
+    Some points to keep in mind ::
+        1. In tensorflow the indices in argmax are flattened, so that a maximum value at position [b, y, x, c] becomes flattened index ((b * height + y) * width + x) * channels + c
+        2. Due to point 1, use broadcasting to appropriately place the values at their right locations ! 
+  """
+  with tf.name_scope(name) as scope:
+    # Reshape indices to [?,-1]
+    ind_ = tf.reshape(ind,shape=[-1])
