@@ -285,7 +285,7 @@ class SegModel:
       
       ### START: Seg Image visualization
       self.seg_out_vis = tf.divide(self.y_pred_cls_seg,
-        self.num_seg_class)
+        self.num_class)
       self.seg_out_vis = tf.cast(tf.scalar_mul(255,self.seg_out_vis),
         tf.uint8)
       tf.summary.image('seg output',self.seg_out_vis,1)
@@ -315,13 +315,13 @@ class SegModel:
 
       # Image with 'num_seg_class' channels
       self.y_seg_onehot = tf.one_hot(self.y_seg_cls,\
-        depth=self.num_seg_class,axis=1)
+        depth=self.num_class,axis=1)
       # Reshape to errase a useless extra dimension
       self.y_seg_onehot = tf.reshape(self.y_seg_onehot,\
-        shape=[-1,self.num_seg_class],name='y_seg_onehot')
+        shape=[-1,self.num_class],name='y_seg_onehot')
 
       ### START: Seg Image visualization
-      self.seg_inp_vis = tf.divide(self.y_seg,self.num_seg_class)
+      self.seg_inp_vis = tf.divide(self.y_seg,self.num_class)
       self.seg_inp_vis = tf.cast(tf.scalar_mul(255,self.seg_inp_vis),
         tf.uint8)
       tf.summary.image('seg input',self.seg_inp_vis,1)
@@ -434,7 +434,7 @@ class ModelMPv1:
       relu=True,name='deconv5',dropout=self.dropout,
       do_prob=self.drop_prob)
 
-    d6_shape = [ks1,ks1,self.num_seg_class,num_k2]
+    d6_shape = [ks1,ks1,self.num_class,num_k2]
     self.deconv6 = ut.deconv2(inp=self.deconv5,shape=d6_shape,
                    relu=False,name='deconv6')
     """
