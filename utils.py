@@ -322,8 +322,8 @@ def conv(inp,shape,strides=[1,1,1,1],padding='SAME',
   pool: Adds max pooling to the operation
   """
   with tf.name_scope(name) as scope:
-    w = weights(shape,verb=pr)
-    b = biases([shape[3]],verb=pr)
+    w = weights(shape,verb=verb)
+    b = biases([shape[3]],verb=verb)
 
     conv = tf.nn.conv2d(input=inp,
                          filter=w,
@@ -452,14 +452,14 @@ def flatten(layer):
   return(layer_flat)
 
 def fc(inp,shape,relu=True,logits=False,dropout=False,do_prob=0.5,
-  pr=False,name='fc',histogram=True):
+  verb=False,name='fc',histogram=True):
   """
   inp: input
   shape: [num_dim_in,num_class_out]
   """
   with tf.name_scope(name) as scope:
-    w = weights(shape,pr=pr)
-    b = biases([shape[1]],pr=pr)
+    w = weights(shape,verb=verb)
+    b = biases([shape[1]],verb=verb)
 
     fc = tf.matmul(inp,w)
     fc += b
@@ -480,19 +480,19 @@ def fc(inp,shape,relu=True,logits=False,dropout=False,do_prob=0.5,
     return(fc)
 
 def deconv(inp,out_like,shape,strides=[1,1,1,1],
-  padding='SAME',relu=True,pr=False,name='deconv',dropout=False,
-  do_prob=0.5,histogram=True):
+  padding='SAME',relu=True,verb=False,name='deconv',dropout=False,
+  do_prob=0.5,histogram=True,verb=False):
   """
   inp: input tensor
   out_like: output-like shape tensor. What are the output tensor
       dimensions according to an existing tensor
   strides: strides used un the out_like in the convolution
   shape: [ker_h,ker_w,out_c,in_c]
-  pr: Print weights and biases shape
+  verb: Print weights and biases shape
   """
   with tf.name_scope(name) as scope:
-    w = weights(shape,pr=pr)
-    b = biases([shape[2]],pr=pr)
+    w = weights(shape,verb=verb)
+    b = biases([shape[2]],verb=verb)
     out_shape = tf.shape(out_like)
     
     transpose_conv = tf.nn.conv2d_transpose(value=inp,
@@ -517,12 +517,12 @@ def deconv(inp,out_like,shape,strides=[1,1,1,1],
     return(transpose_conv)
 
 def deconv2(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
-  pr=False,name='deconv',dropout=False,do_prob=0.5,histogram=True):
+  verb=False,name='deconv',dropout=False,do_prob=0.5,histogram=True):
   """
   """
   with tf.name_scope(name) as scope:
-    w = weights(shape,pr=pr)
-    b = biases([shape[2]],pr=pr)
+    w = weights(shape,verb=verb)
+    b = biases([shape[2]],verb=verb)
 
     x_shape = tf.shape(inp)
     out_shape = tf.stack([x_shape[0],x_shape[1],x_shape[2],shape[2]])
@@ -557,21 +557,21 @@ def unravel_argmax(argmax, shape):
   output_list.append(argmax % (shape[2] * shape[3]) // shape[3])
   return(tf.stack(output_list))
 
-def unpool_layer2x2(x, raveled_argmax, out_shape,pr=False,name='unpool'):
+def unpool_layer2x2(x, raveled_argmax, out_shape,verb=False,name='unpool'):
   with tf.name_scope(name) as scope:
     argmax = unravel_argmax(raveled_argmax, tf.to_int64(out_shape))
     output = tf.zeros([out_shape[1], out_shape[2], out_shape[3]])
-    if pr:
+    if verb:
       print(output)
 
     height = tf.shape(output)[0]
-    if pr:
+    if verb:
       print(height)
     width = tf.shape(output)[1]
-    if pr:
+    if verb:
       print(width)
     channels = tf.shape(output)[2]
-    if pr:
+    if verb:
       print(channels)
 
     t1 = tf.to_int64(tf.range(channels))
@@ -579,20 +579,20 @@ def unpool_layer2x2(x, raveled_argmax, out_shape,pr=False,name='unpool'):
     t1 = tf.reshape(t1, [-1, channels])
     t1 = tf.transpose(t1, perm=[1, 0])
     t1 = tf.reshape(t1, [channels, (height + 1) // 2, (width + 1) // 2, 1])
-    if pr:
+    if verb:
       print(t1)
 
     t2 = tf.squeeze(argmax)
     t2 = tf.stack((t2[0], t2[1]), axis=0)
     t2 = tf.transpose(t2, perm=[3, 1, 2, 0])
-    if pr:
+    if verb:
       print(t2)
 
     t = tf.concat([t2, t1], 3)
-    if pr:
+    if verb:
       print(t)
     indices = tf.reshape(t, [((height + 1) // 2) * ((width + 1) // 2) * channels, 3])
-    if pr:
+    if verb:
       print(indices)
 
     x1 = tf.squeeze(x)
