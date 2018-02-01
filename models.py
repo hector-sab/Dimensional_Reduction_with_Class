@@ -113,7 +113,7 @@ class SegModel:
       self.tensorboard_log(log_dir,log_name)
 
 
-  def train(self,num_it=0,verb=None,tb_log_it=100):
+  def train2(self,num_it=0,verb=None,tb_log_it=100):
     """
     Description: Trains the model
 

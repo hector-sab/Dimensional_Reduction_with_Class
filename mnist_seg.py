@@ -136,5 +136,5 @@ if __name__=='__main__':
                 lr=args.lr,dropout=args.do,drop_prob=args.dop,
                 tb_log=args.tb_log)
   
-  model.train(num_it=args.iterations,verb=100)
+  model.train2(num_it=args.iterations,verb=100)
     
