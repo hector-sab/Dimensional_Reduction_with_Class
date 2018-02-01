@@ -93,7 +93,7 @@ class SegModel:
 
     # Specify where to save the model and the tb log
     save_dir,save_checkp = self.model.checkpoint_dir(save_dir,save_checkp)
-    load_dir,load_checkp = self.model.checkoint_dir(load_dir,load_checkp)
+    load_dir,load_checkp = self.model.checkpoint_dir(load_dir,load_checkp)
     log_dir,log_name = self.model.log_dir(log_dir,log_name)
 
     self.last_layer = self.model.last_layer()
