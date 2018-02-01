@@ -676,7 +676,8 @@ def unpool_with_argmax(pooled,ind,input_shape, ksize=[1, 2, 2, 1],
     # Create a single unit extended cuboid of length bath_size populating it with continous natural number from zero to batch_size
 
     #tf.placeholder(tf.int64,shape=[None,])
-    batch_range = tf.reshape(tf.range(tf.shape(output_shape,out_type=tf.int64)[0], dtype=ind.dtype), shape=[input_shape[0], 1, 1, 1])
+    #batch_range = tf.reshape(tf.range(tf.shape(output_shape,out_type=tf.int64)[0], dtype=ind.dtype), shape=[input_shape[0], 1, 1, 1])
+    batch_range = tf.reshape(tf.range(output_shape[0], dtype=ind.dtype), shape=[input_shape[0], 1, 1, 1])
     print('HERE {0}'.format(batch_range))
     b = tf.ones_like(ind) * batch_range
     b_ = tf.reshape(b, [input_shape[0] * input_shape[1] * input_shape[2] * input_shape[3], 1])
