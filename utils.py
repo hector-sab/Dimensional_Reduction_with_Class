@@ -669,7 +669,8 @@ def unpool_with_argmax(pooled,ind,input_shape, ksize=[1, 2, 2, 1],
     # Determine the output shape
     output_shape = (input_shape[0], input_shape[1] * ksize[1], input_shape[2] * ksize[2], input_shape[3])
     # Ceshape into one giant tensor for better workability
-    pooled_ = tf.reshape(pooled, [input_shape[0] * input_shape[1] * input_shape[2] * input_shape[3]])
+    #pooled_ = tf.reshape(pooled, [input_shape[0] * input_shape[1] * input_shape[2] * input_shape[3]])
+    pooled_ = tf.reshape(pooled, [-1])
     # The indices in argmax are flattened, so that a maximum value at position [b, y, x, c] becomes flattened index ((b * height + y) * width + x) * channels + c
     # Create a single unit extended cuboid of length bath_size populating it with continous natural number from zero to batch_size
     batch_range = tf.reshape(tf.range(tf.cast(output_shape[0],tf.int64), dtype=ind.dtype), shape=[input_shape[0], 1, 1, 1])
@@ -677,7 +678,8 @@ def unpool_with_argmax(pooled,ind,input_shape, ksize=[1, 2, 2, 1],
     b_ = tf.reshape(b, [input_shape[0] * input_shape[1] * input_shape[2] * input_shape[3], 1])
     ind_ = tf.reshape(ind, [input_shape[0] * input_shape[1] * input_shape[2] * input_shape[3], 1])
     ind_ = tf.concat([b_, ind_],1)
-    tmp = tf.placeholder(tf.float32,shape=[output_shape[0], output_shape[1] * output_shape[2] * output_shape[3]])
+    
+    tmp_ref = tf.placeholder(tf.float32,shape=[output_shape[0], output_shape[1] * output_shape[2] * output_shape[3]])
     #ref = tf.Variable(tf.zeros([output_shape[0], output_shape[1] * output_shape[2] * output_shape[3]]))
     ref = tf.Variable(tf.zeros_like(tmp))
     # Update the sparse matrix with the pooled values , it is a batch wise operation
