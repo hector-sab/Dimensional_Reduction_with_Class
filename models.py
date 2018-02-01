@@ -481,7 +481,7 @@ class ModelMPv1:
     elif save_dir is not None and name_fold is None:
       name = def_name
 
-    return(path,name_fold)
+    return(path,name)
 
   def log_dir(self,path,name):
     """
@@ -498,7 +498,7 @@ class ModelMPv1:
     elif save_dir is not None and name_fold is None:
       name = def_name
 
-    return(path,name_fold)
+    return(path,name)
 
 
 
@@ -627,7 +627,7 @@ class ModelStv1:
     elif save_dir is not None and name_fold is None:
       name = def_name
 
-    return(path,name_fold)
+    return(path,name)
 
   def log_dir(self,path,name):
     """
@@ -644,4 +644,4 @@ class ModelStv1:
     elif save_dir is not None and name_fold is None:
       name = def_name
 
-    return(path,name_fold)
+    return(path,name)
