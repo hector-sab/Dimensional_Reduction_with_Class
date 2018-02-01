@@ -66,6 +66,8 @@ parser.add_argument('--tb_log',help='Saves a log of the training process',
       action='store_true')
 parser.add_argument('--bs',help='Size of batch for training',
       type=int,default=1)
+parser.add_argument('--ex',help='Examples allowed in tensor',
+      type=int,default=1)
 ######## ENDS: Other args
 
 
@@ -134,11 +136,13 @@ if __name__=='__main__':
   print('\tVal data: {0} - {1}'.format(val.images.shape,val.cls.shape))
   print('\tTest data: {0} - {1}'.format(test.images.shape,test.cls.shape))
 
-  
+  if args==0:
+    args.ex = None
+
   model = models.SegModel(train=train,val=val,test=test,model=args.model,
                 bs=args.bs,save=args.save,load=args.load,load_step=args.step,
                 lr=args.lr,dropout=args.do,drop_prob=args.dop,
-                tb_log=args.tb_log)
+                tb_log=args.tb_log,ex=args.ex)
   
   model.optimize(num_it=args.iterations,verb=100)
     
