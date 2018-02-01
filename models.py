@@ -209,10 +209,11 @@ class SegModel:
     """
     Description: Used to creat a log  in tensorboard
     """
+    print(log_dir,log_name)
     if not os.path.exists(log_dir):
       os.makedirs(log_dir)
     self.writer = tf.summary.FileWriter(log_dir+log_name)
-    msg = '\nSaving Tensorboard log at: {0}'.format(log_dir)
+    msg = '\nSaving Tensorboard log at: {0}{1}'.format(log_dir,log_name)
     print(msg)
     self.writer.add_graph(self.session.graph)
 
