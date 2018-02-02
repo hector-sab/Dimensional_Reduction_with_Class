@@ -82,7 +82,9 @@ class SegModel:
 
     # Select the model to train
     if model==0:
-      pass
+      self.model = ModelStv1(inp=self.x,dropout=self.dropout,
+        drop_prob=self.drop_prob,histogram=self.tb_log,
+        num_class=self.num_class)
     elif model==1:
       self.model = ModelMPv1(inp=self.x,dropout=self.dropout,
         drop_prob=self.drop_prob,histogram=self.tb_log,
