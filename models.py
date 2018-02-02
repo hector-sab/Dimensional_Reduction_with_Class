@@ -387,13 +387,14 @@ class ModelMPv1:
     ##### Core model
     c1_shape = [ks1,ks1,self.im_c,num_k1]
     self.conv1,reg = ut.conv2(inp=self.x,shape=c1_shape,name='conv1',
-      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
+      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram,
+      l2=True)
     self.reg.append(reg)
     
     c2_shape = [ks2,ks2,num_k1,num_k2]
     self.conv2,reg = ut.conv2(inp=self.conv1,shape=c2_shape,
       name='conv2',dropout=self.dropout,drop_prob=self.drop_prob,
-      histogram=histogram)
+      histogram=histogram,l2=True)
     self.reg.append(reg)
 
     self.pool1,self.ind1 = ut.max_pool(self.conv2,args=True,
@@ -401,12 +402,14 @@ class ModelMPv1:
 
     c3_shape = [ks3,ks3,num_k2,num_k3]
     self.conv3,reg = ut.conv2(inp=self.pool1,shape=c3_shape,name='conv3',
-      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
+      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram,
+      l2=True)
     self.reg.append(reg)
     
     c4_shape = [ks4,ks4,num_k3,num_k4]
     self.conv4,reg = ut.conv2(inp=self.conv3,shape=c4_shape,name='conv4',
-      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
+      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram,
+      l2=True)
     self.reg.append(reg)
 
     self.pool2,self.ind2 = ut.max_pool(self.conv4,args=True,
@@ -414,12 +417,14 @@ class ModelMPv1:
 
     c5_shape = [ks5,ks5,num_k4,num_k5]
     self.conv5,reg = ut.conv2(inp=self.pool2,shape=c5_shape,name='conv5',
-      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
+      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram,
+      l2=True)
     self.reg.append(reg)
 
     c6_shape = [ks6,ks6,num_k5,num_k6]
     self.conv6,reg = ut.conv2(inp=self.conv5,shape=c6_shape,name='conv6',
-      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
+      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram,
+      l2=True)
     self.reg.append(reg)
 
 
@@ -427,13 +432,13 @@ class ModelMPv1:
     d1_shape = [ks6,ks6,num_k5,num_k6]
     self.deconv1,reg = ut.deconv2(inp=self.conv6,shape=d1_shape,
       relu=True,name='deconv1',dropout=self.dropout,
-      drop_prob=self.drop_prob,histogram=histogram)
+      drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
 
     d2_shape = [ks5,ks5,num_k4,num_k5]
     self.deconv2,reg = ut.deconv2(inp=self.deconv1,shape=d2_shape,
       relu=True,name='deconv2',dropout=self.dropout,
-      drop_prob=self.drop_prob,histogram=histogram)
+      drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
 
     self.unpool1 = ut.unpool_with_argmax(self.deconv2,self.ind2,
@@ -443,13 +448,13 @@ class ModelMPv1:
     d3_shape = [ks4,ks4,num_k3,num_k4]
     self.deconv3,reg = ut.deconv2(inp=self.sum1,shape=d3_shape,
       relu=True,name='deconv3',dropout=self.dropout,
-      drop_prob=self.drop_prob,histogram=histogram)
+      drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
 
     d4_shape = [ks3,ks3,num_k2,num_k3]
     self.deconv4,reg = ut.deconv2(inp=self.deconv3,shape=d4_shape,
       relu=True,name='deconv4',dropout=self.dropout,
-      drop_prob=self.drop_prob,histogram=histogram)
+      drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
 
     self.unpool2 = ut.unpool_with_argmax(self.deconv4,self.ind1,
@@ -459,12 +464,12 @@ class ModelMPv1:
     d5_shape = [ks2,ks2,num_k2,num_k2]
     self.deconv5,reg = ut.deconv2(inp=self.sum2,shape=d5_shape,
       relu=True,name='deconv5',dropout=self.dropout,
-      drop_prob=self.drop_prob,histogram=histogram)
+      drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
 
     d6_shape = [ks1,ks1,self.num_class,num_k2]
     self.deconv6,reg = ut.deconv2(inp=self.deconv5,shape=d6_shape,
-                   relu=False,name='deconv6',histogram=histogram)
+                   relu=False,name='deconv6',histogram=histogram,l2=True)
     self.reg.append(reg)
 
 
