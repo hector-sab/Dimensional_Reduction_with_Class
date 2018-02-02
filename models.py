@@ -414,12 +414,12 @@ class ModelMPv1:
     d1_shape = [ks6,ks6,num_k5,num_k6]
     self.deconv1 = ut.deconv2(inp=self.conv6,shape=d1_shape,
       relu=True,name='deconv1',dropout=self.dropout,
-      do_prob=self.drop_prob,histogram=histogram)
+      drop_prob=self.drop_prob,histogram=histogram)
 
     d2_shape = [ks5,ks5,num_k4,num_k5]
     self.deconv2 = ut.deconv2(inp=self.deconv1,shape=d2_shape,
       relu=True,name='deconv2',dropout=self.dropout,
-      do_prob=self.drop_prob,histogram=histogram)
+      drop_prob=self.drop_prob,histogram=histogram)
 
     self.unpool1 = ut.unpool_with_argmax(self.deconv2,self.ind2,
                       input_shape=[self.x.get_shape()[0].value,7,7,num_k4],name='unpool1')
@@ -428,12 +428,12 @@ class ModelMPv1:
     d3_shape = [ks4,ks4,num_k3,num_k4]
     self.deconv3 = ut.deconv2(inp=self.sum1,shape=d3_shape,
       relu=True,name='deconv3',dropout=self.dropout,
-      do_prob=self.drop_prob,histogram=histogram)
+      drop_prob=self.drop_prob,histogram=histogram)
 
     d4_shape = [ks3,ks3,num_k2,num_k3]
     self.deconv4 = ut.deconv2(inp=self.deconv3,shape=d4_shape,
       relu=True,name='deconv4',dropout=self.dropout,
-      do_prob=self.drop_prob,histogram=histogram)
+      drop_prob=self.drop_prob,histogram=histogram)
 
     self.unpool2 = ut.unpool_with_argmax(self.deconv4,self.ind1,
                       input_shape=[self.x.get_shape()[0].value,14,14,num_k2],name='unpool2')
@@ -442,17 +442,13 @@ class ModelMPv1:
     d5_shape = [ks2,ks2,num_k2,num_k2]
     self.deconv5 = ut.deconv2(inp=self.sum2,shape=d5_shape,
       relu=True,name='deconv5',dropout=self.dropout,
-      do_prob=self.drop_prob,histogram=histogram)
+      drop_prob=self.drop_prob,histogram=histogram)
 
     d6_shape = [ks1,ks1,self.num_class,num_k2]
     self.deconv6 = ut.deconv2(inp=self.deconv5,shape=d6_shape,
                    relu=False,name='deconv6',histogram=histogram)
-    """
-    outlike6 = tf.placeholder(tf.float32,
-      shape=[self.ex,28,28,self.num_seg_class],name='d6_tmp')
-    self.deconv6 = ut.deconv(inp=self.deconv5,out_like=__outlike6,
-      shape=__d6_shape,relu=False,pr=False,name='deconv6')
-    """
+
+    
     self.pre_logits = self.deconv6
 
     msg = '\n\t{0} \n\t{1} \n\t{2} \n\t{3} \n\t{4} \n\t{5}'
@@ -568,34 +564,36 @@ class ModelStv1:
 
 
 
+    d1_shape = [ks6,ks6,num_k5,num_k6]
+    self.deconv1 = ut.deconv2(inp=self.conv6,shape=c6_shape,
+      relu=True,dropout=self.dropout,drop_prob=self.drop_prob,
+      histogram=histogram,name='deconv1')
 
-    self.deconv1 = ut.deconv(inp=self.conv6,out_like=self.conv5,
-      relu=True,shape=c6_shape,dropout=self.dropout,
-      do_prob=self.drop_prob,histogram=histogram)
-
-    self.deconv2 = ut.deconv(inp=self.deconv1,out_like=self.conv4,
-      shape=c5_shape,relu=True,name='deconv2',dropout=self.dropout,
-      do_prob=self.drop_prob,histogram=histogram)
+    d2_shape = [ks5,ks5,num_k4,num_k5]
+    self.deconv2 = ut.deconv2(inp=self.deconv1,shape=c5_shape,
+      relu=True,name='deconv2',dropout=self.dropout,
+      drop_prob=self.drop_prob,histogram=histogram)
 
     self.sum1 = self.deconv2 + self.conv4
-    self.deconv3 = ut.deconv(inp=self.sum1,out_like=self.conv3,
-      shape=c4_shape,strides=[1,2,2,1],relu=True,name='deconv3',dropout=self.dropout,
-      do_prob=self.drop_prob,histogram=histogram)
+    d3_shape = [ks4,ks4,num_k3,num_k4]
+    self.deconv3 = ut.deconv2(inp=self.sum1,shape=c4_shape,
+      relu=True,strides=[1,2,2,1],relu=True,name='deconv3',
+      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
 
-    self.deconv4 = ut.deconv(inp=self.deconv3,out_like=self.conv2,
-      shape=c3_shape,relu=True,name='deconv4',dropout=self.dropout,
-      do_prob=self.drop_prob,histogram=histogram)
+    d4_shape = [ks3,ks3,num_k2,num_k3]
+    self.deconv4 = ut.deconv2(inp=self.deconv3,shape=c3_shape,
+      relu=True,name='deconv4',dropout=self.dropout,
+      drop_prob=self.drop_prob,histogram=histogram)
 
     self.sum2 = self.deconv4 + self.conv2
-    self.deconv5 = ut.deconv(inp=self.sum2,out_like=self.conv1,
-      shape=c2_shape,strides=[1,2,2,1],relu=True,name='deconv5',dropout=self.dropout,
-      do_prob=self.drop_prob,histogram=histogram)
+    d5_shape = [ks2,ks2,num_k2,num_k2]
+    self.deconv5 = ut.deconv2(inp=self.sum2,shape=c2_shape,
+      strides=[1,2,2,1],relu=True,name='deconv5',dropout=self.dropout,
+      drop_prob=self.drop_prob,histogram=histogram)
 
-    __d6_shape = [ks1,ks1,self.num_class,num_k1]
-    __outlike6 = tf.placeholder(tf.float32,
-      shape=[self.ex,28,28,self.num_class],name='d6_tmp')
-    self.deconv6 = ut.deconv(inp=self.deconv5,out_like=__outlike6,
-      shape=__d6_shape,relu=False,pr=False,name='deconv6',histogram=histogram)
+    d6_shape = [ks1,ks1,self.num_class,num_k2]
+    self.deconv6 = ut.deconv2(inp=self.deconv5,shape=d6_shape,
+      relu=False,name='deconv6',histogram=histogram)
 
 
     self.pre_logits = self.deconv6

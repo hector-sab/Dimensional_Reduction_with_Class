@@ -519,7 +519,7 @@ def deconv(inp,out_like,shape,strides=[1,1,1,1],
     return(transpose_conv)
 
 def deconv2(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
-  verb=False,name='deconv',dropout=False,do_prob=0.5,histogram=True):
+  verb=False,name='deconv',dropout=False,drop_prob=0.8,histogram=True):
   """
   """
   with tf.name_scope(name) as scope:
@@ -542,7 +542,7 @@ def deconv2(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
       if histogram:
         tf.summary.histogram('activations',transpose_conv)
     if dropout:
-      transpose_conv = tf.nn.dropout(transpose_conv,do_prob)
+      transpose_conv = tf.nn.dropout(transpose_conv,drop_prob)
 
     if histogram:
       tf.summary.histogram('weights',w)
