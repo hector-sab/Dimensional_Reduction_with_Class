@@ -564,13 +564,14 @@ class ModelStv1:
 
 
 
-    d1_shape = [ks6,ks6,num_k5,num_k6]
+    d1_shape = [ks6,ks6,num_k6,num_k6]
     self.deconv1 = ut.deconv2(inp=self.conv6,shape=c6_shape,
       relu=True,dropout=self.dropout,drop_prob=self.drop_prob,
       histogram=histogram,name='deconv1')
 
     #d2_shape = [ks5,ks5,num_k4,num_k5]
-    d2_shape = [ks5,ks5,num_k5,num_k5]
+    d2_shape = [ks5,ks5,num_k5,num_k6]
+    print(d2_shape)
     self.deconv2 = ut.deconv2(inp=self.deconv1,shape=c5_shape,
       relu=True,name='deconv2',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram)
