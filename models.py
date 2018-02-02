@@ -591,9 +591,9 @@ class ModelStv1:
       shape=c2_shape,strides=[1,2,2,1],relu=True,name='deconv5',dropout=self.dropout,
       do_prob=self.drop_prob,histogram=histogram)
 
-    __d6_shape = [ks1,ks1,self.num_seg_class,num_k1]
+    __d6_shape = [ks1,ks1,self.num_class,num_k1]
     __outlike6 = tf.placeholder(tf.float32,
-      shape=[self.ex,28,28,self.num_seg_class],name='d6_tmp')
+      shape=[self.ex,28,28,self.num_class],name='d6_tmp')
     self.deconv6 = ut.deconv(inp=self.deconv5,out_like=__outlike6,
       shape=__d6_shape,relu=False,pr=False,name='deconv6',histogram=histogram)
 
