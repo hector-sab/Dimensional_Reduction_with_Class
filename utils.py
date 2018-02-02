@@ -527,7 +527,8 @@ def deconv2(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
     b = biases([shape[2]],verb=verb)
 
     x_shape = tf.shape(inp)
-    out_shape = tf.stack([x_shape[0],x_shape[1],x_shape[2],shape[2]])
+    out_shape = tf.stack([x_shape[0],x_shape[1]*strides[1],
+                          x_shape[2]*strides[2],shape[2]])
 
     transpose_conv = tf.nn.conv2d_transpose(value=inp,
                                             filter=w,
