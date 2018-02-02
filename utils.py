@@ -355,7 +355,7 @@ def conv(inp,shape,strides=[1,1,1,1],padding='SAME',
     return(conv)
 
 def conv2(inp,shape,padding='SAME',strides=[1,1,1,1],relu=True,
-          dropout=False,drop_prob=0.25,verb=False,histogram=False,
+          dropout=False,drop_prob=0.8,verb=False,histogram=False,
           name='conv'):
   """
   Tensorflow 2d convolution.

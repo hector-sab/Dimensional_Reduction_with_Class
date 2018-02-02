@@ -18,7 +18,7 @@ class SegModel:
   """
   # TODO: Check if visualization nodes can be reused to create just one
   def __init__(self,train,val,test=None,num_class=11,ex=None,model=0,
-    bs=1,lr=3e-5,dropout=False,drop_prob=0.25,training=True,save=False,
+    bs=1,lr=3e-5,dropout=False,drop_prob=0.8,training=True,save=False,
     save_dir=None,save_checkp=None,max_to_keep=1,load=False,load_dir=None,
     load_checkp=None,save_load_same=True,load_step=None,tb_log=False,
     log_dir=None,log_name=None):
@@ -308,7 +308,7 @@ class SegModel:
     Initialize all required input placeholders
     """
     with tf.name_scope('Input'):
-      self.drop_prob = tf.placeholder_with_default(0.0,shape=[],
+      self.drop_prob = tf.placeholder_with_default(1.0,shape=[],
         name='drop_prob')
       self.x = tf.placeholder(tf.float32,\
         shape=[self.ex,self.im_h,self.im_w,self.im_c],name='x')
@@ -542,29 +542,29 @@ class ModelStv1:
     #### Core Model
     c1_shape = [ks1,ks1,self.im_c,num_k1]
     self.conv1 = ut.conv2(inp=self.x,shape=c1_shape,name='conv1',
-      dropout=self.dropout,do_prob=self.drop_prob,histogram=histogram)
+      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
 
     c2_shape = [ks2,ks2,num_k1,num_k2]
     self.conv2 = ut.conv2(inp=self.conv1,shape=c2_shape,
       strides=[1,2,2,1],name='conv2',dropout=self.dropout,
-      do_prob=self.drop_prob,histogram=histogram)
+      drop_prob=self.drop_prob,histogram=histogram)
 
     c3_shape = [ks3,ks3,num_k2,num_k3]
     self.conv3 = ut.conv2(inp=self.conv2,shape=c3_shape,name='conv3',
-      dropout=self.dropout,do_prob=self.drop_prob,histogram=histogram)
+      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
 
     c4_shape = [ks4,ks4,num_k3,num_k4]
     self.conv4 = ut.conv2(inp=self.conv3,shape=c4_shape,
       strides=[1,2,2,1],name='conv4',dropout=self.dropout,
-      do_prob=self.drop_prob,histogram=histogram)
+      drop_prob=self.drop_prob,histogram=histogram)
 
     c5_shape = [ks5,ks5,num_k4,num_k5]
     self.conv5 = ut.conv2(inp=self.conv4,shape=c5_shape,name='conv5',
-      dropout=self.dropout,do_prob=self.drop_prob,histogram=histogram)
+      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
 
     c6_shape = [ks6,ks6,num_k5,num_k6]
     self.conv6 = ut.conv2(inp=self.conv5,shape=c6_shape,name='conv6',
-      dropout=self.dropout,do_prob=self.drop_prob,histogram=histogram)
+      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
 
 
 
