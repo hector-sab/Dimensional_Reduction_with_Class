@@ -548,20 +548,20 @@ class ModelStv1:
       do_prob=self.drop_prob,histogram=histogram)
 
     c3_shape = [ks3,ks3,num_k2,num_k3]
-    self.conv3 = ut.conv(inp=self.conv2,shape=c3_shape,name='conv3',
+    self.conv3 = ut.conv2(inp=self.conv2,shape=c3_shape,name='conv3',
       dropout=self.dropout,do_prob=self.drop_prob,histogram=histogram)
 
     c4_shape = [ks4,ks4,num_k3,num_k4]
-    self.conv4 = ut.conv(inp=self.conv3,shape=c4_shape,
+    self.conv4 = ut.conv2(inp=self.conv3,shape=c4_shape,
       strides=[1,2,2,1],name='conv4',dropout=self.dropout,
       do_prob=self.drop_prob,histogram=histogram)
 
     c5_shape = [ks5,ks5,num_k4,num_k5]
-    self.conv5 = ut.conv(inp=self.conv4,shape=c5_shape,name='conv5',
+    self.conv5 = ut.conv2(inp=self.conv4,shape=c5_shape,name='conv5',
       dropout=self.dropout,do_prob=self.drop_prob,histogram=histogram)
 
     c6_shape = [ks6,ks6,num_k5,num_k6]
-    self.conv6 = ut.conv(inp=self.conv5,shape=c6_shape,name='conv6',
+    self.conv6 = ut.conv2(inp=self.conv5,shape=c6_shape,name='conv6',
       dropout=self.dropout,do_prob=self.drop_prob,histogram=histogram)
 
 
