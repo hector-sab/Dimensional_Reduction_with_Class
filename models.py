@@ -21,7 +21,7 @@ class SegModel:
     bs=1,lr=3e-5,dropout=False,drop_prob=0.8,training=True,save=False,
     save_dir=None,save_checkp=None,max_to_keep=1,load=False,load_dir=None,
     load_checkp=None,save_load_same=True,load_step=None,tb_log=False,
-    log_dir=None,log_name=None):
+    log_dir=None,log_name=None,l2=True):
     """
     -train: Triaining data using the class DataSeg
     -val: Validation data using the class DataSeg
@@ -48,6 +48,7 @@ class SegModel:
     -tb_log: Flag indicating if summaries will be saved
     -log_dir: Directory where it will be saved
     -log_name: Name of the summary
+    -l2: Activates l2 regularizatoin
     """
     self.session = tf.Session()
     # Data base
@@ -69,6 +70,8 @@ class SegModel:
 
     self.total_it = 0
     self.best_acc = 0
+
+    self.l2 = l2
 
     # Image specs
     self.im_h = self.train.images.shape[1]
@@ -157,7 +160,7 @@ class SegModel:
               global_step=self.total_it)
         else:
           saved_str = ''
-        msg = 'It: {0}/{1} - Acc {2:2%} {3}'.format(self.total_it,
+        msg = 'It: {0}/{1} - Acc {2:.01%} {3}'.format(self.total_it,
                 self.total_it+num_it-(it+1),acc,saved_str)
         print(msg)
 
@@ -263,6 +266,9 @@ class SegModel:
       self.cross_entropy = tf.nn.softmax_cross_entropy_with_logits(
         logits=self.logits,labels=self.y_seg_onehot,name='cross_entropy')
       self.cost = tf.reduce_mean(self.cross_entropy,name='cost')
+      if self.l2:
+        for i,reg in enumerate(self.model.reg):
+          self.cost += tf.reduce_mean(reg,name='cost-w'+str(i))
       tf.summary.scalar('cost',self.cost)
 
     with tf.name_scope('train'):
@@ -353,6 +359,7 @@ class ModelMPv1:
     drop_prob: Percentage of neurons to be turned off
     histogram: Indicates if information for tensorboard should be annexed.
     """
+    self.reg = [] # Contains l2 regularizaton for weights
     self.dropout = dropout
     self.drop_prob = drop_prob
     self.x = inp
@@ -379,76 +386,88 @@ class ModelMPv1:
 
     ##### Core model
     c1_shape = [ks1,ks1,self.im_c,num_k1]
-    self.conv1 = ut.conv2(inp=self.x,shape=c1_shape,name='conv1',
+    self.conv1,reg = ut.conv2(inp=self.x,shape=c1_shape,name='conv1',
       dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
+    self.reg.append(reg)
     
     c2_shape = [ks2,ks2,num_k1,num_k2]
-    self.conv2 = ut.conv2(inp=self.conv1,shape=c2_shape,
+    self.conv2,reg = ut.conv2(inp=self.conv1,shape=c2_shape,
       name='conv2',dropout=self.dropout,drop_prob=self.drop_prob,
       histogram=histogram)
+    self.reg.append(reg)
 
     self.pool1,self.ind1 = ut.max_pool(self.conv2,args=True,
       name='maxpool1')
 
     c3_shape = [ks3,ks3,num_k2,num_k3]
-    self.conv3 = ut.conv2(inp=self.pool1,shape=c3_shape,name='conv3',
+    self.conv3,reg = ut.conv2(inp=self.pool1,shape=c3_shape,name='conv3',
       dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
+    self.reg.append(reg)
     
     c4_shape = [ks4,ks4,num_k3,num_k4]
-    self.conv4 = ut.conv2(inp=self.conv3,shape=c4_shape,name='conv4',
+    self.conv4,reg = ut.conv2(inp=self.conv3,shape=c4_shape,name='conv4',
       dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
+    self.reg.append(reg)
 
     self.pool2,self.ind2 = ut.max_pool(self.conv4,args=True,
       name='maxpool2')
 
     c5_shape = [ks5,ks5,num_k4,num_k5]
-    self.conv5 = ut.conv2(inp=self.pool2,shape=c5_shape,name='conv5',
+    self.conv5,reg = ut.conv2(inp=self.pool2,shape=c5_shape,name='conv5',
       dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
+    self.reg.append(reg)
 
     c6_shape = [ks6,ks6,num_k5,num_k6]
-    self.conv6 = ut.conv2(inp=self.conv5,shape=c6_shape,name='conv6',
+    self.conv6,reg = ut.conv2(inp=self.conv5,shape=c6_shape,name='conv6',
       dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
+    self.reg.append(reg)
 
 
 
     d1_shape = [ks6,ks6,num_k5,num_k6]
-    self.deconv1 = ut.deconv2(inp=self.conv6,shape=d1_shape,
+    self.deconv1,reg = ut.deconv2(inp=self.conv6,shape=d1_shape,
       relu=True,name='deconv1',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram)
+    self.reg.append(reg)
 
     d2_shape = [ks5,ks5,num_k4,num_k5]
-    self.deconv2 = ut.deconv2(inp=self.deconv1,shape=d2_shape,
+    self.deconv2,reg = ut.deconv2(inp=self.deconv1,shape=d2_shape,
       relu=True,name='deconv2',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram)
+    self.reg.append(reg)
 
     self.unpool1 = ut.unpool_with_argmax(self.deconv2,self.ind2,
                       input_shape=[self.x.get_shape()[0].value,7,7,num_k4],name='unpool1')
 
     self.sum1 = self.unpool1 + self.conv4
     d3_shape = [ks4,ks4,num_k3,num_k4]
-    self.deconv3 = ut.deconv2(inp=self.sum1,shape=d3_shape,
+    self.deconv3,reg = ut.deconv2(inp=self.sum1,shape=d3_shape,
       relu=True,name='deconv3',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram)
+    self.reg.append(reg)
 
     d4_shape = [ks3,ks3,num_k2,num_k3]
-    self.deconv4 = ut.deconv2(inp=self.deconv3,shape=d4_shape,
+    self.deconv4,reg = ut.deconv2(inp=self.deconv3,shape=d4_shape,
       relu=True,name='deconv4',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram)
+    self.reg.append(reg)
 
     self.unpool2 = ut.unpool_with_argmax(self.deconv4,self.ind1,
                       input_shape=[self.x.get_shape()[0].value,14,14,num_k2],name='unpool2')
 
     self.sum2 = self.unpool2 + self.conv2
     d5_shape = [ks2,ks2,num_k2,num_k2]
-    self.deconv5 = ut.deconv2(inp=self.sum2,shape=d5_shape,
+    self.deconv5,reg = ut.deconv2(inp=self.sum2,shape=d5_shape,
       relu=True,name='deconv5',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram)
+    self.reg.append(reg)
 
     d6_shape = [ks1,ks1,self.num_class,num_k2]
-    self.deconv6 = ut.deconv2(inp=self.deconv5,shape=d6_shape,
+    self.deconv6,reg = ut.deconv2(inp=self.deconv5,shape=d6_shape,
                    relu=False,name='deconv6',histogram=histogram)
+    self.reg.append(reg)
 
-    
+
     self.pre_logits = self.deconv6
 
     msg = '\n\t{0} \n\t{1} \n\t{2} \n\t{3} \n\t{4} \n\t{5}'
@@ -516,6 +535,7 @@ class ModelStv1:
     drop_prob: Percentage of neurons to be turned off
     histogram: Indicates if information for tensorboard should be annexed.
     """
+    self.reg = [] # Contains l2 regularizaton for weights
     self.dropout = dropout
     self.drop_prob = drop_prob
     self.x = inp
@@ -537,69 +557,85 @@ class ModelStv1:
 
     #### Core Model
     c1_shape = [ks1,ks1,self.im_c,num_k1]
-    self.conv1 = ut.conv2(inp=self.x,shape=c1_shape,name='conv1',
-      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
+    self.conv1,reg = ut.conv2(inp=self.x,shape=c1_shape,name='conv1',
+      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram,
+      l2=True)
+    self.reg.append(reg)
 
     c2_shape = [ks2,ks2,num_k1,num_k2]
-    self.conv2 = ut.conv2(inp=self.conv1,shape=c2_shape,
+    self.conv2,reg = ut.conv2(inp=self.conv1,shape=c2_shape,
       strides=[1,2,2,1],name='conv2',dropout=self.dropout,
-      drop_prob=self.drop_prob,histogram=histogram)
+      drop_prob=self.drop_prob,histogram=histogram,l2=True)
+    self.reg.append(reg)
 
     c3_shape = [ks3,ks3,num_k2,num_k3]
-    self.conv3 = ut.conv2(inp=self.conv2,shape=c3_shape,name='conv3',
-      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
+    self.conv3,reg = ut.conv2(inp=self.conv2,shape=c3_shape,name='conv3',
+      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram,
+      l2=True)
+    self.reg.append(reg)
 
     c4_shape = [ks4,ks4,num_k3,num_k4]
-    self.conv4 = ut.conv2(inp=self.conv3,shape=c4_shape,
+    self.conv4,reg = ut.conv2(inp=self.conv3,shape=c4_shape,
       strides=[1,2,2,1],name='conv4',dropout=self.dropout,
-      drop_prob=self.drop_prob,histogram=histogram)
+      drop_prob=self.drop_prob,histogram=histogram,l2=True)
+    self.reg.append(reg)
 
     c5_shape = [ks5,ks5,num_k4,num_k5]
-    self.conv5 = ut.conv2(inp=self.conv4,shape=c5_shape,name='conv5',
-      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
+    self.conv5,reg = ut.conv2(inp=self.conv4,shape=c5_shape,name='conv5',
+      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram,
+      l2=True)
+    self.reg.append(reg)
 
     c6_shape = [ks6,ks6,num_k5,num_k6]
-    self.conv6 = ut.conv2(inp=self.conv5,shape=c6_shape,name='conv6',
-      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
+    self.conv6,reg = ut.conv2(inp=self.conv5,shape=c6_shape,name='conv6',
+      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram,
+      l2=True)
+    self.reg.append(reg)
 
 
 
     d1_shape = [ks6,ks6,num_k6,num_k6]
-    self.deconv1 = ut.deconv2(inp=self.conv6,shape=c6_shape,
+    self.deconv1,reg = ut.deconv2(inp=self.conv6,shape=c6_shape,
       relu=True,dropout=self.dropout,drop_prob=self.drop_prob,
-      histogram=histogram,name='deconv1')
+      histogram=histogram,name='deconv1',l2=True)
+    self.reg.append(reg)
 
     #d2_shape = [ks5,ks5,num_k4,num_k5]
     d2_shape = [ks5,ks5,num_k5,num_k6]
     print(d2_shape)
-    self.deconv2 = ut.deconv2(inp=self.deconv1,shape=c5_shape,
+    self.deconv2,reg = ut.deconv2(inp=self.deconv1,shape=c5_shape,
       relu=True,name='deconv2',dropout=self.dropout,
-      drop_prob=self.drop_prob,histogram=histogram)
+      drop_prob=self.drop_prob,histogram=histogram,l2=True)
+    self.reg.append(reg)
 
     self.sum1 = self.deconv2 + self.conv4
     #d3_shape = [ks4,ks4,num_k3,num_k4]
     d3_shape = [ks4,ks4,num_k4,num_k5]
-    self.deconv3 = ut.deconv2(inp=self.sum1,shape=c4_shape,
-      relu=True,strides=[1,2,2,1],name='deconv3',
-      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram)
+    self.deconv3,reg = ut.deconv2(inp=self.sum1,shape=c4_shape,
+      relu=True,strides=[1,2,2,1],name='deconv3',dropout=self.dropout,
+      drop_prob=self.drop_prob,histogram=histogram,l2=True)
+    self.reg.append(reg)
 
     #d4_shape = [ks3,ks3,num_k2,num_k3]
     d4_shape = [ks3,ks3,num_k3,num_k4]
-    self.deconv4 = ut.deconv2(inp=self.deconv3,shape=c3_shape,
+    self.deconv4,reg = ut.deconv2(inp=self.deconv3,shape=c3_shape,
       relu=True,name='deconv4',dropout=self.dropout,
-      drop_prob=self.drop_prob,histogram=histogram)
+      drop_prob=self.drop_prob,histogram=histogram,l2=True)
+    self.reg.append(reg)
 
     self.sum2 = self.deconv4 + self.conv2
     #d5_shape = [ks2,ks2,num_k2,num_k2]
     d5_shape = [ks2,ks2,num_k1,num_k3]
-    self.deconv5 = ut.deconv2(inp=self.sum2,shape=c2_shape,
+    self.deconv5,reg = ut.deconv2(inp=self.sum2,shape=c2_shape,
       strides=[1,2,2,1],relu=True,name='deconv5',dropout=self.dropout,
-      drop_prob=self.drop_prob,histogram=histogram)
+      drop_prob=self.drop_prob,histogram=histogram,l2=True)
+    self.reg.append(reg)
 
     #d6_shape = [ks1,ks1,self.num_class,num_k2]
     d6_shape = [ks1,ks1,self.num_class,num_k1]
-    self.deconv6 = ut.deconv2(inp=self.deconv5,shape=d6_shape,
-      relu=False,name='deconv6',histogram=histogram)
+    self.deconv6,reg = ut.deconv2(inp=self.deconv5,shape=d6_shape,
+      relu=False,name='deconv6',histogram=histogram,l2=True)
+    self.reg.append(reg)
 
 
     self.pre_logits = self.deconv6

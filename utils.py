@@ -356,7 +356,7 @@ def conv(inp,shape,strides=[1,1,1,1],padding='SAME',
 
 def conv2(inp,shape,padding='SAME',strides=[1,1,1,1],relu=True,
           dropout=False,drop_prob=0.8,verb=False,histogram=False,
-          name='conv'):
+          name='conv',l2=False):
   """
   Tensorflow 2d convolution.
   
@@ -399,7 +399,11 @@ def conv2(inp,shape,padding='SAME',strides=[1,1,1,1],relu=True,
       tf.summary.histogram('weights',w)
       tf.summary.histogram('biases',b)
 
-    return(out)
+    if l2:
+      l2_reg = tf.nn.l2_loss(w)
+      return(out,l2_reg)
+    else:
+      return(out)
 
 def max_pool(layer,name='max_pool',ksize=[1,2,2,1],strides=[1,2,2,1],
   padding='SAME',args=False):
@@ -454,7 +458,7 @@ def flatten(layer):
   return(layer_flat)
 
 def fc(inp,shape,relu=True,logits=False,dropout=False,do_prob=0.5,
-  verb=False,name='fc',histogram=True):
+  verb=False,name='fc',histogram=True,l2=False):
   """
   inp: input
   shape: [num_dim_in,num_class_out]
@@ -479,7 +483,11 @@ def fc(inp,shape,relu=True,logits=False,dropout=False,do_prob=0.5,
       tf.summary.histogram('weights',w)
       tf.summary.histogram('biases',b)
 
-    return(fc)
+    if l2:
+      l2_reg = tf.nn.l2_loss(w)
+      return(fc,l2_reg)
+    else:
+      return(fc)
 
 def deconv(inp,out_like,shape,strides=[1,1,1,1],
   padding='SAME',relu=True,verb=False,name='deconv',dropout=False,
@@ -519,7 +527,8 @@ def deconv(inp,out_like,shape,strides=[1,1,1,1],
     return(transpose_conv)
 
 def deconv2(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
-  verb=False,name='deconv',dropout=False,drop_prob=0.8,histogram=True):
+  verb=False,name='deconv',dropout=False,drop_prob=0.8,histogram=True,
+  l2=False):
   """
   """
   with tf.name_scope(name) as scope:
@@ -549,7 +558,11 @@ def deconv2(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
       tf.summary.histogram('weights',w)
       tf.summary.histogram('biases',b)
 
-    return(transpose_conv)
+    if l2:
+      l2_reg = tf.nn.l2_loss(w)
+      return(transpose_conv,l2_reg)
+    else:
+      return(transpose_conv)
 
 
 ###### STARTS
@@ -663,8 +676,6 @@ def unpool_with_argmax(pooled,ind,input_shape, ksize=[1, 2, 2, 1],
         1. In tensorflow the indices in argmax are flattened, so that a maximum value at position [b, y, x, c] becomes flattened index ((b * height + y) * width + x) * channels + c
         2. Due to point 1, use broadcasting to appropriately place the values at their right locations ! 
   """
-  print('Pooled {}'.format(pooled))
-  print('Indices {}'.format(ind))
   with tf.name_scope(name) as scope:
     # Get the the shape of the tensor in th form of a list
     #input_shape = pooled.get_shape().as_list()
