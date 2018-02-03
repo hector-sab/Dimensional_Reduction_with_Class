@@ -530,6 +530,7 @@ def deconv2(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
   verb=False,name='deconv',dropout=False,drop_prob=0.8,histogram=True,
   l2=False):
   """
+  shape: [ker_h,ker_w,out_c,in_c]
   """
   with tf.name_scope(name) as scope:
     w = weights(shape,verb=verb)
