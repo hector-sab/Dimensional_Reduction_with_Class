@@ -483,9 +483,10 @@ class ModelMPv1:
 
     self.pre_logits = self.deconv6
 
-    msg = '\n\t{0} \n\t{1} \n\t{2} \n\t{3} \n\t{4} \n\t{5}'
-    msg = msg.format(self.conv1,self.conv2,self.conv3,self.conv4,
-                     self.conv5,self.conv6)
+    msg += '\n\t{0} \n\t{1} \n\t{2} \n\t{3} \n\t{4} \n\t{5} '
+    msg += '\n\t{6} \n\t{7}'
+    msg = msg.format(self.conv1,self.conv2,self.pool1,self.conv3,
+                     self.conv4,self.pool2,self.conv5,self.conv6)
     msg += '\n\t{0} \n\t{1} \n\t{2} \n\t{3} \n\t{4} \n\t{5} '
     msg += '\n\t{6} \n\t{7}'
     msg = msg.format(self.deconv1,self.deconv2,self.unpool1,
