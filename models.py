@@ -446,7 +446,7 @@ class ModelMPv1:
     self.reg.append(reg)
 
     self.unpool1 = ut.unpool_with_argmax(self.deconv2,self.ind2,
-                      input_shape=[1,7,7,num_k5],
+                      input_shape=[1,7,7,num_k4],
                       name='unpool1')
 
     #self.sum1 = self.unpool1 + self.conv4
@@ -464,7 +464,7 @@ class ModelMPv1:
     self.reg.append(reg)
 
     self.unpool2 = ut.unpool_with_argmax(self.deconv4,self.ind1,
-                      input_shape=[self.x.get_shape()[0].value,14,14,num_k3],
+                      input_shape=[self.x.get_shape()[0].value,14,14,num_k2],
                       name='unpool2')
 
     #self.sum2 = self.unpool2 + self.conv2
