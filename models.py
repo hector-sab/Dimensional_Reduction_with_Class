@@ -439,7 +439,7 @@ class ModelMPv1:
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
 
-    d2_shape = [ks5,ks5,num_k5,num_k6]
+    d2_shape = [ks5,ks5,num_k4,num_k5]
     self.deconv2,reg = ut.deconv2(inp=self.deconv1,shape=d2_shape,
       relu=True,name='deconv2',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
@@ -450,14 +450,14 @@ class ModelMPv1:
                       name='unpool1')
 
     #self.sum1 = self.unpool1 + self.conv4
-    d3_shape = [ks4,ks4,num_k4,num_k5]
+    d3_shape = [ks4,ks4,num_k3,num_k4]
     self.deconv3,reg = ut.deconv2(inp=self.unpool1,shape=d3_shape,
       relu=True,name='deconv3',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
 
     self.sum1 = self.deconv3 + self.conv4
-    d4_shape = [ks3,ks3,num_k3,num_k4]
+    d4_shape = [ks3,ks3,num_k2,num_k3]
     self.deconv4,reg = ut.deconv2(inp=self.deconv3,shape=d4_shape,
       relu=True,name='deconv4',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
@@ -468,7 +468,7 @@ class ModelMPv1:
                       name='unpool2')
 
     #self.sum2 = self.unpool2 + self.conv2
-    d5_shape = [ks2,ks2,num_k2,num_k3]
+    d5_shape = [ks2,ks2,num_k2,num_k2]
     self.deconv5,reg = ut.deconv2(inp=self.unpool2,shape=d5_shape,
       relu=True,name='deconv5',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
