@@ -484,8 +484,8 @@ class ModelMPv1:
     msg = '\n\t{0} \n\t{1} \n\t{2} \n\t{3} \n\t{4} \n\t{5}'
     msg = msg.format(self.conv1,self.conv2,self.conv3,self.conv4,
                      self.conv5,self.conv6)
-    msg += '\n\t{0} \n\t{1} \n\t{2} \n\t{3} \n\t{4} \n\t{5} '+
-           '\n\t{6} \n\t{7}'
+    msg += '\n\t{0} \n\t{1} \n\t{2} \n\t{3} \n\t{4} \n\t{5} '
+    msg += '\n\t{6} \n\t{7}'
     msg = msg.format(self.deconv1,self.deconv2,self.unpool1,
                      self.deconv3,self.deconv4,self.unpool2,
                      self.deconv5,self.deconv6)
