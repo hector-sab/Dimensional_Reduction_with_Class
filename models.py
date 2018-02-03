@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 Author: Héctor Sánchez
 Date: January-31-2018
