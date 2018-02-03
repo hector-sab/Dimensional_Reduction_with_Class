@@ -2,6 +2,22 @@
 Author: Héctor Sánchez
 Date: January-30-2018
 Description: MNIST segmentation
+
+  How to run it? you may ask. Fear no more my little child and read below:
+
+  $ python mnist_seg.py --m 0 --ex 1 --lr 3e-9 -i 50000 -s --tb_log
+
+  Want some visual? Here you have...
+
+  $ tensorboard --logdir=./log/mnist_seg_stv1/ --port=7003
+
+  ^- Run it in a different terminal and (from the server) go to 
+      192.168.7.30:7003
+
+  NOTE: It's important to indicate --ex 1 for model 1, it has to be due to
+  the lack of dynamic unpooling. Keep that in mind.
+
+  NOTE 2: model 1 can only be executed on a machine with GPU.
 """
 
 # TODO: 

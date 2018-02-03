@@ -262,13 +262,16 @@ class SegModel:
     """
     Creates tensors needed for training the model
     """
+
+    # TODO: beta value accessible from somewhere else
+    beta = 0.01
     with tf.name_scope('cross_entropy'):
       self.cross_entropy = tf.nn.softmax_cross_entropy_with_logits(
         logits=self.logits,labels=self.y_seg_onehot,name='cross_entropy')
       self.cost = tf.reduce_mean(self.cross_entropy,name='cost')
       if self.l2:
         for i,reg in enumerate(self.model.reg):
-          self.cost += tf.reduce_mean(reg,name='cost-w'+str(i))
+          self.cost += tf.reduce_mean(beta*reg,name='cost-w'+str(i))
       tf.summary.scalar('cost',self.cost)
 
     with tf.name_scope('train'):
@@ -607,7 +610,6 @@ class ModelStv1:
 
     #d2_shape = [ks5,ks5,num_k4,num_k5]
     d2_shape = [ks5,ks5,num_k5,num_k6]
-    print(d2_shape)
     self.deconv2,reg = ut.deconv2(inp=self.deconv1,shape=c5_shape,
       relu=True,name='deconv2',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
