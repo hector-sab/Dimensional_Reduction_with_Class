@@ -160,7 +160,7 @@ class SegModel:
               global_step=self.total_it)
         else:
           saved_str = ''
-        msg = 'It: {0}/{1} - Acc {2:.01%} {3}'.format(self.total_it,
+        msg = 'It: {0}/{1} - Acc {2:.2%} {3}'.format(self.total_it,
                 self.total_it+num_it-(it+1),acc,saved_str)
         print(msg)
 
@@ -572,25 +572,25 @@ class ModelStv1:
 
     c2_shape = [ks2,ks2,num_k1,num_k2]
     self.conv2,reg = ut.conv2(inp=self.conv1,shape=c2_shape,
-      strides=[1,2,2,1],name='conv2',dropout=self.dropout,
+      name='conv2',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
 
     c3_shape = [ks3,ks3,num_k2,num_k3]
     self.conv3,reg = ut.conv2(inp=self.conv2,shape=c3_shape,name='conv3',
-      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram,
+      strides=[1,2,2,1],dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram,
       l2=True)
     self.reg.append(reg)
 
     c4_shape = [ks4,ks4,num_k3,num_k4]
     self.conv4,reg = ut.conv2(inp=self.conv3,shape=c4_shape,
-      strides=[1,2,2,1],name='conv4',dropout=self.dropout,
+      name='conv4',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
 
     c5_shape = [ks5,ks5,num_k4,num_k5]
     self.conv5,reg = ut.conv2(inp=self.conv4,shape=c5_shape,name='conv5',
-      dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram,
+      strides=[1,2,2,1],dropout=self.dropout,drop_prob=self.drop_prob,histogram=histogram,
       l2=True)
     self.reg.append(reg)
 
@@ -615,32 +615,34 @@ class ModelStv1:
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
 
-    self.sum1 = self.deconv2 + self.conv4
+    #self.sum1 = self.deconv2 + self.conv4
     #d3_shape = [ks4,ks4,num_k3,num_k4]
     d3_shape = [ks4,ks4,num_k4,num_k5]
-    self.deconv3,reg = ut.deconv2(inp=self.sum1,shape=d3_shape,
+    self.deconv3,reg = ut.deconv2(inp=self.deconv2,shape=d3_shape,
       relu=True,strides=[1,2,2,1],name='deconv3',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
 
+    self.sum1 = self.deconv3 + self.conv4
     #d4_shape = [ks3,ks3,num_k2,num_k3]
     d4_shape = [ks3,ks3,num_k3,num_k4]
-    self.deconv4,reg = ut.deconv2(inp=self.deconv3,shape=d4_shape,
+    self.deconv4,reg = ut.deconv2(inp=self.sum1,shape=d4_shape,
       relu=True,name='deconv4',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
 
-    self.sum2 = self.deconv4 + self.conv2
+    #self.sum2 = self.deconv4 + self.conv3
     #d5_shape = [ks2,ks2,num_k2,num_k2]
     d5_shape = [ks2,ks2,num_k1,num_k3]
-    self.deconv5,reg = ut.deconv2(inp=self.sum2,shape=d5_shape,
+    self.deconv5,reg = ut.deconv2(inp=self.deconv4,shape=d5_shape,
       strides=[1,2,2,1],relu=True,name='deconv5',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
 
+    self.sum2 = self.deconv5 + self.conv2
     #d6_shape = [ks1,ks1,self.num_class,num_k2]
     d6_shape = [ks1,ks1,self.num_class,num_k1]
-    self.deconv6,reg = ut.deconv2(inp=self.deconv5,shape=d6_shape,
+    self.deconv6,reg = ut.deconv2(inp=self.sum2,shape=d6_shape,
       relu=False,name='deconv6',histogram=histogram,l2=True)
     self.reg.append(reg)
 
