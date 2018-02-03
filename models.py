@@ -432,13 +432,13 @@ class ModelMPv1:
 
 
 
-    d1_shape = [ks6,ks6,num_k5,num_k6]
+    d1_shape = [ks6,ks6,num_k6,num_k6]
     self.deconv1,reg = ut.deconv2(inp=self.conv6,shape=d1_shape,
       relu=True,name='deconv1',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
 
-    d2_shape = [ks5,ks5,num_k4,num_k5]
+    d2_shape = [ks5,ks5,num_k5,num_k6]
     self.deconv2,reg = ut.deconv2(inp=self.deconv1,shape=d2_shape,
       relu=True,name='deconv2',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
@@ -603,14 +603,14 @@ class ModelStv1:
 
 
     d1_shape = [ks6,ks6,num_k6,num_k6]
-    self.deconv1,reg = ut.deconv2(inp=self.conv6,shape=c6_shape,
+    self.deconv1,reg = ut.deconv2(inp=self.conv6,shape=d1_shape,
       relu=True,dropout=self.dropout,drop_prob=self.drop_prob,
       histogram=histogram,name='deconv1',l2=True)
     self.reg.append(reg)
 
     #d2_shape = [ks5,ks5,num_k4,num_k5]
     d2_shape = [ks5,ks5,num_k5,num_k6]
-    self.deconv2,reg = ut.deconv2(inp=self.deconv1,shape=c5_shape,
+    self.deconv2,reg = ut.deconv2(inp=self.deconv1,shape=d2_shape,
       relu=True,name='deconv2',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
@@ -618,14 +618,14 @@ class ModelStv1:
     self.sum1 = self.deconv2 + self.conv4
     #d3_shape = [ks4,ks4,num_k3,num_k4]
     d3_shape = [ks4,ks4,num_k4,num_k5]
-    self.deconv3,reg = ut.deconv2(inp=self.sum1,shape=c4_shape,
+    self.deconv3,reg = ut.deconv2(inp=self.sum1,shape=d3_shape,
       relu=True,strides=[1,2,2,1],name='deconv3',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
 
     #d4_shape = [ks3,ks3,num_k2,num_k3]
     d4_shape = [ks3,ks3,num_k3,num_k4]
-    self.deconv4,reg = ut.deconv2(inp=self.deconv3,shape=c3_shape,
+    self.deconv4,reg = ut.deconv2(inp=self.deconv3,shape=d4_shape,
       relu=True,name='deconv4',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
@@ -633,7 +633,7 @@ class ModelStv1:
     self.sum2 = self.deconv4 + self.conv2
     #d5_shape = [ks2,ks2,num_k2,num_k2]
     d5_shape = [ks2,ks2,num_k1,num_k3]
-    self.deconv5,reg = ut.deconv2(inp=self.sum2,shape=c2_shape,
+    self.deconv5,reg = ut.deconv2(inp=self.sum2,shape=d5_shape,
       strides=[1,2,2,1],relu=True,name='deconv5',dropout=self.dropout,
       drop_prob=self.drop_prob,histogram=histogram,l2=True)
     self.reg.append(reg)
