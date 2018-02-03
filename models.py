@@ -446,7 +446,8 @@ class ModelMPv1:
     self.reg.append(reg)
 
     self.unpool1 = ut.unpool_with_argmax(self.deconv2,self.ind2,
-                      input_shape=[self.x.get_shape()[0].value,7,7,num_k4],name='unpool1')
+                      input_shape=[self.x.get_shape()[0].value,7,7,num_k5],
+                      name='unpool1')
 
     self.sum1 = self.unpool1 + self.conv4
     d3_shape = [ks4,ks4,num_k4,num_k5]
@@ -462,7 +463,8 @@ class ModelMPv1:
     self.reg.append(reg)
 
     self.unpool2 = ut.unpool_with_argmax(self.deconv4,self.ind1,
-                      input_shape=[self.x.get_shape()[0].value,14,14,num_k2],name='unpool2')
+                      input_shape=[self.x.get_shape()[0].value,14,14,num_k3],
+                      name='unpool2')
 
     self.sum2 = self.unpool2 + self.conv2
     d5_shape = [ks2,ks2,num_k2,num_k3]
@@ -482,9 +484,11 @@ class ModelMPv1:
     msg = '\n\t{0} \n\t{1} \n\t{2} \n\t{3} \n\t{4} \n\t{5}'
     msg = msg.format(self.conv1,self.conv2,self.conv3,self.conv4,
                      self.conv5,self.conv6)
-    msg += '\n\t{0} \n\t{1} \n\t{2} \n\t{3} \n\t{4} \n\t{5}'
-    msg = msg.format(self.deconv1,self.deconv2,self.deconv3,
-                     self.deconv4,self.deconv5,self.deconv6)
+    msg += '\n\t{0} \n\t{1} \n\t{2} \n\t{3} \n\t{4} \n\t{5} '+
+           '\n\t{6} \n\t{7}'
+    msg = msg.format(self.deconv1,self.deconv2,self.unpool1,
+                     self.deconv3,self.deconv4,self.unpool2,
+                     self.deconv5,self.deconv6)
     print(msg)
 
   def last_layer(self):
