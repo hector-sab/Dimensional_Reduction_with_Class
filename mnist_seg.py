@@ -85,6 +85,9 @@ parser.add_argument('--bs',help='Size of batch for training',
       type=int,default=1)
 parser.add_argument('--ex',help='Examples allowed in tensor',
       type=int)
+msg = "Indicates which version of a same model it's going to run. "
+msg += "It just affects the naming of the directories where data is stored"
+parser.add_argument('-v','--version',help=msg,type=int,default=1)
 ######## ENDS: Other args
 
 
@@ -157,7 +160,7 @@ if __name__=='__main__':
   model = models.SegModel(train=train,val=val,test=test,model=args.model,
                 bs=args.bs,save=args.save,load=args.load,load_step=args.step,
                 lr=args.lr,dropout=args.do,drop_prob=args.dop,
-                tb_log=args.tb_log,ex=args.ex,max_to_keep=50000)
+                tb_log=args.tb_log,ex=args.ex,max_to_keep=50000,version=args.version)
   
   model.optimize(num_it=args.iterations,verb=100)
     

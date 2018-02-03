@@ -22,7 +22,7 @@ class SegModel:
     bs=1,lr=3e-5,dropout=False,drop_prob=0.8,training=True,save=False,
     save_dir=None,save_checkp=None,max_to_keep=1,load=False,load_dir=None,
     load_checkp=None,save_load_same=True,load_step=None,tb_log=False,
-    log_dir=None,log_name=None,l2=True):
+    log_dir=None,log_name=None,l2=True,version=1):
     """
     -train: Triaining data using the class DataSeg
     -val: Validation data using the class DataSeg
@@ -50,6 +50,9 @@ class SegModel:
     -log_dir: Directory where it will be saved
     -log_name: Name of the summary
     -l2: Activates l2 regularizatoin
+    -version: Indicates  which version of a same net we are executing.
+        It just affects the nameming of the directories where data is
+        stored
     """
     self.session = tf.Session()
     # Data base
@@ -88,11 +91,11 @@ class SegModel:
     if model==0:
       self.model = ModelStv1(inp=self.x,dropout=self.dropout,
         drop_prob=self.drop_prob,histogram=self.tb_log,
-        num_class=self.num_class)
+        num_class=self.num_class,version=version)
     elif model==1:
       self.model = ModelMPv1(inp=self.x,dropout=self.dropout,
         drop_prob=self.drop_prob,histogram=self.tb_log,
-        num_class=self.num_class)
+        num_class=self.num_class,version=version)
     else:
       print("There's no model with that option choice...")
       sys.exit()
@@ -229,6 +232,8 @@ class SegModel:
     """
     if not os.path.exists(save_dir):
       os.makedirs(save_dir)
+    msg = '\nSaving checkpoints at: {0}{1}'.format(save_dir,save_checkp)
+    print(msg)
     self.save_path = os.path.join(save_dir,save_checkp)
 
   def loadable(self,load_dir,load_checkp,save_load_same):
@@ -354,7 +359,10 @@ class ModelMPv1:
   Contains the model of the segmentation using max pooling
   """
   def __init__(self,inp,dropout=False,drop_prob=0.25,
-    histogram=True,num_class=11):
+    histogram=True,num_class=11,def_cp_name='mnist_seg',
+    def_cp_path='checkpoints/mnist_seg_mp/',
+    def_log_name='mnist_seg_mp',
+    def_log_path='./log/',version=1):
     """
     inp: Input placeholder.
     shape: Tensorflow tensor shape used in the input placeholder.
@@ -363,6 +371,10 @@ class ModelMPv1:
     drop_prob: Percentage of neurons to be turned off
     histogram: Indicates if information for tensorboard should be annexed.
     """
+    self.def_cp_name = def_cp_name
+    self.def_cp_path = def_cp_path+'v'+str(version)
+    self.def_log_name = def_log_name+'v'+str(version)
+    self.def_log_path = def_log_path
     self.reg = [] # Contains l2 regularizaton for weights
     self.dropout = dropout
     self.drop_prob = drop_prob
@@ -504,8 +516,8 @@ class ModelMPv1:
     """
     Indicates where to save/load the model
     """
-    def_name = 'mnist_seg'
-    def_path = 'checkpoints/mnist_seg_mpv1/'
+    def_name = self.def_cp_name
+    def_path = self.def_cp_path
 
     if path is None and name is None:
       path = def_path
@@ -521,8 +533,8 @@ class ModelMPv1:
     """
     Indicates where to save log used for tensorboard
     """
-    def_name = 'mnist_seg_mpv1'
-    def_path = './log/'
+    def_name = self.def_log_name
+    def_path = self.def_log_path
 
     if path is None and name is None:
       path = def_path
@@ -542,7 +554,9 @@ class ModelStv1:
   and no max pooling
   """
   def __init__(self,inp,dropout=False,drop_prob=0.25,
-    histogram=True,num_class=11,verb=True):
+    histogram=True,num_class=11,verb=True,def_cp_name='mnist_seg',
+    def_cp_path='checkpoints/mnist_seg_st/',def_log_name='mnist_seg_st',
+    def_log_path='./log/',version=1):
     """
     inp: Input placeholder.
     shape: Tensorflow tensor shape used in the input placeholder.
@@ -551,6 +565,10 @@ class ModelStv1:
     drop_prob: Percentage of neurons to be turned off
     histogram: Indicates if information for tensorboard should be annexed.
     """
+    self.def_cp_name = def_cp_name
+    self.def_cp_path = def_cp_path+'v'+str(version)
+    self.def_log_name = def_log_name+'v'+str(version)
+    self.def_log_path = def_log_path
     self.reg = [] # Contains l2 regularizaton for weights
     self.dropout = dropout
     self.drop_prob = drop_prob
@@ -676,8 +694,8 @@ class ModelStv1:
     """
     Indicates where to save/load the model
     """
-    def_name = 'mnist_seg'
-    def_path = 'checkpoints/mnist_seg_stv1/'
+    def_name = self.def_cp_name
+    def_path = self.def_cp_path
 
     if path is None and name is None:
       path = def_path
@@ -693,8 +711,8 @@ class ModelStv1:
     """
     Indicates where to save log used for tensorboard
     """
-    def_name = 'mnist_seg_stv1'
-    def_path = './log/'
+    def_name = self.def_log_name
+    def_path = self.def_log_path
 
     if path is None and name is None:
       path = def_path
