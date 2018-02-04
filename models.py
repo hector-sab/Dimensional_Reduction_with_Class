@@ -120,8 +120,11 @@ class SegModel:
 
     self.init_variables()
 
+    """ # I belive it must always be executed... let's see...
     if self.save:
       self.savable(save_dir,save_checkp)
+    """
+    self.savable(save_dir,save_checkp)
     if self.load:
       self.loadable(load_dir,load_checkp,save_load_same)
 
@@ -198,7 +201,7 @@ class SegModel:
     Description: Returns the validation accuracy when batch size
             is equal to bs (one...).
 
-    data: DataSet used to calculate full accuracy. It cann be
+    data: DataSet used to calculate full accuracy. It can be
           train, val, or test
     """
     dataset.restart_next_batch()
@@ -207,6 +210,9 @@ class SegModel:
     
     for it in range(int(num_ex/bs)):
       data = dataset.next_batch(bs)
+      if self.ex is not None and data['ims'].shape[0]<self.ex:
+        # Ensures that won't be an error caused by shape incompatibility
+        continue
       feed_dict = {self.x: data['ims'],
                    self.y_seg: data['seg']}
       acc = self.session.run(self.accuracy,feed_dict=feed_dict)
@@ -230,10 +236,11 @@ class SegModel:
     """
     Save path to be saved
     """
-    if not os.path.exists(save_dir):
-      os.makedirs(save_dir)
-    msg = '\nSaving checkpoints at: {0}{1}'.format(save_dir,save_checkp)
-    print(msg)
+    if self.save:
+      if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+      msg = '\nSaving checkpoints at: {0}{1}'.format(save_dir,save_checkp)
+      print(msg)
     self.save_path = os.path.join(save_dir,save_checkp)
 
   def loadable(self,load_dir,load_checkp,save_load_same):
@@ -245,6 +252,8 @@ class SegModel:
     else:
       load_path = os.path.join(load_dir,load_checkp)
 
+    msg = '\nLoading checkpoint: {0}'.format(load_path)
+    print(msg)
     self.restore_variables(load_path,self.load_step)
 
   def init_variables(self):
@@ -284,6 +293,15 @@ class SegModel:
       self.optimizer = tf.train.AdamOptimizer(
         learning_rate=self.lr).minimize(self.cost)
 
+      # TODO: Fix batch norm
+      ### STARTS: For batch norm... mean and variance
+      #update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+      #
+      #with tf.control_dependencies(update_ops):
+      #  train_ops = [self.optimizer] + update_ops
+      #  train_op_final = tf.group(*train_ops)
+      ### ENDS: For batch norm... mean and variance
+
     with tf.name_scope('accuracy'):
       self.correct_prediction = tf.equal(self.y_pred_cls,self.y_seg_cls,
                                     name='correct_prediction')
@@ -310,7 +328,7 @@ class SegModel:
         self.num_class)
       self.seg_out_vis = tf.cast(tf.scalar_mul(255,self.seg_out_vis),
         tf.uint8)
-      tf.summary.image('seg output',self.seg_out_vis,1)
+      tf.summary.image('seg_output',self.seg_out_vis,1)
       ### END: Seg Image visualization
 
       msg = '\n\t{0} \n\t{1} \n\t{2} \n\t{3}'
@@ -328,6 +346,10 @@ class SegModel:
       self.x = tf.placeholder(tf.float32,\
         shape=[self.ex,self.im_h,self.im_w,self.im_c],name='x')
       tf.summary.image('input',self.x,1)
+
+      # TODO: Fix batch norm
+      # Batch normalization
+      #self.x = tf.layers.batch_normalization(inputs=self.x_)
 
       # Image with pixel-lebel labels
       self.y_seg = tf.placeholder(tf.int64,\
@@ -360,7 +382,7 @@ class ModelMPv1:
   """
   def __init__(self,inp,dropout=False,drop_prob=0.25,
     histogram=True,num_class=11,def_cp_name='mnist_seg',
-    def_cp_path='checkpoints/mnist_seg_mp/',
+    def_cp_path='checkpoints/mnist_seg_mp',
     def_log_name='mnist_seg_mp',
     def_log_path='./log/',version=1):
     """
@@ -373,8 +395,12 @@ class ModelMPv1:
     """
     self.def_cp_name = def_cp_name
     self.def_cp_path = def_cp_path+'v'+str(version)
+    if self.def_cp_path[-1]!='/':
+      self.def_cp_path += '/'
     self.def_log_name = def_log_name+'v'+str(version)
     self.def_log_path = def_log_path
+    if self.def_log_path[-1]!='/':
+      self.def_log_path += '/'
     self.reg = [] # Contains l2 regularizaton for weights
     self.dropout = dropout
     self.drop_prob = drop_prob
@@ -555,7 +581,7 @@ class ModelStv1:
   """
   def __init__(self,inp,dropout=False,drop_prob=0.25,
     histogram=True,num_class=11,verb=True,def_cp_name='mnist_seg',
-    def_cp_path='checkpoints/mnist_seg_st/',def_log_name='mnist_seg_st',
+    def_cp_path='checkpoints/mnist_seg_st',def_log_name='mnist_seg_st',
     def_log_path='./log/',version=1):
     """
     inp: Input placeholder.
@@ -567,8 +593,12 @@ class ModelStv1:
     """
     self.def_cp_name = def_cp_name
     self.def_cp_path = def_cp_path+'v'+str(version)
+    if self.def_cp_path[-1]!='/':
+      self.def_cp_path += '/'
     self.def_log_name = def_log_name+'v'+str(version)
     self.def_log_path = def_log_path
+    if self.def_log_path[-1]!='/':
+      self.def_log_path += '/'
     self.reg = [] # Contains l2 regularizaton for weights
     self.dropout = dropout
     self.drop_prob = drop_prob
