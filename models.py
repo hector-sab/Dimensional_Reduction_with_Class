@@ -135,7 +135,7 @@ class SegModel:
     feed_dict = {self.x: inp}
     out = self.session.run(self.y_pred_cls_seg,feed_dict=feed_dict)
     return(out)
-    
+
   def optimize(self,num_it=0,verb=None,tb_log_it=100):
     """
     Description: Trains the model
@@ -487,7 +487,7 @@ class ModelMPv1:
     self.reg.append(reg)
 
     self.unpool1 = ut.unpool_with_argmax(self.deconv2,self.ind2,
-                      input_shape=[1,7,7,num_k4],
+                      input_shape=[self.x.get_shape()[0].value,7,7,num_k4],
                       name='unpool1')
 
     #self.sum1 = self.unpool1 + self.conv4
