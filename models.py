@@ -269,7 +269,7 @@ class SegModel:
     if self.load_step is None:
       self.saver.restore(sess=self.session, save_path=load_path)
     else:
-      self.saver.restore(sess=self.session, save_path=load_path+str(load_step))
+      self.saver.restore(sess=self.session, save_path=load_path+'-'+str(load_step))
       self.total_it = load_step
 
   def trainable(self):
