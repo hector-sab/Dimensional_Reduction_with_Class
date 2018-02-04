@@ -148,6 +148,9 @@ class SegModel:
     for it in range(num_it):
       self.total_it += 1
 
+      if self.ex is not None and data['ims'].shape[0]<self.ex:
+        # Ensures that won't be an error caused by shape incompatibility
+        continue
       data = self.train.next_batch(self.bs)
       if self.dropout:
         feed_dict = {self.x: data['ims'], 
@@ -216,6 +219,7 @@ class SegModel:
       data = dataset.next_batch(bs)
       if self.ex is not None and data['ims'].shape[0]<self.ex:
         # Ensures that won't be an error caused by shape incompatibility
+        num_ex -= 1
         continue
       feed_dict = {self.x: data['ims'],
                    self.y_seg: data['seg']}
