@@ -131,7 +131,11 @@ class SegModel:
     if self.tb_log:
       self.tensorboard_log(log_dir,log_name)
 
-
+  def predict(self,inp):
+    feed_dict = {self.x: inp}
+    out = self.session.run(self.y_pred_cls_seg,feed_dict=feed_dict)
+    return(out)
+    
   def optimize(self,num_it=0,verb=None,tb_log_it=100):
     """
     Description: Trains the model
