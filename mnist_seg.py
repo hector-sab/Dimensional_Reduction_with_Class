@@ -132,6 +132,7 @@ if __name__=='__main__':
   # Split train into train and validation
 
   ind = np.arange(train_ims.shape[0])
+  np.random.seed(3) # Ensures repeatability
   np.random.shuffle(ind)
 
   ind = int(ind.shape[0]*0.9)
