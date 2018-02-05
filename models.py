@@ -44,7 +44,7 @@ class SegModel:
     -load_checkp: Name of the checkpoint to be loaded
     -save_load_same: Flag indicating if the load and save model 
               are the same
-    -load_step: if the model as many checkpoints steps, select which
+    -load_step: if the model has many checkpoints steps, select which
               one should be loaded
     -tb_log: Flag indicating if summaries will be saved
     -log_dir: Directory where it will be saved
@@ -377,12 +377,16 @@ class SegModel:
       self.seg_inp_vis = tf.divide(self.y_seg,self.num_class)
       self.seg_inp_vis = tf.cast(tf.scalar_mul(255,self.seg_inp_vis),
         tf.uint8)
-      tf.summary.image('seg input',self.seg_inp_vis,1)
+      tf.summary.image('seg_input',self.seg_inp_vis,1)
       ### END: Seg Image visualization
 
       msg = '\n\t{0} \n\t{1} \n\t{2} \n\t{3}'
       msg = msg.format(self.x,self.y_seg,self.y_seg_cls,self.y_seg_onehot)
       print(msg)
+
+  def close_session(self):
+    self.session.close()
+    print('Session closed')
 
 
 class ModelMPv1:
