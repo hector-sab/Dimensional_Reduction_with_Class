@@ -64,7 +64,7 @@ msg = 'Select which model to train/predict:\n\t'
 msg += '0 - Strides without max pooling\n\t'
 msg += '1 - Max pooling for dimensional reduction'
 parser.add_argument('-m','--model',help=msg,
-      type=int,default=0,choices=[0,1])
+      type=int,default=0,choices=[0,1,2,3])
 parser.add_argument('--do',help='Use DropOut if selected',
       action='store_true')
 parser.add_argument('--dop',help='DropOut probability',
