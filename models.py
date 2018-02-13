@@ -97,6 +97,23 @@ class Model:
 
     return(path,name)
 
+  def log_dir(self,path,name):
+    """
+    Indicates where to save log used for tensorboard
+    """
+    def_name = self.def_log_name
+    def_path = self.def_log_path
+
+    if path is None and name is None:
+      path = def_path
+      name = def_name
+    elif path is None and name is not None:
+      path = def_path
+    elif path is not None and name is None:
+      name = def_name
+
+    return(path,name)
+
 class MaxPoolNoSC(Model):
   def __init__(self,inp,num_class=11,version=1,histogram=False,
     dropout=False,drop_prob=0.85,def_cp_name='mnist_seg',
