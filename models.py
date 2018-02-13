@@ -120,7 +120,7 @@ class MaxPoolNoSC(Model):
   def __init__(self,inp,num_class=11,version=1,histogram=False,
     dropout=False,drop_prob=0.85,def_cp_name='mnist_seg',
     def_cp_path='checkpoints/mnist_seg_mpnosc',def_log_name='mnist_seg_mpnosc',
-    def_log_path='./log/'):
+    def_log_path='./log/',ex=1):
     """
     inp: Input placeholder.
     shape: Tensorflow tensor shape used in the input placeholder.
@@ -131,6 +131,9 @@ class MaxPoolNoSC(Model):
     """
     Model.__init__(self,inp,num_class,version,histogram,dropout,
       drop_prob,def_cp_name,def_cp_path,def_log_name,def_log_path)
+
+    self.ex = ex#tf.placeholder_with_default(1,shape=[])
+    
     ####-S: Core Model
     self.model = self.core_model()
     ####-E: Core Model
@@ -145,8 +148,6 @@ class MaxPoolNoSC(Model):
     ####-E: Network Specs
     ##
     ####-S: Core Model
-    # Used to help in dinamyc max unpooling...
-    self.ex = tf.placeholder_with_default(1,shape=[])
     self.pools = []
     self.ind = []
 
