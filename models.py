@@ -145,7 +145,8 @@ class MaxPoolNoSC(Model):
     ####-E: Network Specs
     ##
     ####-S: Core Model
-    
+    # Used to help in dinamyc max unpooling...
+    self.ex = tf.placeholder_with_default(1,shape=[])
     self.pools = []
     self.ind = []
 
@@ -199,7 +200,10 @@ class MaxPoolNoSC(Model):
                   l2=True,relu=True,name='deconv')
     self.deconvs.append(deconv)
 
-    unpool = tut.unpool_with_argmax(inp=deconv,self.ind[1],name='unpool1')
+    unpool = tut.unpool_with_argmax(inp=deconv,ind=self.ind[1],
+                    input_shape=[self.ex,deconv.get_shape()[1].value,
+                                  deconv.get_shape()[2].value,dnum_k[1]],
+                    name='unpool1')
 
     shape = [dks[2],dks[2],dnum_k[3],dnum_k[2]]
     deconv = tut.deconv(inp=unpool,shape=shape,histogram=self.histogram,
@@ -211,7 +215,10 @@ class MaxPoolNoSC(Model):
                   l2=True,relu=True,name='deconv')
     self.deconvs.append(deconv)
 
-    unpool = tut.unpool_with_argmax(inp=deconv,self.ind[0],name='unpool2')
+    unpool = tut.unpool_with_argmax(inp=deconv,ind=self.ind[0],
+                    input_shape=[self.ex,deconv.get_shape()[1].value,
+                                  deconv.get_shape()[2].value,dnum_k[3]],
+                    name='unpool2')
 
     shape = [dks[4],dks[4],dnum_k[5],dnum_k[4]]
     deconv = tut.deconv(inp=unpool,shape=shape,histogram=self.histogram,
