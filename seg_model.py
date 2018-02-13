@@ -59,6 +59,8 @@ class SegModel:
 
     #####-S: Parameters
     self.ex = ex
+    self.save = save
+    self.load = load
     #####-E: Parameters
     ##
     #####-S: Image Specs
@@ -107,8 +109,6 @@ class SegModel:
       self.dropout = dropout
       self.drop_prob = drop_prob
       self.tb_log = tb_log
-      self.save = save
-      self.load = load
       self.load_step = load_step
       self.total_it = 0
       self.best_acc = 0
