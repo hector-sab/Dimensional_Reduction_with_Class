@@ -21,7 +21,7 @@ class SegModel:
     bs=1,lr=3e-5,dropout=False,drop_prob=0.8,training=True,save=False,
     save_dir=None,save_checkp=None,max_to_keep=1,load=False,load_dir=None,
     load_checkp=None,save_load_same=True,load_step=None,tb_log=False,
-    log_dir=None,log_name=None,l2=True,version=1):
+    log_dir=None,log_name=None,l2=True,version=1,deacy_steps=10000):
     """
     -train: Triaining data using the class DataSeg
     -val: Validation data using the class DataSeg
@@ -62,7 +62,9 @@ class SegModel:
     # Parameters
     self.ex = ex 
     self.bs = bs # Number of examples per batch
-    self.lr = lr
+    #self.lr = lr
+    self.global_step = tf.Variable(0,trainable=False)
+    self.lr = tf.train.exponential_decay(lr,global_step,deacy_steps,0.96,staircase=True)
     self.dropout = dropout
     self.drop_prob = drop_prob
     self.tb_log = tb_log
@@ -302,7 +304,7 @@ class SegModel:
 
     with tf.name_scope('train'):
       self.optimizer = tf.train.AdamOptimizer(
-        learning_rate=self.lr).minimize(self.cost)
+        learning_rate=self.lr).minimize(self.cost,global_step=self.global_step)
 
       # TODO: Fix batch norm
       ### STARTS: For batch norm... mean and variance
