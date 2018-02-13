@@ -166,7 +166,7 @@ class MaxPoolNoSC(Model):
 
       shape = [dks[i],dks[i],dnum_k[i+1],dnum_k[i]]
       deconv,reg = tut.deconv(inp=input_,shape=shape,histogram=self.histogram,
-                      l2_reg=True,relu=True,name='deconv'+str(i))
+                      l2=True,relu=True,name='deconv'+str(i))
       print(deconv)
 
       self.deconvs.append(deconv)
