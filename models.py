@@ -109,7 +109,8 @@ class MaxPoolNoSC(Model):
     drop_prob: Percentage of neurons to be turned off
     histogram: Indicates if information for tensorboard should be annexed.
     """
-    Model.__init__(self,inp=inp,num_class,version,histogram,dropout,
+    print('HERE ',inp)
+    Model.__init__(self,inp,num_class,version,histogram,dropout,
       drop_prob,def_cp_name,def_cp_path,def_log_name,def_log_path)
     ####-S: Core Model
     self.model = self.core_model()
