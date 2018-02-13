@@ -428,7 +428,7 @@ class StrideNoSC(Model):
   """
   def __init__(self,inp,num_class=11,version=1,histogram=False,
     dropout=False,drop_prob=0.85,def_cp_name='mnist_seg',
-    def_cp_path='checkpoints/mnist_seg_mpsc',def_log_name='mnist_seg_mpsc',
+    def_cp_path='checkpoints/mnist_seg_stnosc',def_log_name='mnist_seg_stnosc',
     def_log_path='./log/'):
     """
     inp: Input placeholder.
@@ -549,7 +549,7 @@ class StrideSC(Model):
   """
   def __init__(self,inp,num_class=11,version=1,histogram=False,
     dropout=False,drop_prob=0.85,def_cp_name='mnist_seg',
-    def_cp_path='checkpoints/mnist_seg_mpsc',def_log_name='mnist_seg_mpsc',
+    def_cp_path='checkpoints/mnist_seg_sdsc',def_log_name='mnist_seg_stsc',
     def_log_path='./log/'):
     """
     inp: Input placeholder.
@@ -634,7 +634,7 @@ class StrideSC(Model):
     self.reg.append(reg)
     print('\t{}'.format(deconv))
 
-    
+
     shape = [dks[2],dks[2],dnum_k[3],dnum_k[2]]
     deconv,reg = tut.deconv(inp=deconv,shape=shape,histogram=self.histogram,
                   l2=True,relu=True,name='deconv')

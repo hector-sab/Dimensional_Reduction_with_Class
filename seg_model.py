@@ -104,11 +104,14 @@ class SegModel:
       sys.exit()
     """
     if model==0:
-      self.model = md.MaxPoolNoSC(inp=self.x)
+      self.model = md.MaxPoolNoSC(inp=self.x,ex=self.ex)
     elif model==1:
-      self.model = md.MaxPoolSC(inp=self.x)
+      self.model = md.MaxPoolSC(inp=self.x,ex=self.ex)
     elif model==2:
       self.model = md.StrideNoSC(inp=self.x)
+    elif model==3:
+      self.model = md.StrideNoSC(inp=self.x)
+
 
     # Specify where to save the model and the tb log
     save_dir,save_checkp = self.model.checkpoint_dir(save_dir,save_checkp)
