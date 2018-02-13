@@ -112,6 +112,7 @@ class MaxPoolNoSC(Model):
     print('HERE ',inp)
     Model.__init__(self,inp,num_class,version,histogram,dropout,
       drop_prob,def_cp_name,def_cp_path,def_log_name,def_log_path)
+    print(Model.x)
     ####-S: Core Model
     self.model = self.core_model()
     ####-E: Core Model
