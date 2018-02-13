@@ -154,6 +154,7 @@ class MaxPoolNoSC(Model):
     conv = tut.conv(inp=self.x,shape=shape,histogram=self.histogram,
               l2=True,relu=True,name='conv1')
     self.convs.append(conv)
+    print('HERE {}'.format(conv))
 
     shape = [cks[1],cks[1],cnum_k[1],cnum_k[2]]
     conv = tut.conv(inp=conv,shape=shape,histogram=self.histogram,
