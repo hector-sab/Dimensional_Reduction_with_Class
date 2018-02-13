@@ -17,11 +17,12 @@ class SegModel:
   semantic segmentation
   """
   # TODO: Check if visualization nodes can be reused to create just one
-  def __init__(self,train,val,test=None,num_class=11,ex=None,model=0,
-    bs=1,lr=3e-5,dropout=False,drop_prob=0.8,training=True,save=False,
-    save_dir=None,save_checkp=None,max_to_keep=1,load=False,load_dir=None,
-    load_checkp=None,save_load_same=True,load_step=None,tb_log=False,
-    log_dir=None,log_name=None,l2=True,version=1,deacy_steps=10000):
+  # TODO: Check if max_to_keep is working....
+  def __init__(self,im_h=28,im_w=28,im_c=1,num_class=11,model=0,ex=None,
+    training=False,train=None,test=None,val=None,bs=1,lr=3e-5,dropout=False,drop_prob=0.8,
+    save=False,save_dir=None,save_checkp=None,load=False,load_dir=None,load_checkp=None,
+    save_load_same=True,load_step=None,tb_log=False,log_dir=None,log_name=None,
+    deacy_steps=10000,version=1,max_to_keep=1):
     """
     -train: Triaining data using the class DataSeg
     -val: Validation data using the class DataSeg
@@ -55,54 +56,23 @@ class SegModel:
     -decay_step: At hoe many steps the learning rate should decrease.
     """
     self.session = tf.Session()
-    # Data base
-    self.train = train
-    self.val = val
-    self.test = test
 
-    # Parameters
-    self.ex = ex 
-    self.bs = bs # Number of examples per batch
-    #self.lr = lr
-    self.global_step = tf.Variable(0,trainable=False)
-    self.lr = tf.train.exponential_decay(lr,self.global_step,deacy_steps,0.96,staircase=True)
-    self.dropout = dropout
-    self.drop_prob = drop_prob
-    self.tb_log = tb_log
-    self.training = training
-    self.save = save
-    self.load = load
-    self.load_step = load_step
-
-    self.total_it = 0
-    self.best_acc = 0
-
-    self.l2 = l2
-
-    # Image specs
-    self.im_h = self.train.images.shape[1]
-    self.im_w = self.train.images.shape[2]
-    self.im_c = self.train.images.shape[3]
-
+    #####-S: Parameters
+    self.ex = ex
+    #####-E: Parameters
+    ##
+    #####-S: Image Specs
+    self.im_h = im_h
+    self.im_w = im_w
+    self.im_c = im_c
     self.num_class = num_class
-
-    # Create input placeholders
+    #####-E: Image Specs
+    ##
+    #####-S: Create input placeholders
     self.inputs()
-
-    # Select the model to train
-    """
-    if model==0:
-      self.model = ModelStv1(inp=self.x,dropout=self.dropout,
-        drop_prob=self.drop_prob,histogram=self.tb_log,
-        num_class=self.num_class,version=version)
-    elif model==1:
-      self.model = ModelMPv1(inp=self.x,dropout=self.dropout,
-        drop_prob=self.drop_prob,histogram=self.tb_log,
-        num_class=self.num_class,version=version)
-    else:
-      print("There's no model with that option choice...")
-      sys.exit()
-    """
+    #####-E: Create input placeholders
+    ##
+    #####-S: Creates model
     if model==0:
       self.model = md.MaxPoolNoSC(inp=self.x,ex=self.ex)
     elif model==1:
@@ -110,33 +80,55 @@ class SegModel:
     elif model==2:
       self.model = md.StrideNoSC(inp=self.x)
     elif model==3:
-      self.model = md.StrideNoSC(inp=self.x)
+      self.model = md.StrideSC(inp=self.x)
+
 
 
     # Specify where to save the model and the tb log
     save_dir,save_checkp = self.model.checkpoint_dir(save_dir,save_checkp)
     load_dir,load_checkp = self.model.checkpoint_dir(load_dir,load_checkp)
     log_dir,log_name = self.model.log_dir(log_dir,log_name)
-
+    #####-E: Creates model
+    ##
+    #####
     self.last_layer = self.model.last_layer()
-
-    # Create output placeholders
+    #####
+    ##
+    #####-S: Creates Output placeholders
     self.outputs()
+    #####-E: Creates Output placeholders
+    ##
+    #####-S: Trainable
+    if training:
+      self.bs = bs
+      #self.lr = lr
+      self.global_step = tf.Variable(0,trainable=False)
+      self.lr = tf.train.exponential_decay(lr,self.global_step,deacy_steps,0.96,staircase=True)
+      self.dropout = dropout
+      self.drop_prob = drop_prob
+      self.tb_log = tb_log
+      self.save = save
+      self.load = load
+      self.load_step = load_step
+      self.total_it = 0
+      self.best_acc = 0
 
-    if self.training:
+      self.l2 = True
+
+      self.train = train
+      self.val = val
+      self.test = test
+
       self.trainable()
 
-    self.summary = tf.summary.merge_all()
+      self.summary = tf.summary.merge_all()
+    #####-E: Trainable
 
     if self.save or self.load:
       self.saver = tf.train.Saver(max_to_keep=max_to_keep)
-
+    
     self.init_variables()
-
-    """ # I belive it must always be executed... let's see...
-    if self.save:
-      self.savable(save_dir,save_checkp)
-    """
+    
     self.savable(save_dir,save_checkp)
     if self.load:
       self.loadable(load_dir,load_checkp,save_load_same)
