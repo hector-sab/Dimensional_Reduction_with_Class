@@ -52,6 +52,7 @@ class SegModel:
     -version: Indicates  which version of a same net we are executing.
         It just affects the nameming of the directories where data is
         stored
+    -decay_step: At hoe many steps the learning rate should decrease
     """
     self.session = tf.Session()
     # Data base
@@ -64,7 +65,7 @@ class SegModel:
     self.bs = bs # Number of examples per batch
     #self.lr = lr
     self.global_step = tf.Variable(0,trainable=False)
-    self.lr = tf.train.exponential_decay(lr,global_step,deacy_steps,0.96,staircase=True)
+    self.lr = tf.train.exponential_decay(lr,self.global_step,deacy_steps,0.96,staircase=True)
     self.dropout = dropout
     self.drop_prob = drop_prob
     self.tb_log = tb_log
