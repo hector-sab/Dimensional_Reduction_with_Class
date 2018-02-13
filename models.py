@@ -201,7 +201,7 @@ class MaxPoolNoSC(Model):
               l2=True,relu=True,name='conv6')
     self.convs.append(conv)
     self.reg.append(reg)
-    print('\t'.format(conv))
+    print('\t{}'.format(conv))
 
 
 
