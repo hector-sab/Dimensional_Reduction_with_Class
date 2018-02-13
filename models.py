@@ -164,7 +164,7 @@ class MaxPoolNoSC(Model):
 
     pool,ind = tut.max_pool(conv,args=True,name='maxpool1')
     self.pools.append(pool)
-    self.inds.append(ind)
+    self.ind.append(ind)
 
     shape = [cks[2],cks[2],cnum_k[2],cnum_k[3]]
     conv,reg = tut.conv(inp=pool,shape=shape,histogram=self.histogram,
@@ -180,7 +180,7 @@ class MaxPoolNoSC(Model):
 
     pool,ind = tut.max_pool(conv,args=True,name='maxpool2')
     self.pools.append(pool)
-    self.inds.append(ind)
+    self.ind.append(ind)
 
     shape = [cks[4],cks[4],cnum_k[4],cnum_k[5]]
     conv,reg = tut.conv(inp=pool,shape=shape,histogram=self.histogram,
