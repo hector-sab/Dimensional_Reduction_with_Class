@@ -222,7 +222,7 @@ class MaxPoolNoSC(Model):
     unpool = tut.unpool_with_argmax(deconv,ind=self.ind[1],
                     input_shape=[self.ex,deconv.get_shape()[1].value,
                                   deconv.get_shape()[2].value,dnum_k[2]],
-                    ksize=[1,2,2,2]
+                    ksize=[1,2,2,2],
                     name='unpool1')
     print('\t{}'.format(unpool))
 
