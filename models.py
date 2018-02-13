@@ -155,50 +155,52 @@ class MaxPoolNoSC(Model):
               l2=True,relu=True,name='conv1')
     self.convs.append(conv)
     self.reg.append(reg)
-    print(conv)
+    print('\t{}'.format(conv))
 
     shape = [cks[1],cks[1],cnum_k[1],cnum_k[2]]
     conv,reg = tut.conv(inp=conv,shape=shape,histogram=self.histogram,
               l2=True,relu=True,name='conv2')
     self.convs.append(conv)
     self.reg.append(reg)
-    print(conv)
+    print('\t{}'.format(conv))
 
     pool,ind = tut.max_pool(conv,args=True,name='maxpool1')
     self.pools.append(pool)
     self.ind.append(ind)
+    print('\t{}'.format(pool))
 
     shape = [cks[2],cks[2],cnum_k[2],cnum_k[3]]
     conv,reg = tut.conv(inp=pool,shape=shape,histogram=self.histogram,
               l2=True,relu=True,name='conv3')
     self.convs.append(conv)
     self.reg.append(reg)
-    print(conv)
+    print('\t{}'.format(conv))
 
     shape = [cks[3],cks[3],cnum_k[3],cnum_k[4]]
     conv,reg = tut.conv(inp=conv,shape=shape,histogram=self.histogram,
               l2=True,relu=True,name='conv4')
     self.convs.append(conv)
     self.reg.append(reg)
-    print(conv)
+    print('\t{}'.format(conv))
 
     pool,ind = tut.max_pool(conv,args=True,name='maxpool2')
     self.pools.append(pool)
     self.ind.append(ind)
+    print('\t{}'.format(pool))
 
     shape = [cks[4],cks[4],cnum_k[4],cnum_k[5]]
     conv,reg = tut.conv(inp=pool,shape=shape,histogram=self.histogram,
               l2=True,relu=True,name='conv5')
     self.convs.append(conv)
     self.reg.append(reg)
-    print(conv)
+    print('\t{}'.format(conv))
 
     shape = [cks[5],cks[5],cnum_k[5],cnum_k[6]]
     conv,reg = tut.conv(inp=conv,shape=shape,histogram=self.histogram,
               l2=True,relu=True,name='conv6')
     self.convs.append(conv)
     self.reg.append(reg)
-    print(conv)
+    print('\t'.format(conv))
 
 
 
@@ -207,50 +209,52 @@ class MaxPoolNoSC(Model):
                   l2=True,relu=True,name='deconv1')
     self.deconvs.append(deconv)
     self.reg.append(reg)
-    print(deconv)
+    print('\t{}'.format(deconv))
 
     shape = [dks[1],dks[1],dnum_k[2],dnum_k[1]]
     deconv,reg = tut.deconv(inp=deconv,shape=shape,histogram=self.histogram,
                   l2=True,relu=True,name='deconv')
     self.deconvs.append(deconv)
     self.reg.append(reg)
-    print(deconv)
+    print('\t{}'.format(deconv))
 
     unpool = tut.unpool_with_argmax(deconv,ind=self.ind[1],
                     input_shape=[self.ex,deconv.get_shape()[1].value,
                                   deconv.get_shape()[2].value,dnum_k[1]],
                     name='unpool1')
+    print('\t{}'.format(unpool))
 
     shape = [dks[2],dks[2],dnum_k[3],dnum_k[2]]
     deconv,reg = tut.deconv(inp=unpool,shape=shape,histogram=self.histogram,
                   l2=True,relu=True,name='deconv')
     self.deconvs.append(deconv)
     self.reg.append(reg)
-    print(deconv)
+    print('\t{}'.format(deconv))
 
     shape = [dks[3],dks[3],dnum_k[4],dnum_k[3]]
     deconv,reg = tut.deconv(inp=deconv,shape=shape,histogram=self.histogram,
                   l2=True,relu=True,name='deconv')
     self.deconvs.append(deconv)
     self.reg.append(reg)
-    print(deconv)
+    print('\t{}'.format(deconv))
 
     unpool = tut.unpool_with_argmax(deconv,ind=self.ind[0],
                     input_shape=[self.ex,deconv.get_shape()[1].value,
                                   deconv.get_shape()[2].value,dnum_k[3]],
                     name='unpool2')
+    print('\t{}'.format(unpool))
 
     shape = [dks[4],dks[4],dnum_k[5],dnum_k[4]]
     deconv,reg = tut.deconv(inp=unpool,shape=shape,histogram=self.histogram,
                   l2=True,relu=True,name='deconv')
     self.deconvs.append(deconv)
     self.reg.append(reg)
-    print(deconv)
+    print('\t{}'.format(deconv))
 
     shape = [dks[5],dks[5],dnum_k[6],dnum_k[5]]
     deconv,reg = tut.deconv(inp=deconv,shape=shape,histogram=self.histogram,
                   l2=True,relu=True,name='deconv')
     self.deconvs.append(deconv)
     self.reg.append(reg)
-    print(deconv)
+    print('\t{}'.format(deconv))
     ####-E: Core Model
