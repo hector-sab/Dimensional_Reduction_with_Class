@@ -61,6 +61,7 @@ class SegModel:
     self.ex = ex
     self.save = save
     self.load = load
+    self.training = training
     #####-E: Parameters
     ##
     #####-S: Image Specs
@@ -101,7 +102,7 @@ class SegModel:
     #####-E: Creates Output placeholders
     ##
     #####-S: Trainable
-    if training:
+    if self.training:
       self.bs = bs
       #self.lr = lr
       self.global_step = tf.Variable(0,trainable=False)
