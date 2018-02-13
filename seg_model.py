@@ -122,6 +122,9 @@ class SegModel:
       self.trainable()
 
       self.summary = tf.summary.merge_all()
+      
+      if self.tb_log:
+        self.tensorboard_log(log_dir,log_name)
     #####-E: Trainable
 
     if self.save or self.load:
@@ -133,8 +136,6 @@ class SegModel:
     if self.load:
       self.loadable(load_dir,load_checkp,save_load_same)
 
-    if self.tb_log:
-      self.tensorboard_log(log_dir,log_name)
 
   def predict(self,inp):
     feed_dict = {self.x: inp}
