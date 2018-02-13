@@ -17,6 +17,9 @@ parser = argparse.ArgumentParser(desc_msg)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 from tensorflow.python.client import device_lib
 
+with ut.HiddenPrints():
+  all_devices = device_lib.list_local_devices()
+
 choices = []
 for i in range(len(all_devices)):
   choices.append(i)
