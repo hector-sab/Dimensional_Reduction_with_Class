@@ -155,12 +155,14 @@ class MaxPoolNoSC(Model):
               l2=True,relu=True,name='conv1')
     self.convs.append(conv)
     self.reg.append(reg)
+    print(conv)
 
     shape = [cks[1],cks[1],cnum_k[1],cnum_k[2]]
     conv,reg = tut.conv(inp=conv,shape=shape,histogram=self.histogram,
               l2=True,relu=True,name='conv2')
     self.convs.append(conv)
     self.reg.append(reg)
+    print(conv)
 
     pool,ind = tut.max_pool(conv,args=True,name='maxpool1')
     self.pools.append(pool)
@@ -171,12 +173,14 @@ class MaxPoolNoSC(Model):
               l2=True,relu=True,name='conv3')
     self.convs.append(conv)
     self.reg.append(reg)
+    print(conv)
 
     shape = [cks[3],cks[3],cnum_k[3],cnum_k[4]]
     conv,reg = tut.conv(inp=conv,shape=shape,histogram=self.histogram,
               l2=True,relu=True,name='conv4')
     self.convs.append(conv)
     self.reg.append(reg)
+    print(conv)
 
     pool,ind = tut.max_pool(conv,args=True,name='maxpool2')
     self.pools.append(pool)
@@ -187,12 +191,14 @@ class MaxPoolNoSC(Model):
               l2=True,relu=True,name='conv5')
     self.convs.append(conv)
     self.reg.append(reg)
+    print(conv)
 
     shape = [cks[5],cks[5],cnum_k[5],cnum_k[6]]
     conv,reg = tut.conv(inp=conv,shape=shape,histogram=self.histogram,
               l2=True,relu=True,name='conv6')
     self.convs.append(conv)
     self.reg.append(reg)
+    print(conv)
 
 
 
@@ -201,12 +207,14 @@ class MaxPoolNoSC(Model):
                   l2=True,relu=True,name='deconv1')
     self.deconvs.append(deconv)
     self.reg.append(reg)
+    print(deconv)
 
     shape = [dks[1],dks[1],dnum_k[2],dnum_k[1]]
     deconv,reg = tut.deconv(inp=deconv,shape=shape,histogram=self.histogram,
                   l2=True,relu=True,name='deconv')
     self.deconvs.append(deconv)
     self.reg.append(reg)
+    print(deconv)
 
     unpool = tut.unpool_with_argmax(deconv,ind=self.ind[1],
                     input_shape=[self.ex,deconv.get_shape()[1].value,
@@ -218,12 +226,14 @@ class MaxPoolNoSC(Model):
                   l2=True,relu=True,name='deconv')
     self.deconvs.append(deconv)
     self.reg.append(reg)
+    print(deconv)
 
     shape = [dks[3],dks[3],dnum_k[4],dnum_k[3]]
     deconv,reg = tut.deconv(inp=deconv,shape=shape,histogram=self.histogram,
                   l2=True,relu=True,name='deconv')
     self.deconvs.append(deconv)
     self.reg.append(reg)
+    print(deconv)
 
     unpool = tut.unpool_with_argmax(deconv,ind=self.ind[0],
                     input_shape=[self.ex,deconv.get_shape()[1].value,
@@ -235,10 +245,12 @@ class MaxPoolNoSC(Model):
                   l2=True,relu=True,name='deconv')
     self.deconvs.append(deconv)
     self.reg.append(reg)
+    print(deconv)
 
     shape = [dks[5],dks[5],dnum_k[6],dnum_k[5]]
     deconv,reg = tut.deconv(inp=deconv,shape=shape,histogram=self.histogram,
                   l2=True,relu=True,name='deconv')
     self.deconvs.append(deconv)
     self.reg.append(reg)
+    print(deconv)
     ####-E: Core Model
