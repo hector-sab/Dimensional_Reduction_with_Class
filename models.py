@@ -208,7 +208,7 @@ class MaxPoolNoSC(Model):
     self.deconvs.append(deconv)
     self.reg.append(reg)
 
-    unpool = tut.unpool_with_argmax(inp=deconv,ind=self.ind[1],
+    unpool = tut.unpool_with_argmax(deconv,ind=self.ind[1],
                     input_shape=[self.ex,deconv.get_shape()[1].value,
                                   deconv.get_shape()[2].value,dnum_k[1]],
                     name='unpool1')
@@ -225,7 +225,7 @@ class MaxPoolNoSC(Model):
     self.deconvs.append(deconv)
     self.reg.append(reg)
 
-    unpool = tut.unpool_with_argmax(inp=deconv,ind=self.ind[0],
+    unpool = tut.unpool_with_argmax(deconv,ind=self.ind[0],
                     input_shape=[self.ex,deconv.get_shape()[1].value,
                                   deconv.get_shape()[2].value,dnum_k[3]],
                     name='unpool2')
