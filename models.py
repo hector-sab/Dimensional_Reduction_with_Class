@@ -508,28 +508,28 @@ class StrideNoSC(Model):
 
     shape = [dks[1],dks[1],dnum_k[2],dnum_k[1]]
     deconv,reg = tut.deconv(inp=deconv,shape=shape,histogram=self.histogram,
-                  l2=True,relu=True,strides=[1,2,2,1],name='deconv2')
+                  l2=True,relu=True,name='deconv2')
     self.deconvs.append(deconv)
     self.reg.append(reg)
     print('\t{}'.format(deconv))
 
     shape = [dks[2],dks[2],dnum_k[3],dnum_k[2]]
     deconv,reg = tut.deconv(inp=deconv,shape=shape,histogram=self.histogram,
-                  l2=True,relu=True,name='deconv3')
+                  l2=True,relu=True,strides=[1,2,2,1],name='deconv3')
     self.deconvs.append(deconv)
     self.reg.append(reg)
     print('\t{}'.format(deconv))
 
     shape = [dks[3],dks[3],dnum_k[4],dnum_k[3]]
     deconv,reg = tut.deconv(inp=deconv,shape=shape,histogram=self.histogram,
-                  l2=True,relu=True,strides=[1,2,2,1],name='deconv4')
+                  l2=True,relu=True,name='deconv4')
     self.deconvs.append(deconv)
     self.reg.append(reg)
     print('\t{}'.format(deconv))
 
     shape = [dks[4],dks[4],dnum_k[5],dnum_k[4]]
     deconv,reg = tut.deconv(inp=deconv,shape=shape,histogram=self.histogram,
-                  l2=True,relu=True,name='deconv5')
+                  l2=True,relu=True,strides=[1,2,2,1],name='deconv5')
     self.deconvs.append(deconv)
     self.reg.append(reg)
     print('\t{}'.format(deconv))
