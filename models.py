@@ -62,7 +62,7 @@ class Model:
     """
     Returns the last layer of the model
     """
-    return(self.deconv[-1])
+    return(self.deconvs[-1])
 
   def checkpoint_dir(self,path,name):
     """
