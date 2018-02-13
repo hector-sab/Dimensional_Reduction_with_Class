@@ -144,7 +144,7 @@ class MaxPoolNoSC(Model):
     cks = [3,3,3,3,3,3]
     cnum_k = [self.im_c,8,8,16,16,32,32]
     dks = [3,3,3,3,3,3]
-    dnum_k = [32,32,32,16,16,8,self.num_class]
+    dnum_k = [32,32,16,16,8,8,self.num_class]
     ####-E: Network Specs
     ##
     ####-S: Core Model
@@ -222,7 +222,6 @@ class MaxPoolNoSC(Model):
     unpool = tut.unpool_with_argmax(deconv,ind=self.ind[1],
                     input_shape=[self.ex,deconv.get_shape()[1].value,
                                   deconv.get_shape()[2].value,dnum_k[2]],
-                    ksize=[1,2,2,2],
                     name='unpool1')
     print('\t{}'.format(unpool))
 
