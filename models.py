@@ -445,7 +445,7 @@ class StrideNoSC(Model):
     self.model = self.core_model()
     ####-E: Core Model
 
-  def model(self):
+  def core_model(self):
     ####-S: Network Specs
     # Each position represents the convolution to which it belogs
     cks = [3,3,3,3,3,3]
@@ -566,7 +566,7 @@ class StrideSC(Model):
     self.model = self.core_model()
     ####-E: Core Model
 
-  def model(self):
+  def core_model(self):
     ####-S: Network Specs
     # Each position represents the convolution to which it belogs
     cks = [3,3,3,3,3,3]
