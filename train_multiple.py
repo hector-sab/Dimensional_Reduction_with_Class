@@ -10,6 +10,7 @@ Description: MNIST segmentation
 import os
 import argparse
 import utils as ut
+import tensorflow as tf
 
 desc_msg = 'MNIST segmentation using tensorflow and some sort of LeNet-5'
 parser = argparse.ArgumentParser(desc_msg)
