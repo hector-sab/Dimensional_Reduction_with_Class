@@ -46,6 +46,8 @@ class Model:
     self.drop_prob = drop_prob
     self.reg = [] # Contains l2 regularizaton for weights
     self.histogram = histogram
+    self.convs = []
+    self.deconvs = []
     ####-E: Network variables
     ##
     ####-S: Data specs
@@ -143,8 +145,84 @@ class MaxPoolNoSC(Model):
     ####-E: Network Specs
     ##
     ####-S: Core Model
-    self.convs = []
+    
+    self.pools = []
     self.ind = []
+
+    shape = [cks[0],cks[0],cnum_k[0],cnum_k[1]]
+    conv = tut.conv(inp=self.x,shape=shape,histogram=self.histogram,
+              l2=True,relu=True,name='conv1')
+    self.convs.append(conv)
+
+    shape = [cks[1],cks[1],cnum_k[1],cnum_k[2]]
+    conv = tut.conv(inp=conv,shape=shape,histogram=self.histogram,
+              l2=True,relu=True,name='conv2')
+    self.convs.append(conv)
+
+    pool,ind = tut.max_pool(conv,args=True,name='maxpool1')
+    self.pools.append(pool)
+    self.inds.append(ind)
+
+    shape = [cks[2],cks[2],cnum_k[2],cnum_k[3]]
+    conv = tut.conv(inp=pool,shape=shape,histogram=self.histogram,
+              l2=True,relu=True,name='conv3')
+    self.convs.append(conv)
+
+    shape = [cks[3],cks[3],cnum_k[3],cnum_k[4]]
+    conv = tut.conv(inp=conv,shape=shape,histogram=self.histogram,
+              l2=True,relu=True,name='conv4')
+    self.convs.append(conv)
+
+    pool,ind = tut.max_pool(conv,args=True,'maxpool2')
+    self.pools.append(pool)
+    self.inds.append(ind)
+
+    shape = [cks[4],cks[4],cnum_k[4],cnum_k[5]]
+    conv = tut.conv(inp=pool,shape=shape,histogram=self.histogram,
+              l2=True,relu=True,name='conv5')
+    self.convs.append(conv)
+
+    shape = [cks[5],cks[5],cnum_k[5],cnum_k[6]]
+    conv = tut.conv(inp=conv,shape=shape,histogram=self.histogram,
+              l2=True,relu=True,name='conv6')
+    self.convs.append(conv)
+
+
+
+    shape = [dks[0],dks[0],dnum_k[1],dnum_k[0]]
+    deconv = tut.deconv(inp=conv,shape=shape,histogram=self.histogram,
+                  l2=True,relu=True,name='deconv1')
+    self.deconvs.append(deconv)
+
+    shape = [dks[1],dks[1],dnum_k[2],dnum_k[1]]
+    deconv = tut.deconv(inp=deconv,shape=shape,histogram=self.histogram,
+                  l2=True,relu=True,name='deconv')
+    self.deconvs.append(deconv)
+
+
+
+    shape = [dks[2],dks[2],dnum_k[3],dnum_k[2]]
+    deconv = tut.deconv(inp=deconv,shape=shape,histogram=self.histogram,
+                  l2=True,relu=True,name='deconv')
+    self.deconvs.append(deconv)
+
+    shape = [dks[3],dks[3],dnum_k[4],dnum_k[3]]
+    deconv = tut.deconv(inp=deconv,shape=shape,histogram=self.histogram,
+                  l2=True,relu=True,name='deconv')
+    self.deconvs.append(deconv)
+
+    unpool = tut.unpool_with_argmax(inp=deconv,self.ind[],name='unpool2')
+
+    shape = [dks[4],dks[4],dnum_k[5],dnum_k[4]]
+    deconv = tut.deconv(inp=deconv,shape=shape,histogram=self.histogram,
+                  l2=True,relu=True,name='deconv')
+    self.deconvs.append(deconv)
+
+    shape = [dks[5],dks[5],dnum_k[6],dnum_k[5]]
+    deconv = tut.deconv(inp=deconv,shape=shape,histogram=self.histogram,
+                  l2=True,relu=True,name='deconv')
+    self.deconvs.append(deconv)
+    """
     count = 0
     for i in range(len(cks)):
       if i==0:
@@ -166,9 +244,9 @@ class MaxPoolNoSC(Model):
         self.ind.append(ind)
         count += 1
 
+    """
 
-    self.deconvs = []
-    
+    """
     for i in range(len(dks)):
       if i+1%2==0 and i<5:
         input_ = tut.unpool_with_argmax(self.deconvs[i-1],self.ind[count-1],
@@ -188,4 +266,5 @@ class MaxPoolNoSC(Model):
 
       self.deconvs.append(deconv)
       self.reg.append(reg)
+    """
     ####-E: Core Model
