@@ -22,7 +22,7 @@ class SegModel:
     training=False,train=None,test=None,val=None,bs=1,lr=3e-5,dropout=False,drop_prob=0.8,
     save=False,save_dir=None,save_checkp=None,load=False,load_dir=None,load_checkp=None,
     save_load_same=True,load_step=None,tb_log=False,log_dir=None,log_name=None,
-    deacy_steps=10000,version=1,max_to_keep=1):
+    deacy_steps=10000,version=1,max_to_keep=1,histogram=False):
     """
     -train: Triaining data using the class DataSeg
     -val: Validation data using the class DataSeg
@@ -77,13 +77,13 @@ class SegModel:
     ##
     #####-S: Creates model
     if model==0:
-      self.model = md.MaxPoolNoSC(inp=self.x,ex=self.ex)
+      self.model = md.MaxPoolNoSC(inp=self.x,ex=self.ex,histogram=histogram)
     elif model==1:
-      self.model = md.MaxPoolSC(inp=self.x,ex=self.ex)
+      self.model = md.MaxPoolSC(inp=self.x,ex=self.ex,histogram=histogram)
     elif model==2:
-      self.model = md.StrideNoSC(inp=self.x)
+      self.model = md.StrideNoSC(inp=self.x,histogram=histogram)
     elif model==3:
-      self.model = md.StrideSC(inp=self.x)
+      self.model = md.StrideSC(inp=self.x,histogram=histogram)
 
 
 
