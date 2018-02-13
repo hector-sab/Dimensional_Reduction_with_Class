@@ -128,7 +128,7 @@ class MaxPoolNoSC(Model):
     self.convs = []
     self.ind = []
     count = 0
-    for i in enumerate(range(len(cks))):
+    for i in range(len(cks)):
       if i==0:
         input_ = self.x
       else:
@@ -151,7 +151,7 @@ class MaxPoolNoSC(Model):
 
     self.deconvs = []
     
-    for i in enumerate(range(len(dks))):
+    for i in range(len(dks)):
       if i+1%2==0 and i<5:
         input_ = tut.unpool_with_argmax(self.deconvs[i-1],self.ind[count-1],
                     name='unpool'+str(count-1))
