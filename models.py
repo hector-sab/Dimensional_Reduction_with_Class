@@ -40,19 +40,19 @@ class Model:
     self.def_log_path = ut.vali_end_path(def_log_path)
     ####-E: Naming of generated files
     ##
-    ####-S: Data specs
-    self.im_h = int(self.x.get_shape()[1])
-    self.im_w = int(self.x.get_shape()[2])
-    self.im_c = int(self.x.get_shape()[3])
-    self.num_class = num_class
-    ####-E: Data specs
-    ##
     ####-S: Network variables
     self.x = inp
     self.dropout = dropout
     self.drop_prob = drop_prob
     self.reg = [] # Contains l2 regularizaton for weights
     ####-E: Network variables
+    ##
+    ####-S: Data specs
+    self.im_h = int(self.x.get_shape()[1])
+    self.im_w = int(self.x.get_shape()[2])
+    self.im_c = int(self.x.get_shape()[3])
+    self.num_class = num_class
+    ####-E: Data specs
 
   def get_inp(self):
     return(self.x)
@@ -109,10 +109,8 @@ class MaxPoolNoSC(Model):
     drop_prob: Percentage of neurons to be turned off
     histogram: Indicates if information for tensorboard should be annexed.
     """
-    print('HERE ',inp)
     Model.__init__(self,inp,num_class,version,histogram,dropout,
       drop_prob,def_cp_name,def_cp_path,def_log_name,def_log_path)
-    print(Model.x)
     ####-S: Core Model
     self.model = self.core_model()
     ####-E: Core Model
