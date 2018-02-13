@@ -155,7 +155,7 @@ class MaxPoolNoSC(Model):
               l2=True,relu=True,name='conv1')
     self.convs.append(conv)
     self.reg.append(reg)
-    print('\t{}'.format(conv))
+    print('\n\t{}'.format(conv))
 
     shape = [cks[1],cks[1],cnum_k[1],cnum_k[2]]
     conv,reg = tut.conv(inp=conv,shape=shape,histogram=self.histogram,
