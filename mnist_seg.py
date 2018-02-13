@@ -158,7 +158,7 @@ if __name__=='__main__':
   print('\tTest data: {0} - {1}'.format(test.images.shape,test.cls.shape))
 
 
-  model = model.SegModel(train=train,val=val,test=test,model=args.model,
+  model = model.SegModel(train=train,val=val,test=test,model=args.model,training=True,
                 bs=args.bs,save=args.save,load=args.load,load_step=args.step,
                 lr=args.lr,dropout=args.do,drop_prob=args.dop,
                 tb_log=args.tb_log,ex=args.ex,max_to_keep=50000,version=args.version)
