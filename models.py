@@ -45,6 +45,7 @@ class Model:
     self.dropout = dropout
     self.drop_prob = drop_prob
     self.reg = [] # Contains l2 regularizaton for weights
+    self.histogram = histogram
     ####-E: Network variables
     ##
     ####-S: Data specs
@@ -135,7 +136,7 @@ class MaxPoolNoSC(Model):
         input_ = self.convs[i-1]
 
       shape = [cks[i],cks[i],cnum_k[i],cnum_k[i+1]]
-      conv,reg = tut.conv(inp=input_,shape=shape,histogram=histogram,
+      conv,reg = tut.conv(inp=input_,shape=shape,histogram=self.histogram,
                     l2=True,relu=True,name='conv'+str(i))
       print(conv)
 
@@ -164,7 +165,7 @@ class MaxPoolNoSC(Model):
         input_ = self.deconvs[i-1]
 
       shape = [dks[i],dks[i],dnum_k[i+1],dnum_k[i]]
-      deconv,reg = tut.deconv(inp=input_,shape=shape,histogram=histogram,
+      deconv,reg = tut.deconv(inp=input_,shape=shape,histogram=self.histogram,
                       l2_reg=True,relu=True,name='deconv'+str(i))
       print(deconv)
 
