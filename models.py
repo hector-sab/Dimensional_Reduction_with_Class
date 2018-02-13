@@ -222,49 +222,4 @@ class MaxPoolNoSC(Model):
     deconv = tut.deconv(inp=deconv,shape=shape,histogram=self.histogram,
                   l2=True,relu=True,name='deconv')
     self.deconvs.append(deconv)
-    """
-    count = 0
-    for i in range(len(cks)):
-      if i==0:
-        input_ = self.x
-      else:
-        input_ = self.convs[i-1]
-
-      shape = [cks[i],cks[i],cnum_k[i],cnum_k[i+1]]
-      conv,reg = tut.conv(inp=input_,shape=shape,histogram=self.histogram,
-                    l2=True,relu=True,name='conv'+str(i))
-      print(conv)
-
-      self.convs.append(conv)
-      self.reg.append(reg)
-      if i+1%2==0 and i<5:
-        pool,ind = tut.max_pool(conv,args=True)
-        print(pool)
-        self.convs.append(pool)
-        self.ind.append(ind)
-        count += 1
-
-    """
-
-    """
-    for i in range(len(dks)):
-      if i+1%2==0 and i<5:
-        input_ = tut.unpool_with_argmax(self.deconvs[i-1],self.ind[count-1],
-                    name='unpool'+str(count-1))
-        print(input_)
-        self.deconvs.append(input_)
-        count -= 1
-      elif i==0:
-        input_ = self.convs[-1]
-      else:
-        input_ = self.deconvs[i-1]
-
-      shape = [dks[i],dks[i],dnum_k[i+1],dnum_k[i]]
-      deconv,reg = tut.deconv(inp=input_,shape=shape,histogram=self.histogram,
-                      l2=True,relu=True,name='deconv'+str(i))
-      print(deconv)
-
-      self.deconvs.append(deconv)
-      self.reg.append(reg)
-    """
     ####-E: Core Model

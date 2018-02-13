@@ -188,6 +188,10 @@ def deconv(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
 
     transpose_conv += b
 
+    # Just so it conservs shape information
+    transpose_conv = tf.reshape(transpose_conv,shape=[-1,x_shape[1]*strides[1],
+      x_shape[2]*strides[2],shape[2]])
+
     if relu:
       transpose_conv = tf.nn.relu(transpose_conv)
       if histogram:
@@ -198,6 +202,8 @@ def deconv(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
     if histogram:
       tf.summary.histogram('weights',w)
       tf.summary.histogram('biases',b)
+
+
 
     if l2:
       l2_reg = tf.nn.l2_loss(w)
