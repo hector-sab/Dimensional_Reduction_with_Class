@@ -513,7 +513,7 @@ class StrideNoSC(Model):
     self.reg.append(reg)
     print('\t{}'.format(deconv))
 
-    sc_sum = selfcons[3] + deconv
+    sc_sum = self.convs[3] + deconv
 
     shape = [dks[2],dks[2],dnum_k[3],dnum_k[2]]
     deconv,reg = tut.deconv(inp=sc_sum,shape=shape,histogram=self.histogram,
