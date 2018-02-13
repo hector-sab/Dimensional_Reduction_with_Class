@@ -52,7 +52,7 @@ class SegModel:
     -version: Indicates  which version of a same net we are executing.
         It just affects the nameming of the directories where data is
         stored
-    -decay_step: At hoe many steps the learning rate should decrease
+    -decay_step: At hoe many steps the learning rate should decrease.
     """
     self.session = tf.Session()
     # Data base
