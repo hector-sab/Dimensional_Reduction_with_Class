@@ -150,6 +150,7 @@ class SegModel:
     verb: Display training process each 'verb' iterations
     tb_log_it: Saves summary each 'tb_log_it' if log is True
     """
+    assert self.training, 'Not loaded as a trainable model. Try reloading it as trainable.'
     print('\nStarting optimization...\n')
     for it in range(num_it):
       self.total_it += 1
