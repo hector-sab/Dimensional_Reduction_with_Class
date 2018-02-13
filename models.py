@@ -173,7 +173,7 @@ class MaxPoolNoSC(Model):
               l2=True,relu=True,name='conv4')
     self.convs.append(conv)
 
-    pool,ind = tut.max_pool(conv,args=True,'maxpool2')
+    pool,ind = tut.max_pool(conv,args=True,name='maxpool2')
     self.pools.append(pool)
     self.inds.append(ind)
 
