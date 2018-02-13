@@ -134,7 +134,7 @@ class MaxPoolNoSC(Model):
       else:
         input_ = self.convs[i-1]
 
-      shape = [cks[i],ks[i],cnum_k[i],cnum_k[i+1]]
+      shape = [cks[i],cks[i],cnum_k[i],cnum_k[i+1]]
       conv,reg = tut.conv(inp=input_,shape=shape,histogram=histogram,
                     l2=True,relu=True,name='conv'+str(i))
       print(conv)
