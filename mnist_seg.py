@@ -109,7 +109,7 @@ import tensorflow as tf
 import numpy as np
 
 from MNIST import load_mnist
-import models
+import seg_model as model
 
 if __name__=='__main__':
 	# Load MNIST data
@@ -158,7 +158,7 @@ if __name__=='__main__':
   print('\tTest data: {0} - {1}'.format(test.images.shape,test.cls.shape))
 
 
-  model = models.SegModel(train=train,val=val,test=test,model=args.model,
+  model = model.SegModel(train=train,val=val,test=test,model=args.model,
                 bs=args.bs,save=args.save,load=args.load,load_step=args.step,
                 lr=args.lr,dropout=args.do,drop_prob=args.dop,
                 tb_log=args.tb_log,ex=args.ex,max_to_keep=50000,version=args.version)

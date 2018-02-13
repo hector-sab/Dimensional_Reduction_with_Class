@@ -87,6 +87,7 @@ class SegModel:
     self.inputs()
 
     # Select the model to train
+    """
     if model==0:
       self.model = ModelStv1(inp=self.x,dropout=self.dropout,
         drop_prob=self.drop_prob,histogram=self.tb_log,
@@ -98,6 +99,8 @@ class SegModel:
     else:
       print("There's no model with that option choice...")
       sys.exit()
+    """
+    self.model = md.MaxPoolNoSC(inp=self.x)
 
     # Specify where to save the model and the tb log
     save_dir,save_checkp = self.model.checkpoint_dir(save_dir,save_checkp)

@@ -26,7 +26,7 @@ def biases(shape,verb=False,name='biases'):
     print(b)
   return(b)
 
-def conv(inp,shape,padding='SAME',strides=[1,1,1,1],relu=True,
+def conv(inp,shape,padding='SAME',strides=[1,1,1,1],relu=False,
   dropout=False,drop_prob=0.8,verb=False,histogram=False,
   name='conv',l2=False):
   """
@@ -129,7 +129,7 @@ def flatten(layer):
 
   return(layer_flat)
 
-def fc(inp,shape,relu=True,logits=False,dropout=False,do_prob=0.5,
+def fc(inp,shape,relu=False,logits=False,dropout=False,do_prob=0.5,
   verb=False,name='fc',histogram=True,l2=False):
   """
   inp: input
@@ -161,7 +161,7 @@ def fc(inp,shape,relu=True,logits=False,dropout=False,do_prob=0.5,
     else:
       return(fc)
 
-def deconv(inp,shape,strides=[1,1,1,1],padding='SAME',relu=True,
+def deconv(inp,shape,strides=[1,1,1,1],padding='SAME',relu=False,
   verb=False,name='deconv',dropout=False,drop_prob=0.8,histogram=True,
   l2=False):
   """

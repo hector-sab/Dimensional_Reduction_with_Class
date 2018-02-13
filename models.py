@@ -94,9 +94,9 @@ class Model:
     return(path,name)
 
 class MaxPoolNoSC(Model):
-  def __init__(self,inp,num_class=11,version=1,histogram=True,
+  def __init__(self,inp,num_class=11,version=1,histogram=False,
     dropout=False,drop_prob=0.85,def_cp_name='mnist_seg',
-    def_cp_path='checkpoints/mnist_seg_mp',def_log_name='mnist_seg_mp',
+    def_cp_path='checkpoints/mnist_seg_mpnosc',def_log_name='mnist_seg_mpnosc',
     def_log_path='./log/'):
     """
     inp: Input placeholder.
