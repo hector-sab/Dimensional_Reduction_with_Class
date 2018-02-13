@@ -53,6 +53,9 @@ class Model:
     self.drop_prob = drop_prob
     self.reg = [] # Contains l2 regularizaton for weights
     ####-E: Network variables
+
+  def get_inp(self):
+    return(self.x)
   
   def last_layer(self):
     """
