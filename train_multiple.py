@@ -8,6 +8,7 @@ Description: MNIST segmentation
   $ python train_multiple.py -d 0
 """
 import os
+import argparse
 import utils as ut
 
 desc_msg = 'MNIST segmentation using tensorflow and some sort of LeNet-5'
