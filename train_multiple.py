@@ -51,7 +51,7 @@ print(msg)
 
 import numpy as np
 from MNIST import load_mnist
-import seg_model as model
+import seg_model as models
 
 
 if __name__=='__main__':
@@ -103,10 +103,10 @@ if __name__=='__main__':
   bs = 20
 
   if args.model==0:
-    for i in [0,1]:
+    for i in [1]:
       tf.reset_default_graph()
       print('-----> Executing model {}'.format(i))
-      model = model.SegModel(train=train,val=val,test=test,model=i,training=True,
+      model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
                 bs=bs,save=True,load=False,lr=3e-7,tb_log=True,ex=bs,max_to_keep=50000,
                 version=1,histogram=True)
   
@@ -114,10 +114,10 @@ if __name__=='__main__':
       model.close_session()
       print('Done with model: {0}'.format(i))
   elif args.model==1:
-    for i in [2,3]:
+    for i in [3]:
       tf.reset_default_graph()
       print('-----> Executing model {}'.format(i))
-      model = model.SegModel(train=train,val=val,test=test,model=i,training=True,
+      model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
                 bs=bs,save=True,load=False,lr=3e-7,tb_log=True,max_to_keep=50000,
                 version=1,histogram=True)
   
