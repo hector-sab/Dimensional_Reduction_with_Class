@@ -713,8 +713,9 @@ class SegModelSigmoid:
       ### ENDS: For batch norm... mean and variance
 
     with tf.name_scope('accuracy'):
-      self.correct_prediction = tf.equal(self.y_pred_cls,self.y_seg_cls,
-                                    name='correct_prediction')
+      self.correct_prediction = tf.equal(tf.cast(self.y_pred_cls,tf.float32),
+                                         self.y_seg_cls,
+                                         name='correct_prediction')
       self.accuracy = tf.reduce_mean(
         tf.cast(self.correct_prediction, tf.float32))
       tf.summary.scalar('accuracy',self.accuracy)
