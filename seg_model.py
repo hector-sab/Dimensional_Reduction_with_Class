@@ -737,8 +737,8 @@ class SegModelSigmoid:
         shape=[-1,self.im_h,self.im_w,1],name='y_pred_cls_seg')
       
       ### START: Seg Image visualization
-      self.seg_out_vis = tf.divide(self.y_pred_cls_seg,
-        self.num_class)
+      #self.seg_out_vis = tf.divide(self.y_pred_cls_seg,
+      #  self.num_class)
       self.seg_out_vis = tf.cast(tf.scalar_mul(255,self.seg_out_vis),
         tf.uint8)
       tf.summary.image('seg_output',self.seg_out_vis,1)
@@ -778,7 +778,7 @@ class SegModelSigmoid:
         shape=[-1,self.num_class],name='y_seg_onehot')
 
       ### START: Seg Image visualization
-      self.seg_inp_vis = tf.divide(self.y_seg,self.num_class)
+      #self.seg_inp_vis = tf.divide(self.y_seg,self.num_class)
       self.seg_inp_vis = tf.cast(tf.scalar_mul(255,self.seg_inp_vis),
         tf.uint8)
       tf.summary.image('seg_input',self.seg_inp_vis,1)
