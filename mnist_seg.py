@@ -160,7 +160,7 @@ if __name__=='__main__':
 
   model = model.SegModel(train=train,val=val,test=test,model=args.model,training=True,
                 bs=args.bs,save=args.save,load=args.load,load_step=args.step,
-                lr=args.lr,dropout=args.do,drop_prob=args.dop,
+                lr=args.lr,dropout=args.do,drop_prob=args.dop,deacy_steps=800000,
                 tb_log=args.tb_log,ex=args.ex,max_to_keep=50000,version=args.version)
   
   model.optimize(num_it=args.iterations,verb=100)

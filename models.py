@@ -667,3 +667,36 @@ class StrideNoSC(Model):
     print('\t{}'.format(deconv))
     ####-E: Core Model
 
+
+class AtrousMPNoSC(Model):
+  def __init__(self,inp,num_class=11,version=1,histogram=False,
+    dropout=False,drop_prob=0.85,def_cp_name='mnist_seg',
+    def_cp_path='checkpoints/mnist_seg_mpsconeo',
+    def_log_name='mnist_seg_mpsconeo',def_log_path='./log/'):
+    """
+    inp: Input placeholder.
+    shape: Tensorflow tensor shape used in the input placeholder.
+           It must be a list object.
+    dropout: Flag used to indicate if dropout will be used
+    drop_prob: Percentage of neurons to be turned off
+    histogram: Indicates if information for tensorboard should be annexed.
+    """
+    Model.__init__(self,inp,num_class,version,histogram,dropout,
+      drop_prob,def_cp_name,def_cp_path,def_log_name,def_log_path)
+
+    ####-S: Core Model
+    self.model = self.core_model()
+    ####-E: Core Model
+
+  def core_model(self):
+    ####-S: Network Specs
+    # Each position represents the convolution to which it belogs
+    cks = [3,3,3,3,3,3]
+    cnum_k = [self.im_c,8,8,16,16,32,32]
+    dks = [3,3,3,3,3,3]
+    dnum_k = [32,32,16,16,8,8,self.num_class]
+    ####-E: Network Specs
+    ##
+    ####-S: Core Model
+    
+    ####-E: Core Model

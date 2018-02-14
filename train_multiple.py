@@ -116,7 +116,7 @@ if __name__=='__main__':
   elif args.model==1:
     for i in [2,3]:
       tf.reset_default_graph()
-      print('-----> Executing model {}'.format(i))
+      print('\n-----> Executing model {}'.format(i))
       model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
                 bs=bs,save=True,load=False,lr=3e-7,tb_log=True,max_to_keep=50000,
                 version=1,histogram=True)

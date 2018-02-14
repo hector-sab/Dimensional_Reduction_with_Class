@@ -77,6 +77,9 @@ def conv(inp,shape,padding='SAME',strides=[1,1,1,1],relu=False,
     else:
       return(out)
 
+def dilated_conv():
+  pass
+  
 def max_pool(layer,name='max_pool',ksize=[1,2,2,1],strides=[1,2,2,1],
   padding='SAME',args=False):
   with tf.name_scope(name) as scope:
