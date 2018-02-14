@@ -577,8 +577,8 @@ class SegModelSigmoid:
               global_step=self.total_it)
         else:
           saved_str = ''
-        msg = 'It: {0}/{1} - Acc {2:.2%} {3}      {4}'.format(self.total_it,
-                self.total_it+num_it-(it+1),acc,saved_str,self.best_acc)
+        msg = 'It: {0}/{1} - Acc {2:.2%} {3}'.format(self.total_it,
+                self.total_it+num_it-(it+1),acc,saved_str)
         print(msg)
 
       if verb is None and self.save:
