@@ -692,7 +692,7 @@ class SegModelSigmoid:
     beta = 0.01
     with tf.name_scope('cross_entropy'):
       self.cross_entropy = tf.nn.sigmoid_cross_entropy_with_logits(
-        logits=self.logits,labels=self.y_seg_cls,name='cross_entropy')
+        logits=self.logits,labels=tf.cast(self.y_seg_cls,tf.float32),name='cross_entropy')
       self.cost = tf.reduce_mean(self.cross_entropy,name='cost')
       if self.l2:
         for i,reg in enumerate(self.model.reg):
