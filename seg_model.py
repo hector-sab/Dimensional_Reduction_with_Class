@@ -180,7 +180,7 @@ class SegModel:
         #acc = self.full_acc(self.val,bs=self.bs)
 
         if self.best_acc<acc:
-          self.best_val_acc = acc
+          self.best_acc = acc
           saved_str = '*'
 
           if self.save:
