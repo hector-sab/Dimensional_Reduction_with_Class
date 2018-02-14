@@ -726,9 +726,9 @@ class SegModelSigmoid:
     with tf.name_scope('Prediction'):
       self.logits = tf.reshape(self.last_layer,
         shape=[-1,self.num_class],name='logits_rs')
-      self.y_pred = tf.nn.softmax(self.logits,name='y_pred')
-      self.y_pred_cls = tf.argmax(self.y_pred,axis=1)
-      self.y_pred_cls = tf.reshape(self.y_pred_cls,shape=[-1,1],
+      self.y_pred = tf.nn.sigmoid(self.logits,name='y_pred')
+      #self.y_pred_cls = tf.argmax(self.y_pred,axis=1)
+      self.y_pred_cls = tf.reshape(self.y_pred,shape=[-1,1],
         name='y_pred_cls')
       self.y_pred_cls_seg = tf.reshape(self.y_pred_cls,
         shape=[-1,self.im_h,self.im_w,1],name='y_pred_cls_seg')
