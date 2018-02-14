@@ -725,7 +725,8 @@ class SegModelSigmoid:
     Creates all placeholders needed to predict segmentation
     """
     with tf.name_scope('Prediction'):
-      self.logits = tf.reshape(self.last_layer,
+      self.logits = tf.nn.sigmoid(self.last_layer)
+      self.logits = tf.reshape(self.logits,
         shape=[-1,self.num_class],name='logits_rs')
       self.y_pred = tf.nn.sigmoid(self.logits,name='y_pred')
       #self.y_pred_cls = tf.argmax(self.y_pred,axis=1)
