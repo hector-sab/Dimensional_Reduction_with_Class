@@ -714,7 +714,7 @@ class SegModelSigmoid:
 
     with tf.name_scope('accuracy'):
       self.correct_prediction = tf.equal(self.y_pred_cls,tf.float32,
-                                         tf.cast(self.y_seg_cls),
+                                         tf.cast(self.y_seg_cls,tf.float32),
                                          name='correct_prediction')
       self.accuracy = tf.reduce_mean(
         tf.cast(self.correct_prediction, tf.float32))
