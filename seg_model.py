@@ -728,7 +728,7 @@ class SegModelSigmoid:
       self.last_layer = tf.nn.sigmoid(self.last_layer)
       
       self.y_pred = tf.greater(self.last_layer,0.5)
-      self.logits = tf.reshape(self.logits,
+      self.logits = tf.reshape(self.y_pred,
         shape=[-1,self.num_class],name='logits_rs')
 
       self.y_pred_cls = tf.reshape(self.y_pred,shape=[-1,1],
