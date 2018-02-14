@@ -421,14 +421,14 @@ class MaxPoolSC(Model):
     print('\t{}'.format(deconv))
     ####-E: Core Model
 
-class StrideNoSC(Model):
+class StrideSC(Model):
   """
   Description:
   Model for MNIST segmentation using striding without skip connections
   """
   def __init__(self,inp,num_class=11,version=1,histogram=False,
     dropout=False,drop_prob=0.85,def_cp_name='mnist_seg',
-    def_cp_path='checkpoints/mnist_seg_stnosc',def_log_name='mnist_seg_stnosc',
+    def_cp_path='checkpoints/mnist_seg_stsc',def_log_name='mnist_seg_stsc',
     def_log_path='./log/'):
     """
     inp: Input placeholder.
@@ -546,14 +546,14 @@ class StrideNoSC(Model):
     print('\t{}'.format(deconv))
     ####-E: Core Model
 
-class StrideSC(Model):
+class StrideNoSC(Model):
   """
   Description:
   Model for MNIST segmentation using striding with skip connections
   """
   def __init__(self,inp,num_class=11,version=1,histogram=False,
     dropout=False,drop_prob=0.85,def_cp_name='mnist_seg',
-    def_cp_path='checkpoints/mnist_seg_stsc',def_log_name='mnist_seg_stsc',
+    def_cp_path='checkpoints/mnist_seg_stnosc',def_log_name='mnist_seg_stnosc',
     def_log_path='./log/'):
     """
     inp: Input placeholder.
