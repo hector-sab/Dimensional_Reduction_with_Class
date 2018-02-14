@@ -37,6 +37,8 @@ msg += '0 - Max pooling for dimensional reduction\n\t'
 msg += '1 - Strides without max pooling'
 parser.add_argument('-m','--model',help=msg,
       type=int,default=0,choices=[0,1,2])
+parser.add_argument('--lr',help='Define a different learning rate',
+      type=float,default=3e-7)
 
 args = parser.parse_args()
 
@@ -107,7 +109,7 @@ if __name__=='__main__':
       tf.reset_default_graph()
       print('\n-----> Executing model {}'.format(i))
       model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
-                bs=bs,save=True,load=False,lr=3e-7,tb_log=True,ex=bs,max_to_keep=50000,
+                bs=bs,save=True,load=False,lr=args.lr,tb_log=True,ex=bs,max_to_keep=50000,
                 version=1,histogram=True)
   
       model.optimize(num_it=1000000,verb=100)
