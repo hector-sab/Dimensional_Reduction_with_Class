@@ -727,7 +727,7 @@ class SegModelSigmoid:
     with tf.name_scope('Prediction'):
       self.last_layer = tf.nn.sigmoid(self.last_layer)
       
-      self.y_pred = tf.greater(self.last_layer,0.5)
+      self.y_pred = tf.cast(tf.greater(self.last_layer,0.5),tf.int64)
       self.logits = tf.reshape(self.y_pred,
         shape=[-1,self.num_class],name='logits_rs')
 
