@@ -666,3 +666,4 @@ class StrideSC(Model):
     self.reg.append(reg)
     print('\t{}'.format(deconv))
     ####-E: Core Model
+

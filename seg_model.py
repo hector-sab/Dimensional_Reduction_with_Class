@@ -22,7 +22,7 @@ class SegModel:
     training=False,train=None,test=None,val=None,bs=1,lr=3e-5,dropout=False,drop_prob=0.8,
     save=False,save_dir=None,save_checkp=None,load=False,load_dir=None,load_checkp=None,
     save_load_same=True,load_step=None,tb_log=False,log_dir=None,log_name=None,
-    deacy_steps=10000,version=1,max_to_keep=1,histogram=False):
+    deacy_steps=20000,version=1,max_to_keep=1,histogram=False):
     """
     -train: Triaining data using the class DataSeg
     -val: Validation data using the class DataSeg
@@ -170,10 +170,10 @@ class SegModel:
         feed_dict = {self.x: data['ims'], 
                      self.y_seg: data['seg']}
 
-      self.session.run(self.optimizer,feed_dict=feed_dict)
+      acc,_ = self.session.run([self.accuracy,self.optimizer],feed_dict=feed_dict)
 
       if verb is not None and self.total_it%verb==0:
-        acc = self.full_acc(self.val,bs=self.bs)
+        #acc = self.full_acc(self.val,bs=self.bs)
 
         if self.best_acc<acc:
           self.best_val_acc = acc
@@ -193,7 +193,7 @@ class SegModel:
         In case verbose is disabled, to ensure checkpoints are saved
         """
         if self.total_it%100==0:
-          acc = self.full_acc(self.val,self.bs)
+          #acc = self.full_acc(self.val,self.bs)
           if self.best_acc<acc:
             self.best_val_acc = acc
             self.saver.save(sess=self.session,save_path=self.save_path,
