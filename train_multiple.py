@@ -114,7 +114,7 @@ if __name__=='__main__':
       model.close_session()
       print('Done with model: {0}'.format(i))
   elif args.model==1:
-    for i in [2,3]:
+    for i in [3]:
       tf.reset_default_graph()
       print('\n-----> Executing model {}'.format(i))
       model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
