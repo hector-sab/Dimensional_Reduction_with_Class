@@ -129,7 +129,7 @@ if __name__=='__main__':
       tf.reset_default_graph()
       print('\n-----> Executing model {}'.format(i))
       model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
-                bs=bs,save=True,load=False,lr=3e-7,tb_log=True,max_to_keep=50000,
+                bs=bs,save=True,load=False,lr=3e-7,tb_log=True,ex=bs,max_to_keep=50000,
                 version=2,histogram=True)
   
       model.optimize(num_it=1000000,verb=100)
