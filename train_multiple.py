@@ -96,16 +96,16 @@ if __name__=='__main__':
   test_ims = None
   test_cls = None
 
-  print('\tTrain data: {0} - {1}'.format(train.images.shape,train.cls.shape))
-  print('\tVal data: {0} - {1}'.format(val.images.shape,val.cls.shape))
-  print('\tTest data: {0} - {1}'.format(test.images.shape,test.cls.shape))
+  print('Train data: {0} - {1}'.format(train.images.shape,train.cls.shape))
+  print('Val data: {0} - {1}'.format(val.images.shape,val.cls.shape))
+  print('Test data: {0} - {1}'.format(test.images.shape,test.cls.shape))
 
   bs = 20
 
   if args.model==0:
-    for i in [1]:
+    for i in [0,1]:
       tf.reset_default_graph()
-      print('-----> Executing model {}'.format(i))
+      print('\n-----> Executing model {}'.format(i))
       model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
                 bs=bs,save=True,load=False,lr=3e-7,tb_log=True,ex=bs,max_to_keep=50000,
                 version=1,histogram=True)
@@ -114,7 +114,7 @@ if __name__=='__main__':
       model.close_session()
       print('Done with model: {0}'.format(i))
   elif args.model==1:
-    for i in [3]:
+    for i in [2,3]:
       tf.reset_default_graph()
       print('-----> Executing model {}'.format(i))
       model = models.SegModel(train=train,val=val,test=test,model=i,training=True,

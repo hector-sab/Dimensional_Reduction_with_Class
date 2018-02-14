@@ -553,7 +553,7 @@ class StrideSC(Model):
   """
   def __init__(self,inp,num_class=11,version=1,histogram=False,
     dropout=False,drop_prob=0.85,def_cp_name='mnist_seg',
-    def_cp_path='checkpoints/mnist_seg_sdsc',def_log_name='mnist_seg_stsc',
+    def_cp_path='checkpoints/mnist_seg_stsc',def_log_name='mnist_seg_stsc',
     def_log_path='./log/'):
     """
     inp: Input placeholder.
