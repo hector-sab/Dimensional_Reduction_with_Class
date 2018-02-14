@@ -36,7 +36,7 @@ msg = 'Select which models to train:\n\t'
 msg += '0 - Max pooling for dimensional reduction\n\t'
 msg += '1 - Strides without max pooling'
 parser.add_argument('-m','--model',help=msg,
-      type=int,default=0,choices=[0,1,2,3])
+      type=int,default=0,choices=[0,1,2])
 
 args = parser.parse_args()
 
@@ -120,6 +120,17 @@ if __name__=='__main__':
       model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
                 bs=bs,save=True,load=False,lr=3e-7,tb_log=True,max_to_keep=50000,
                 version=1,histogram=True)
+  
+      model.optimize(num_it=1000000,verb=100)
+      model.close_session()
+      print('Done with model: {0}'.format(i))
+  elif args.model==2:
+    for i in [1,3]:
+      tf.reset_default_graph()
+      print('\n-----> Executing model {}'.format(i))
+      model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
+                bs=bs,save=True,load=False,lr=3e-7,tb_log=True,max_to_keep=50000,
+                version=2,histogram=True)
   
       model.optimize(num_it=1000000,verb=100)
       model.close_session()
