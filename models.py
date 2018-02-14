@@ -18,9 +18,9 @@ class Model:
   to inherit attributes
   """
   def __init__(self,inp,num_class=11,version=1,histogram=True,
-    dropout=False,drop_prob=0.85,def_cp_name=None,
-    def_cp_path=None,def_log_name=None,
-    def_log_path=None):
+    dropout=False,drop_prob=0.85,def_cp_name='mnist_seg',
+    def_cp_path='checkpoints/mnist_seg',def_log_name='mnist_seg',
+    def_log_path='./log/'):
     """
     inp: Input placeholder.
     shape: Tensorflow tensor shape used in the input placeholder.
@@ -28,6 +28,7 @@ class Model:
     dropout: Flag used to indicate if dropout will be used
     drop_prob: Percentage of neurons to be turned off
     histogram: Indicates if information for tensorboard should be annexed.
+    """
     """
     if def_cp_name is None:
       def_cp_name = 'mnist_seg'
@@ -37,7 +38,7 @@ class Model:
       def_log_name = 'mnist_seg'
     if def_log_path is None:
       def_log_path = './log/'
-
+    """
     ####-S: Naming of generated files 
     self.def_cp_name = def_cp_name
     self.def_cp_path = ut.vali_end_path(def_cp_path+'v'+str(version))

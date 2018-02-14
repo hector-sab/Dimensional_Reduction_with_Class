@@ -128,7 +128,7 @@ if __name__=='__main__':
     for i in [1,3]:
       tf.reset_default_graph()
       print('\n-----> Executing model {}'.format(i))
-      model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
+      model = models.SegModelSigmoid(train=train,val=val,test=test,model=i,training=True,
                 bs=bs,save=True,load=False,lr=3e-7,tb_log=True,ex=bs,max_to_keep=50000,
                 version=2,histogram=True)
   
