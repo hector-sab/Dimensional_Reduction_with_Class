@@ -541,7 +541,7 @@ class SegModelSigmoid:
     for it in range(num_it):
       self.total_it += 1
 
-      data = self.train.next_batch(self.bs)
+      data = self.train.next_batch(self.bs,seg_fb=True)
       
       if self.ex is not None and data['ims'].shape[0]<self.ex:
         # Ensures that won't be an error caused by shape incompatibility
@@ -586,7 +586,7 @@ class SegModelSigmoid:
 
       if self.tb_log and self.total_it%tb_log_it==0:
         self.val.restart_next_batch()
-        data = self.val.next_batch(self.bs)
+        data = self.val.next_batch(self.bs,seg_fb=True)
         tmp_feed = {self.x:data['ims'], self.y_seg:data['seg']}
         s = self.session.run(self.summary,feed_dict=tmp_feed)
         self.writer.add_summary(s,self.total_it)
@@ -611,7 +611,7 @@ class SegModelSigmoid:
     total_acc = 0
     
     for it in range(int(num_ex/bs)):
-      data = dataset.next_batch(bs)
+      data = dataset.next_batch(bs,seg_fb=True)
       if self.ex is not None and data['ims'].shape[0]<self.ex:
         # Ensures that won't be an error caused by shape incompatibility
         num_ex -= 1
