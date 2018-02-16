@@ -39,6 +39,8 @@ parser.add_argument('-m','--model',help=msg,
       type=int,default=0,choices=[0,1,2])
 parser.add_argument('--lr',help='Define a different learning rate',
       type=float,default=3e-7)
+parser.add_argument('-i','--iterations',help='Number of training it.',
+      type=int,default=100000)
 
 args = parser.parse_args()
 
@@ -123,7 +125,7 @@ if __name__=='__main__':
                 bs=bs,save=True,load=False,lr=3e-7,tb_log=True,max_to_keep=50000,
                 version=1,histogram=True)
   
-      model.optimize(num_it=1000000,verb=100)
+      model.optimize(num_it=args.iterations,verb=100)
       model.close_session()
       print('Done with model: {0}'.format(i))
   elif args.model==2:
@@ -134,6 +136,6 @@ if __name__=='__main__':
                 bs=bs,save=True,load=False,lr=3e-7,tb_log=True,ex=bs,max_to_keep=50000,
                 version=2,histogram=True)
   
-      model.optimize(num_it=1000000,verb=100)
+      model.optimize(num_it=args.iterations,verb=100)
       model.close_session()
       print('Done with model: {0}'.format(i))

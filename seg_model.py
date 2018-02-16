@@ -22,7 +22,7 @@ class SegModel:
     training=False,train=None,test=None,val=None,bs=1,lr=3e-5,dropout=False,drop_prob=0.8,
     save=False,save_dir=None,save_checkp=None,load=False,load_dir=None,load_checkp=None,
     save_load_same=True,load_step=None,tb_log=False,log_dir=None,log_name=None,
-    deacy_steps=20000,version=1,max_to_keep=1,histogram=False):
+    deacy_steps=5000,version=1,max_to_keep=1,histogram=False):
     """
     -train: Triaining data using the class DataSeg
     -val: Validation data using the class DataSeg
