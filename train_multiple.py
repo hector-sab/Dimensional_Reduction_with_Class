@@ -132,7 +132,7 @@ if __name__=='__main__':
       print('\n-----> Executing model {}'.format(i))
       model = models.SegModelSigmoid(train=train,val=val,test=test,model=i,training=True,
                 bs=bs,save=True,load=False,lr=3e-7,tb_log=True,ex=bs,max_to_keep=50000,
-                version=2,histogram=True,load=True,load_step=)
+                version=2,histogram=True,load=True)
   
       model.optimize(num_it=1000000,verb=100)
       model.close_session()
