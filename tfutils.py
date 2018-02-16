@@ -78,7 +78,7 @@ def conv(inp,shape,padding='SAME',strides=[1,1,1,1],relu=False,
       return(out)
 
 def dilated_conv(inp,shape,rate=2,relu=False,histogram=False,
-	l2=False,padding='SAME',name='dilated_conv'):
+  l2=False,padding='SAME',name='dilated_conv'):
   """
   shape: Shape of the kernels. [ker_h,ker_w,inp_ch,num_k]
   """
@@ -106,33 +106,33 @@ def dilated_conv(inp,shape,rate=2,relu=False,histogram=False,
       l2_reg = tf.nn.l2_loss(w)
       return(out,l2_reg)
     else:
-    	return(out)
+      return(out)
 
 def dilated_deconv(inp,shape,rate=2,strides=[1,1,1,1],relu=False,l2=False,
-	verb=False,padding='SAME',name='dilated_deconv'):
-	"""
-	TODO: Check if strides 2,2 works
-	"""
-	with tf.name_scope(name) as scope:
-		w = weights(shape,verb=verb)
-		b = biases([shape[2]],verb=verb)
+  verb=False,padding='SAME',name='dilated_deconv'):
+  """
+  TODO: Check if strides 2,2 works
+  """
+  with tf.name_scope(name) as scope:
+    w = weights(shape,verb=verb)
+    b = biases([shape[2]],verb=verb)
 
-		x_shape = tf.shape(inp)
-		out_shape = tf.stack([x_shape[0],x_shape[1]*strides[1],
+    x_shape = tf.shape(inp)
+    out_shape = tf.stack([x_shape[0],x_shape[1]*strides[1],
                           x_shape[2]*strides[2],shape[2]])
 
-		out = tf.nn.atrous_conv2d_transpose(value=inp,
-																			filter=w,
-																			output_shape=out_shape,
-																			rate=rate,
-																			padding='SAME',
-																			name=name)
-		out += b
+    out = tf.nn.atrous_conv2d_transpose(value=inp,
+                                      filter=w,
+                                      output_shape=out_shape,
+                                      rate=rate,
+                                      padding='SAME',
+                                      name=name)
+    out += b
 
-		#out = tf.reshape(out,shape=[-1,inp.get_shape()[1].value*strides[1],
+    #out = tf.reshape(out,shape=[-1,inp.get_shape()[1].value*strides[1],
     #  inp.get_shape()[2].value*strides[2],shape[2]])
 
-		if relu:
+    if relu:
       out = tf.nn.relu(out)
       if histogram:
         tf.summary.histogram('activations',out)
