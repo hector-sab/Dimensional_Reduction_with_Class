@@ -61,6 +61,7 @@ class SegModel:
     self.ex = ex
     self.save = save
     self.load = load
+    self.load_step = load_step
     self.training = training
     #####-E: Parameters
     ##
