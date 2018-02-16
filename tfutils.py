@@ -121,7 +121,7 @@ def dilated_deconv(inp,shape,rate=2,strides=[1,1,1,1],relu=False,l2=False,
 		out_shape = tf.stack([x_shape[0],x_shape[1]*strides[1],
                           x_shape[2]*strides[2],shape[2]])
 
-		transpose_conv = tf.nn.atrous_conv2d_transpose(value=inp,
+		out = tf.nn.atrous_conv2d_transpose(value=inp,
 																			filter=w,
 																			output_shape=out_shape,
 																			rate=rate,
