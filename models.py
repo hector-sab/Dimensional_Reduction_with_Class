@@ -300,9 +300,9 @@ class MaxPoolSC(Model):
     ####-S: Network Specs
     # Each position represents the convolution to which it belogs
     cks = [3,3,3,3,3,3]
-    cnum_k = [self.im_c,8,8,16,16,32,32]
+    cnum_k = [self.im_c,16,16,32,32,64,64]
     dks = [3,3,3,3,3,3]
-    dnum_k = [32,32,16,16,8,8,self.num_class]
+    dnum_k = [64,64,32,32,16,16,self.num_class]
     ####-E: Network Specs
     ##
     ####-S: Core Model
