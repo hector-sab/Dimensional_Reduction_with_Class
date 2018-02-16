@@ -114,7 +114,7 @@ if __name__=='__main__':
                 bs=bs,save=True,load=False,lr=args.lr,tb_log=True,ex=bs,max_to_keep=50000,
                 version=1,histogram=True)
   
-      model.optimize(num_it=1000000,verb=100)
+      model.optimize(num_it=args.iterations,verb=100)
       model.close_session()
       print('Done with model: {0}'.format(i))
   elif args.model==1:
