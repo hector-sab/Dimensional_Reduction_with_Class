@@ -41,6 +41,8 @@ parser.add_argument('--lr',help='Define a different learning rate',
       type=float,default=3e-7)
 parser.add_argument('-i','--iterations',help='Number of training it.',
       type=int,default=100000)
+parser.add_argument('--bs',help='Size of batch for training',
+      type=int,default=1)
 
 args = parser.parse_args()
 
@@ -104,7 +106,7 @@ if __name__=='__main__':
   print('Val data: {0} - {1}'.format(val.images.shape,val.cls.shape))
   print('Test data: {0} - {1}'.format(test.images.shape,test.cls.shape))
 
-  bs = 20
+  bs = args.bs
 
   if args.model==0:
     for i in [0,1]:
