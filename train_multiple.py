@@ -113,7 +113,7 @@ if __name__=='__main__':
   lr = args.lr
 
   if args.model==0:
-    for i in [0,1]:
+    for i in [1]:
       tf.reset_default_graph()
       print('\n-----> Executing model {}'.format(i))
       model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
@@ -124,7 +124,7 @@ if __name__=='__main__':
       model.close_session()
       print('Done with model: {0}'.format(i))
   elif args.model==1:
-    for i in [2,3]:
+    for i in [3]:
       tf.reset_default_graph()
       print('\n-----> Executing model {}'.format(i))
       model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
@@ -135,7 +135,7 @@ if __name__=='__main__':
       model.close_session()
       print('Done with model: {0}'.format(i))
   elif args.model==2:
-    for i in [4,5]:
+    for i in [5]:
       tf.reset_default_graph()
       print('\n-----> Executing model {}'.format(i))
       model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
@@ -145,9 +145,9 @@ if __name__=='__main__':
       model.optimize(num_it=args.iterations,verb=100)
       model.close_session()
       print('Done with model: {0}'.format(i))
-  """
-  elif args.model==2:
-    for i in [3]:
+  
+  elif args.model==3:
+    for i in [1,3,5]:
       tf.reset_default_graph()
       print('\n-----> Executing model {}'.format(i))
       model = models.SegModelSigmoid(train=train,val=val,test=test,model=i,training=True,
@@ -157,4 +157,3 @@ if __name__=='__main__':
       model.optimize(num_it=args.iterations,verb=100)
       model.close_session()
       print('Done with model: {0}'.format(i))
-  """
