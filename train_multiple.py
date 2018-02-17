@@ -47,7 +47,7 @@ parser.add_argument('--bs',help='Size of batch for training',
 args = parser.parse_args()
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = str(args.device)
+os.environ["CUDA_VISIBLE_DEVICES"] = 2
 
 msg = '\n\n################\n\n'
 msg = msg + '-Device used for thensorflow: {0}'.format(\
