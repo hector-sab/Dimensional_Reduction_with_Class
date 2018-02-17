@@ -53,9 +53,9 @@ from tensorflow.python.client import device_lib
 print(device_lib.list_local_devices())
 
 msg = '\n\n################\n\n'
-msg = msg + '-Device used for thensorflow: {0}'.format(\
-      all_devices[args.device].name)\
-      + msg
+#msg = msg + '-Device used for thensorflow: {0}'.format(\
+#      all_devices[args.device].name)\
+#      + msg
 print(msg)
 
 import numpy as np
