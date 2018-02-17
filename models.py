@@ -950,7 +950,7 @@ class Stride2SC(Model):
 
     sc_sum = self.convs[2] + deconv
 
-    shape = [dks[1],dks[1],dnum_k[2],dnum_k[2]]
+    shape = [dks[1],dks[1],dnum_k[4],dnum_k[4]]
     deconv,reg = tut.deconv(inp=sc_sum,shape=shape,histogram=self.histogram,
                   l2=True,relu=True,strides=[1,2,2,1],name='deconv_s2')
     self.deconvs.append(deconv)
