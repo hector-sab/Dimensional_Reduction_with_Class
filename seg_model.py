@@ -78,16 +78,22 @@ class SegModel:
     ##
     #####-S: Creates model
     if model==0:
-      self.model = md.MaxPoolNoSC(inp=self.x,ex=self.ex,histogram=histogram,
+      self.model = md.MaxPool(inp=self.x,ex=self.ex,histogram=histogram,
         num_class=num_class,version=version)
     elif model==1:
       self.model = md.MaxPoolSC(inp=self.x,ex=self.ex,histogram=histogram,
         num_class=num_class,version=version)
     elif model==2:
-      self.model = md.StrideNoSC(inp=self.x,histogram=histogram,
+      self.model = md.Stride(inp=self.x,histogram=histogram,
         num_class=num_class,version=version)
     elif model==3:
       self.model = md.StrideSC(inp=self.x,histogram=histogram,
+        num_class=num_class,version=version)
+    elif model==4:
+      self.model = md.Stride2(inp=self.x,histogram=histogram,
+        num_class=num_class,version=version)
+    elif model==5:
+      self.model = md.Stride2SC(inp=self.x,histogram=histogram,
         num_class=num_class,version=version)
 
 

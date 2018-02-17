@@ -38,11 +38,11 @@ msg += '1 - Strides without max pooling'
 parser.add_argument('-m','--model',help=msg,
       type=int,default=0,choices=[0,1,2])
 parser.add_argument('--lr',help='Define a different learning rate',
-      type=float,default=3e-7)
+      type=float,default=3e-9)
 parser.add_argument('-i','--iterations',help='Number of training it.',
-      type=int,default=100000)
+      type=int,default=1000000)
 parser.add_argument('--bs',help='Size of batch for training',
-      type=int,default=1)
+      type=int,default=20)
 
 args = parser.parse_args()
 
@@ -107,13 +107,14 @@ if __name__=='__main__':
   print('Test data: {0} - {1}'.format(test.images.shape,test.cls.shape))
 
   bs = args.bs
+  lr = args.lr
 
   if args.model==0:
     for i in [0,1]:
       tf.reset_default_graph()
       print('\n-----> Executing model {}'.format(i))
       model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
-                bs=bs,save=True,load=False,lr=args.lr,tb_log=True,ex=bs,max_to_keep=50000,
+                bs=bs,save=True,load=False,lr=lr,tb_log=True,ex=bs,max_to_keep=50000,
                 version=1,histogram=True)
   
       model.optimize(num_it=args.iterations,verb=100)
@@ -124,12 +125,24 @@ if __name__=='__main__':
       tf.reset_default_graph()
       print('\n-----> Executing model {}'.format(i))
       model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
-                bs=bs,save=True,load=False,lr=3e-7,tb_log=True,max_to_keep=50000,
+                bs=bs,save=True,load=False,lr=lr,tb_log=True,max_to_keep=50000,
                 version=1,histogram=True)
   
       model.optimize(num_it=args.iterations,verb=100)
       model.close_session()
       print('Done with model: {0}'.format(i))
+  elif args.model==2:
+    for i in [4,5]:
+      tf.reset_default_graph()
+      print('\n-----> Executing model {}'.format(i))
+      model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
+                bs=bs,save=True,load=False,lr=lr,tb_log=True,max_to_keep=50000,
+                version=1,histogram=True)
+
+      model.optimize(num_it=args.iterations,verb=100)
+      model.close_session()
+      print('Done with model: {0}'.format(i))
+  """
   elif args.model==2:
     for i in [3]:
       tf.reset_default_graph()
@@ -141,3 +154,4 @@ if __name__=='__main__':
       model.optimize(num_it=args.iterations,verb=100)
       model.close_session()
       print('Done with model: {0}'.format(i))
+  """
