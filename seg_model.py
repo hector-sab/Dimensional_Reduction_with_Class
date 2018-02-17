@@ -524,6 +524,7 @@ class SegModelSigmoid:
     #####-E: Trainable
 
     if self.save or self.load:
+      """
       to_save = ['conv1/biases','conv1/biases/Adam','conv1/biases/Adam_1',
                   'conv1/weights','conv1/weights/Adam','conv1/weights/Adam_1',
                   'conv2/biases','conv2/biases/Adam','conv2/biases/Adam_1',
@@ -544,8 +545,9 @@ class SegModelSigmoid:
                   'deconv5/weights/Adam_1','deconv6/biases','deconv6/biases/Adam',
                   'deconv6/biases/Adam_1','deconv6/weights','deconv6/weights/Adam',
                   'deconv6/weights/Adam_1','train/beta1_power','train/beta2_power']
-      self.saver = tf.train.Saver(var_list=to_save,max_to_keep=max_to_keep)
-      #self.saver = tf.train.Saver(max_to_keep=max_to_keep)
+      """
+      #self.saver = tf.train.Saver(var_list=to_save,max_to_keep=max_to_keep)
+      self.saver = tf.train.Saver(max_to_keep=max_to_keep)
     
     self.init_variables()
     
