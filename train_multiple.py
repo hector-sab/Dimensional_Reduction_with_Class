@@ -47,7 +47,7 @@ parser.add_argument('--bs',help='Size of batch for training',
 args = parser.parse_args()
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = 2
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
 from tensorflow.python.client import device_lib
 print(device_lib.list_local_devices())
