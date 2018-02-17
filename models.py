@@ -713,7 +713,7 @@ class Stride2(Model):
 
     shape = [cks[1],cks[1],cnum_k[1],cnum_k[2]]
     conv,reg = tut.conv(inp=conv,shape=shape,histogram=self.histogram,
-              l2=True,relu=True,strides=[1,2,2,1],name='conv2')
+              l2=True,relu=True,name='conv2')
     self.convs.append(conv)
     self.reg.append(reg)
     print('\t{}'.format(conv))
