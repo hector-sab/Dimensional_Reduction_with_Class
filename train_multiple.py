@@ -36,7 +36,7 @@ msg = 'Select which models to train:\n\t'
 msg += '0 - Max pooling for dimensional reduction\n\t'
 msg += '1 - Strides without max pooling'
 parser.add_argument('-m','--model',help=msg,
-      type=int,default=0,choices=[0,1,2])
+      type=int,default=0,choices=[0,1,2,3])
 parser.add_argument('--lr',help='Define a different learning rate',
       type=float,default=3e-9)
 parser.add_argument('-i','--iterations',help='Number of training it.',
