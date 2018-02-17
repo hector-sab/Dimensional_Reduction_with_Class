@@ -451,6 +451,7 @@ class SegModelSigmoid:
     self.ex = ex
     self.save = save
     self.load = load
+    self.load_step = load_step
     self.training = training
     #####-E: Parameters
     ##
@@ -523,7 +524,28 @@ class SegModelSigmoid:
     #####-E: Trainable
 
     if self.save or self.load:
-      self.saver = tf.train.Saver(max_to_keep=max_to_keep)
+      to_save = ['conv1/biases','conv1/biases/Adam','conv1/biases/Adam_1',
+                  'conv1/weights','conv1/weights/Adam','conv1/weights/Adam_1',
+                  'conv2/biases','conv2/biases/Adam','conv2/biases/Adam_1',
+                  'conv2/weights','conv2/weights/Adam','conv2/weights/Adam_1',
+                  'conv3/biases','conv3/weights','conv3/weights/Adam',
+                  'conv3/weights/Adam_1','conv4/biases','conv4/weights',
+                  'conv4/weights/Adam','conv4/weights/Adam_1','conv5/biases',
+                  'conv5/weights','conv5/weights/Adam','conv5/weights/Adam_1',
+                  'conv6/biases','conv6/weights','conv6/weights/Adam',
+                  'conv6/weights/Adam_1',
+                  'deconv1/biases','deconv1/weights','deconv1/weights/Adam',
+                  'deconv1/weights/Adam_1','deconv2/biases','deconv2/weights',
+                  'deconv2/weights/Adam','deconv2/weights/Adam_1','deconv3/biases',
+                  'deconv3/weights','deconv3/weights/Adam','deconv3/weights/Adam_1',
+                  'deconv4/biases','deconv4/weights','deconv4/weights/Adam',
+                  'deconv4/weights/Adam_1','deconv5/biases','deconv5/biases/Adam',
+                  'deconv5/biases/Adam_1','deconv5/weights','deconv5/weights/Adam',
+                  'deconv5/weights/Adam_1','deconv6/biases','deconv6/biases/Adam',
+                  'deconv6/biases/Adam_1','deconv6/weights','deconv6/weights/Adam',
+                  'deconv6/weights/Adam_1','train/beta1_power','train/beta2_power']
+      self.saver = tf.train.Saver(var_list=to_save,max_to_keep=max_to_keep)
+      #self.saver = tf.train.Saver(max_to_keep=max_to_keep)
     
     self.init_variables()
     
