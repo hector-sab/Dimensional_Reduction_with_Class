@@ -16,11 +16,11 @@ desc_msg = 'MNIST segmentation using tensorflow and some sort of LeNet-5'
 parser = argparse.ArgumentParser(desc_msg)
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
-from tensorflow.python.client import device_lib
+#from tensorflow.python.client import device_lib
 
-with ut.HiddenPrints():
-  all_devices = device_lib.list_local_devices()
-
+#with ut.HiddenPrints():
+#  all_devices = device_lib.list_local_devices()
+all_devices = [0,1,2,3,4]
 choices = []
 for i in range(len(all_devices)):
   choices.append(i)
