@@ -137,6 +137,6 @@ if __name__=='__main__':
     print('\n-----> Executing model {}'.format(i))
     model.init(train=train,val=val,test=test,model=i,training=True,
                 bs=args.bs,save=True,load=False,lr=args.lr,tb_log=True,
-                ex=bs,max_to_keep=50000,version=args.version)
+                ex=args.bs,max_to_keep=50000,version=args.version)
     model.optimize(num_it=args.iterations,verb=100)
     model.close_session()
