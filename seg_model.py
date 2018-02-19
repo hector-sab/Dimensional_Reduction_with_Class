@@ -17,10 +17,13 @@ class SegModel:
   semantic segmentation
   """
   def __init__(self,im_h=28,im_w=28,im_c=1,num_class=11,model=0,
-    training=False,train=None,test=None,val=None,bs=1,ex=1,version=1,
-    save=False,save_dir=None,save_checkp=None,load=False,load_dir=None,
-    load_checkp=None,save_load_same=True,load_step=None,tb_log=False,
-    log_dir=None,log_name=None,deacy_steps=5000,max_to_keep=1):
+    training=False,train=None,test=None,val=None,
+    bs=1,ex=1,lr=3e-7,version=1,
+    save=False,save_dir=None,save_checkp=None,
+    load=False,load_dir=None,
+    load_checkp=None,save_load_same=True,load_step=None,
+    tb_log=False,log_dir=None,log_name=None,
+    deacy_steps=5000,max_to_keep=1):
     """
     """
     self.session = tf.Session()
@@ -354,13 +357,13 @@ class SegMultiClass(SegModel):
   def __init__(self):
     pass
 
-  def init(self,im_h=28,im_w=28,im_c=1,num_class=11,model=0,
+  def init(self,im_h=28,im_w=28,im_c=1,num_class=11,model=0,lr=3e-7,
     training=False,train=None,test=None,val=None,bs=1,ex=1,version=1,
     save=False,save_dir=None,save_checkp=None,load=False,load_dir=None,
     load_checkp=None,save_load_same=True,load_step=None,tb_log=False,
     log_dir=None,log_name=None,deacy_steps=10000,max_to_keep=1):
 
-    SegModel.__init__(self,im_h=im_h,im_w=im_w,im_c=im_c,
+    SegModel.__init__(self,im_h=im_h,im_w=im_w,im_c=im_c,lr=lr,
       num_class=num_class,model=model,training=training,train=train,
       test=test,val=val,bs=bs,ex=ex,version=version,save=save,
       save_dir=save_dir,save_checkp=save_checkp,load=load,
@@ -373,13 +376,13 @@ class SegBinaryClass(SegModel):
   def __init__(self):
     pass
 
-  def init(self,im_h=28,im_w=28,im_c=1,num_class=11,model=0,
+  def init(self,im_h=28,im_w=28,im_c=1,num_class=11,model=0,lr=3e-7,
     training=False,train=None,test=None,val=None,bs=1,ex=1,version=1,
     save=False,save_dir=None,save_checkp=None,load=False,load_dir=None,
     load_checkp=None,save_load_same=True,load_step=None,tb_log=False,
     log_dir=None,log_name=None,deacy_steps=5000,max_to_keep=1):
 
-    SegModel.__init__(self,im_h=im_h,im_w=im_w,im_c=im_c,
+    SegModel.__init__(self,im_h=im_h,im_w=im_w,im_c=im_c,lr=lr,
       num_class=num_class,model=model,training=training,train=train,
       test=test,val=val,bs=bs,ex=ex,version=version,save=save,
       save_dir=save_dir,save_checkp=save_checkp,load=load,
