@@ -387,7 +387,7 @@ class SegMultiClass(SegModel):
       num_class=num_class,model=model,training=training,train=train,
       test=test,val=val,bs=bs,ex=ex,version=version,save=save,
       save_dir=save_dir,save_checkp=save_checkp,load=load,
-      load_dir=load_dir,load_checkp=load_checkp,load_step=None,
+      load_dir=load_dir,load_checkp=load_checkp,load_step=load_step,
       save_load_same=save_load_same,tb_log=tb_log,
       log_dir=log_dir,log_name=log_name,deacy_steps=deacy_steps,
       max_to_keep=max_to_keep)
@@ -408,7 +408,7 @@ class SegBinaryClass(SegModel):
       num_class=num_class,model=model,training=training,train=train,
       test=test,val=val,bs=bs,ex=ex,version=version,save=save,
       save_dir=save_dir,save_checkp=save_checkp,load=load,
-      load_dir=load_dir,load_checkp=load_checkp,load_step=None,
+      load_dir=load_dir,load_checkp=load_checkp,load_step=load_step,
       save_load_same=save_load_same,tb_log=tb_log,
       log_dir=log_dir,log_name=log_name,deacy_steps=deacy_steps,
       max_to_keep=max_to_keep)
