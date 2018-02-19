@@ -33,7 +33,7 @@ class SegModel:
     self.im_h = im_h
     self.im_w = im_w
     self.im_c = im_c
-    self.num_class = num_cla5s
+    self.num_class = num_class
 
     self.inputs()
 
