@@ -29,6 +29,7 @@ class SegModel:
     self.session = tf.Session()
     self.bs = bs
     self.ex = ex
+    self.training = training
 
     self.im_h = im_h
     self.im_w = im_w
