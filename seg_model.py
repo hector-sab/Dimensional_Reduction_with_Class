@@ -20,7 +20,7 @@ class SegModel:
     training=False,train=None,test=None,val=None,
     bs=1,ex=1,lr=3e-7,version=1,dropout=False,drop_prob=0.8,
     save=False,save_dir=None,save_checkp=None,
-    load=False,load_dir=None,
+    load=False,load_dir=None,load_step=None,
     load_checkp=None,save_load_same=True,
     tb_log=False,log_dir=None,log_name=None,
     deacy_steps=5000,max_to_keep=1):
@@ -32,6 +32,7 @@ class SegModel:
     self.training = training
     self.save = save
     self.load = load
+    self.load_step = load_step
 
     self.im_h = im_h
     self.im_w = im_w
@@ -364,14 +365,14 @@ class SegMultiClass(SegModel):
   def init(self,im_h=28,im_w=28,im_c=1,num_class=11,model=0,lr=3e-7,
     training=False,train=None,test=None,val=None,bs=1,ex=1,version=1,
     save=False,save_dir=None,save_checkp=None,load=False,load_dir=None,
-    load_checkp=None,save_load_same=True,tb_log=False,
+    load_checkp=None,save_load_same=True,tb_log=False,load_step=None,
     log_dir=None,log_name=None,deacy_steps=10000,max_to_keep=1):
 
     SegModel.__init__(self,im_h=im_h,im_w=im_w,im_c=im_c,lr=lr,
       num_class=num_class,model=model,training=training,train=train,
       test=test,val=val,bs=bs,ex=ex,version=version,save=save,
       save_dir=save_dir,save_checkp=save_checkp,load=load,
-      load_dir=load_dir,load_checkp=load_checkp,
+      load_dir=load_dir,load_checkp=load_checkp,load_step=None,
       save_load_same=save_load_same,tb_log=tb_log,
       log_dir=log_dir,log_name=log_name,deacy_steps=deacy_steps,
       max_to_keep=max_to_keep)
@@ -383,7 +384,7 @@ class SegBinaryClass(SegModel):
   def init(self,im_h=28,im_w=28,im_c=1,num_class=11,model=0,lr=3e-7,
     training=False,train=None,test=None,val=None,bs=1,ex=1,version=1,
     save=False,save_dir=None,save_checkp=None,load=False,load_dir=None,
-    load_checkp=None,save_load_same=True,tb_log=False,
+    load_checkp=None,save_load_same=True,tb_log=False,load_step=None,
     log_dir=None,log_name=None,deacy_steps=5000,max_to_keep=1):
 
     SegModel.trainable = self.trainable
@@ -392,7 +393,7 @@ class SegBinaryClass(SegModel):
       num_class=num_class,model=model,training=training,train=train,
       test=test,val=val,bs=bs,ex=ex,version=version,save=save,
       save_dir=save_dir,save_checkp=save_checkp,load=load,
-      load_dir=load_dir,load_checkp=load_checkp,
+      load_dir=load_dir,load_checkp=load_checkp,load_step=None,
       save_load_same=save_load_same,tb_log=tb_log,
       log_dir=log_dir,log_name=log_name,deacy_steps=deacy_steps,
       max_to_keep=max_to_keep)
