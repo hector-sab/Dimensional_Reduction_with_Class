@@ -358,7 +358,7 @@ class SegMultiClass(SegModel):
     training=False,train=None,test=None,val=None,bs=1,ex=1,version=1,
     save=False,save_dir=None,save_checkp=None,load=False,load_dir=None,
     load_checkp=None,save_load_same=True,load_step=None,tb_log=False,
-    log_dir=None,log_name=None,deacy_steps=10000,version=1,max_to_keep=1):
+    log_dir=None,log_name=None,deacy_steps=10000,max_to_keep=1):
 
     SegModel.__init__(self,im_h=im_h,im_w=im_w,im_c=im_c,
       num_class=num_class,model=model,training=training,train=train,
