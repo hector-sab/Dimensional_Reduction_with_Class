@@ -127,7 +127,10 @@ class MaxPool(Model):
   Description:
   Model for MNIST segmentation using max pooling but no skip connections
   """
-  def __init__(self,inp,num_class=11,version=1,histogram=False,
+  def __init__(self):
+    pass
+
+  def init(self,inp,num_class=11,version=1,histogram=True,
     dropout=False,drop_prob=0.85,def_cp_name='mnist_seg',
     def_cp_path='checkpoints/mnist_seg_mp',def_log_name='mnist_seg_mp',
     def_log_path='./log/',ex=1):
@@ -275,7 +278,10 @@ class MaxPoolSC(Model):
   Description:
   Model for MNIST segmentation using max pooling and skip connections
   """
-  def __init__(self,inp,num_class=11,version=1,histogram=False,
+  def __init__(self):
+    pass
+
+  def init(self,inp,num_class=11,version=1,histogram=False,
     dropout=False,drop_prob=0.85,def_cp_name='mnist_seg',
     def_cp_path='checkpoints/mnist_seg_mpsc',def_log_name='mnist_seg_mpsc',
     def_log_path='./log/',ex=1):
@@ -428,10 +434,13 @@ class Stride(Model):
   Description:
   Model for MNIST segmentation using striding with skip connections
   """
-  def __init__(self,inp,num_class=11,version=1,histogram=False,
+  def __init__(self):
+    pass
+    
+  def init(self,inp,num_class=11,version=1,histogram=False,
     dropout=False,drop_prob=0.85,def_cp_name='mnist_seg',
     def_cp_path='checkpoints/mnist_seg_st',def_log_name='mnist_seg_st',
-    def_log_path='./log/'):
+    def_log_path='./log/',ex=None):
     """
     inp: Input placeholder.
     shape: Tensorflow tensor shape used in the input placeholder.
@@ -439,6 +448,7 @@ class Stride(Model):
     dropout: Flag used to indicate if dropout will be used
     drop_prob: Percentage of neurons to be turned off
     histogram: Indicates if information for tensorboard should be annexed.
+    ex: Just for compatibility, does nothing
     """
     Model.__init__(self,inp,num_class,version,histogram,dropout,
       drop_prob,def_cp_name,def_cp_path,def_log_name,def_log_path)
@@ -549,10 +559,13 @@ class StrideSC(Model):
   Description:
   Model for MNIST segmentation using striding without skip connections
   """
-  def __init__(self,inp,num_class=11,version=1,histogram=False,
+  def __init__(self):
+    pass
+
+  def init(self,inp,num_class=11,version=1,histogram=False,
     dropout=False,drop_prob=0.85,def_cp_name='mnist_seg',
     def_cp_path='checkpoints/mnist_seg_stsc',def_log_name='mnist_seg_stsc',
-    def_log_path='./log/'):
+    def_log_path='./log/',ex=None):
     """
     inp: Input placeholder.
     shape: Tensorflow tensor shape used in the input placeholder.
@@ -560,6 +573,7 @@ class StrideSC(Model):
     dropout: Flag used to indicate if dropout will be used
     drop_prob: Percentage of neurons to be turned off
     histogram: Indicates if information for tensorboard should be annexed.
+    ex: Just for compatibility, does nothing
     """
     Model.__init__(self,inp,num_class,version,histogram,dropout,
       drop_prob,def_cp_name,def_cp_path,def_log_name,def_log_path)
@@ -675,10 +689,13 @@ class Stride2(Model):
     Just as Stride, but we add a convolution with the sole porpuse of
     dimensional reduction.
   """
-  def __init__(self,inp,num_class=11,version=1,histogram=False,
+  def __init__(self):
+    pass
+
+  def init(self,inp,num_class=11,version=1,histogram=False,
     dropout=False,drop_prob=0.85,def_cp_name='mnist_seg',
     def_cp_path='checkpoints/mnist_seg_st2',def_log_name='mnist_seg_st2',
-    def_log_path='./log/'):
+    def_log_path='./log/',ex=None):
     """
     inp: Input placeholder.
     shape: Tensorflow tensor shape used in the input placeholder.
@@ -686,6 +703,7 @@ class Stride2(Model):
     dropout: Flag used to indicate if dropout will be used
     drop_prob: Percentage of neurons to be turned off
     histogram: Indicates if information for tensorboard should be annexed.
+    ex: Just for compatibility, does nothing
     """
     Model.__init__(self,inp,num_class,version,histogram,dropout,
       drop_prob,def_cp_name,def_cp_path,def_log_name,def_log_path)
@@ -824,10 +842,13 @@ class Stride2SC(Model):
   Description:
   Model for MNIST segmentation using striding without skip connections
   """
-  def __init__(self,inp,num_class=11,version=1,histogram=False,
+  def __init__(self):
+    pass
+
+  def init(self,inp,num_class=11,version=1,histogram=False,
     dropout=False,drop_prob=0.85,def_cp_name='mnist_seg',
     def_cp_path='checkpoints/mnist_seg_st2sc',def_log_name='mnist_seg_st2sc',
-    def_log_path='./log/'):
+    def_log_path='./log/',ex=None):
     """
     inp: Input placeholder.
     shape: Tensorflow tensor shape used in the input placeholder.
@@ -835,6 +856,7 @@ class Stride2SC(Model):
     dropout: Flag used to indicate if dropout will be used
     drop_prob: Percentage of neurons to be turned off
     histogram: Indicates if information for tensorboard should be annexed.
+    ex: Just for compatibility, does nothing
     """
     Model.__init__(self,inp,num_class,version,histogram,dropout,
       drop_prob,def_cp_name,def_cp_path,def_log_name,def_log_path)
@@ -973,10 +995,13 @@ class Stride2SC(Model):
     ####-E: Core Model
 
 class AtrousMPNoSC(Model):
-  def __init__(self,inp,num_class=11,version=1,histogram=False,
+  def __init__(self):
+    pass
+
+  def init(self,inp,num_class=11,version=1,histogram=False,
     dropout=False,drop_prob=0.85,def_cp_name='mnist_seg',
     def_cp_path='checkpoints/mnist_seg_mpsconeo',
-    def_log_name='mnist_seg_mpsconeo',def_log_path='./log/'):
+    def_log_name='mnist_seg_mpsconeo',def_log_path='./log/',ex=None):
     """
     inp: Input placeholder.
     shape: Tensorflow tensor shape used in the input placeholder.
@@ -984,6 +1009,7 @@ class AtrousMPNoSC(Model):
     dropout: Flag used to indicate if dropout will be used
     drop_prob: Percentage of neurons to be turned off
     histogram: Indicates if information for tensorboard should be annexed.
+    ex: Just for compatibility, does nothing
     """
     Model.__init__(self,inp,num_class,version,histogram,dropout,
       drop_prob,def_cp_name,def_cp_path,def_log_name,def_log_path)

@@ -37,6 +37,10 @@ msg += '0 - Max pooling for dimensional reduction\n\t'
 msg += '1 - Strides without max pooling'
 parser.add_argument('-m','--model',help=msg,
       type=int,default=0,choices=[0,1,2,3])
+msg = 'If the model to train will have binary segmentation'
+parser.add_argument('--binary',help=msg,action='store_true')
+parser.add_argument('-v','--version',help='version',type=int,
+      default=1)
 parser.add_argument('--lr',help='Define a different learning rate',
       type=float,default=3e-9)
 parser.add_argument('-i','--iterations',help='Number of training it.',
@@ -60,7 +64,7 @@ print(msg)
 
 import numpy as np
 from MNIST import load_mnist
-import seg_model as models
+from seg_model import SegMultiClass,SegBinaryClass
 
 
 if __name__=='__main__':
@@ -108,52 +112,31 @@ if __name__=='__main__':
   print('Train data: {0} - {1}'.format(train.images.shape,train.cls.shape))
   print('Val data: {0} - {1}'.format(val.images.shape,val.cls.shape))
   print('Test data: {0} - {1}'.format(test.images.shape,test.cls.shape))
+  
+  if args.binary:
+    model = SegBinaryClass()
+  else:
+    model = SegMultiClass()
 
-  bs = args.bs
-  lr = args.lr
 
   if args.model==0:
-    for i in [1]:
-      tf.reset_default_graph()
-      print('\n-----> Executing model {}'.format(i))
-      model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
-                bs=bs,save=True,load=False,lr=lr,tb_log=True,ex=bs,max_to_keep=50000,
-                version=1,histogram=True)
-  
-      model.optimize(num_it=args.iterations,verb=100)
-      model.close_session()
-      print('Done with model: {0}'.format(i))
+    # MaxPool Model
+    ls_mds = [0,1]
   elif args.model==1:
-    for i in [3]:
-      tf.reset_default_graph()
-      print('\n-----> Executing model {}'.format(i))
-      model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
-                bs=bs,save=True,load=False,lr=lr,tb_log=True,max_to_keep=50000,
-                version=1,histogram=True)
-  
-      model.optimize(num_it=args.iterations,verb=100)
-      model.close_session()
-      print('Done with model: {0}'.format(i))
+    # Stride Model
+    ls_mds = [2,3]
   elif args.model==2:
-    for i in [5]:
-      tf.reset_default_graph()
-      print('\n-----> Executing model {}'.format(i))
-      model = models.SegModel(train=train,val=val,test=test,model=i,training=True,
-                bs=bs,save=True,load=False,lr=lr,tb_log=True,max_to_keep=50000,
-                version=1,histogram=True)
-
-      model.optimize(num_it=args.iterations,verb=100)
-      model.close_session()
-      print('Done with model: {0}'.format(i))
-  
+    # Stride2 Model
+    ls_mds = [4,5]
   elif args.model==3:
-    for i in [1,3,5]:
-      tf.reset_default_graph()
-      print('\n-----> Executing model {}'.format(i))
-      model = models.SegModelSigmoid(train=train,val=val,test=test,model=i,training=True,
-                bs=bs,save=True,load=False,lr=3e-7,tb_log=True,ex=bs,max_to_keep=50000,
-                version=2,histogram=True)
-  
-      model.optimize(num_it=args.iterations,verb=100)
-      model.close_session()
-      print('Done with model: {0}'.format(i))
+    # Normally used for binary. But not necesarily true
+    ls_mds = [1,3,5]
+
+  for i in ls_mds:
+    tf.reset_default_graph()
+    print('\n-----> Executing model {}'.format(i))
+    model.init(train=train,val=val,test=test,model=i,training=True,
+                bs=args.bs,save=True,load=False,lr=args.lr,tb_log=True,
+                ex=bs,max_to_keep=50000,version=args.version)
+    model.optimize(num_it=args.iterations,verb=100)
+    model.close_session()
