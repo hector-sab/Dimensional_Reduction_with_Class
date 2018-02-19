@@ -95,6 +95,7 @@ class SegModel:
 
     self.init_variables()
 
+    self.savable(save_dir,save_checkp)
     if self.load:
       self.loadable(load_dir,load_checkp,save_load_same)
 
