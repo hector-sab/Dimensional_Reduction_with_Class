@@ -372,7 +372,7 @@ class SegMultiClass(SegModel):
       test=test,val=val,bs=bs,ex=ex,version=version,save=save,
       save_dir=save_dir,save_checkp=save_checkp,load=load,
       load_dir=load_dir,load_checkp=load_checkp,
-      save_load_same=save_load_same,load_step=load_step,tb_log=tb_log,
+      save_load_same=save_load_same,tb_log=tb_log,
       log_dir=log_dir,log_name=log_name,deacy_steps=deacy_steps,
       max_to_keep=max_to_keep)
 
