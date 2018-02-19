@@ -232,8 +232,10 @@ class SegModel:
     else:
       load_path = os.path.join(load_dir,load_checkp)
 
+    """
     msg = '\nLoading checkpoint: {0}'.format(load_path)
     print(msg)
+    """
     self.restore_variables(load_path,self.load_step)
 
   def init_variables(self):
@@ -247,10 +249,22 @@ class SegModel:
     Restores all weights values from previous training
     """
     if self.load_step is None:
+      file_path = load_path
+    else:
+      file_path = load_path+'-'+str(load_step)
+      self.total_it = load_step
+
+    msg = '\nLoading checkpoint: {0}'.format(file_path)
+    print(msg)
+    self.saver.restore(sess=self.session, save_path=file_path)
+
+    """
+    if self.load_step is None:
       self.saver.restore(sess=self.session, save_path=load_path)
     else:
       self.saver.restore(sess=self.session, save_path=load_path+'-'+str(load_step))
       self.total_it = load_step
+    """
 
   def trainable(self):
     """
