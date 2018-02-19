@@ -55,7 +55,7 @@ class SegModel:
       self.model = md.Stride2SC()
 
     self.model.init(inp=self.x,ex=self.ex,num_class=num_class,
-      version=version)
+      version=version,histogram=True)
 
     # Specify where to save the model and the tb log
     save_dir,save_checkp = self.model.checkpoint_dir(save_dir,save_checkp)
@@ -254,7 +254,6 @@ class SegModel:
       file_path = load_path+'-'+str(load_step)
       self.total_it = load_step
 
-    print(self.load_step)
     msg = '\nLoading checkpoint: {0}'.format(file_path)
     print(msg)
     self.saver.restore(sess=self.session, save_path=file_path)
