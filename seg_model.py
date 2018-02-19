@@ -18,7 +18,7 @@ class SegModel:
   """
   def __init__(self,im_h=28,im_w=28,im_c=1,num_class=11,model=0,
     training=False,train=None,test=None,val=None,
-    bs=1,ex=1,lr=3e-7,version=1,
+    bs=1,ex=1,lr=3e-7,version=1,dropout=False,drop_prob=0.8,
     save=False,save_dir=None,save_checkp=None,
     load=False,load_dir=None,
     load_checkp=None,save_load_same=True,load_step=None,
