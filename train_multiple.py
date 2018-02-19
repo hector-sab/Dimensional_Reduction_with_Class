@@ -44,7 +44,7 @@ parser.add_argument('-v','--version',help='version',type=int,
 parser.add_argument('--lr',help='Define a different learning rate',
       type=float,default=3e-9)
 parser.add_argument('-i','--iterations',help='Number of training it.',
-      type=int,default=1000000)
+      type=int,default=300000)
 parser.add_argument('--bs',help='Size of batch for training',
       type=int,default=20)
 
