@@ -30,6 +30,8 @@ class SegModel:
     self.bs = bs
     self.ex = ex
     self.training = training
+    self.save = save
+    self.load = load
 
     self.im_h = im_h
     self.im_w = im_w
